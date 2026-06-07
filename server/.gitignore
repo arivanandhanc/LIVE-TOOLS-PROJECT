@@ -1,0 +1,23 @@
+# dependencies
+/node_modules
+
+# build
+/dist
+
+# env — keep example only
+.env*
+!.env.example
+
+# local storage of processed files
+/storage
+
+# prisma generated client
+/src/generated
+
+# logs
+*.log
+npm-debug.log*
+
+# misc
+.DS_Store
+*.tsbuildinfo

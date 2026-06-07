@@ -1,0 +1,82 @@
+# Full local stack for ConvertFlow.
+#   docker compose up --build
+# Brings up Postgres, Redis, MinIO (S3/R2-compatible), the API and the web app.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: convertflow
+      POSTGRES_PASSWORD: convertflow
+      POSTGRES_DB: convertflow
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U convertflow"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - miniodata:/data
+
+  server:
+    build: ./server
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      API_BASE_URL: http://localhost:4000
+      CORS_ORIGINS: http://localhost:3000
+      DATABASE_URL: postgresql://convertflow:convertflow@postgres:5432/convertflow
+      REDIS_URL: redis://redis:6379
+      STORAGE_DRIVER: s3
+      S3_ENDPOINT: http://minio:9000
+      S3_REGION: us-east-1
+      S3_BUCKET: convertflow
+      S3_ACCESS_KEY_ID: minioadmin
+      S3_SECRET_ACCESS_KEY: minioadmin
+      JWT_SECRET: local-dev-secret-change-in-production
+    ports:
+      - "4000:4000"
+    # Run migrations then start
+    command: sh -c "npx prisma migrate deploy && node dist/index.js"
+
+  web:
+    build: ./frontend
+    depends_on:
+      - server
+    environment:
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      NEXT_PUBLIC_API_URL: http://localhost:4000
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:
+  miniodata:

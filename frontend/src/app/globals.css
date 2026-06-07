@@ -1,0 +1,211 @@
+@import "tailwindcss";
+
+/*
+  ConvertFlow design system
+  - Primary brand: #FBBF24 (amber-400) "yellowish premium"
+  - Professional grayscale secondary palette
+  - Full light + dark theme via class strategy (next-themes)
+  - High-contrast, accessibility-first tokens
+*/
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --radius: 0.75rem;
+
+  /* Surfaces */
+  --background: oklch(0.99 0.004 95);
+  --foreground: oklch(0.21 0.01 75);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.21 0.01 75);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.21 0.01 75);
+
+  /* Brand — amber #FBBF24 */
+  --primary: oklch(0.82 0.16 84);
+  --primary-foreground: oklch(0.27 0.05 70);
+  --primary-hover: oklch(0.77 0.16 80);
+
+  /* Neutral secondary */
+  --secondary: oklch(0.97 0.005 90);
+  --secondary-foreground: oklch(0.3 0.01 75);
+  --muted: oklch(0.96 0.004 90);
+  --muted-foreground: oklch(0.52 0.01 75);
+  --accent: oklch(0.96 0.02 90);
+  --accent-foreground: oklch(0.3 0.02 75);
+
+  /* Semantic */
+  --destructive: oklch(0.58 0.22 27);
+  --destructive-foreground: oklch(0.99 0 0);
+  --success: oklch(0.6 0.15 150);
+  --success-foreground: oklch(0.99 0 0);
+  --warning: oklch(0.75 0.16 70);
+  --info: oklch(0.6 0.13 240);
+
+  /* Lines & inputs */
+  --border: oklch(0.91 0.005 90);
+  --input: oklch(0.91 0.005 90);
+  --ring: oklch(0.82 0.16 84);
+
+  /* Category accent hues (used across tool cards) */
+  --cat-pdf: oklch(0.6 0.22 27);
+  --cat-image: oklch(0.62 0.18 300);
+  --cat-csv: oklch(0.62 0.16 150);
+  --cat-text: oklch(0.62 0.14 240);
+  --cat-dev: oklch(0.6 0.14 200);
+  --cat-ai: oklch(0.62 0.2 330);
+}
+
+.dark {
+  --background: oklch(0.18 0.01 75);
+  --foreground: oklch(0.96 0.005 90);
+  --card: oklch(0.22 0.012 75);
+  --card-foreground: oklch(0.96 0.005 90);
+  --popover: oklch(0.22 0.012 75);
+  --popover-foreground: oklch(0.96 0.005 90);
+
+  --primary: oklch(0.82 0.16 84);
+  --primary-foreground: oklch(0.24 0.05 70);
+  --primary-hover: oklch(0.86 0.15 86);
+
+  --secondary: oklch(0.27 0.012 75);
+  --secondary-foreground: oklch(0.92 0.005 90);
+  --muted: oklch(0.27 0.012 75);
+  --muted-foreground: oklch(0.7 0.01 80);
+  --accent: oklch(0.3 0.02 80);
+  --accent-foreground: oklch(0.95 0.005 90);
+
+  --destructive: oklch(0.65 0.2 27);
+  --destructive-foreground: oklch(0.99 0 0);
+  --success: oklch(0.7 0.15 150);
+  --success-foreground: oklch(0.18 0 0);
+  --warning: oklch(0.8 0.15 70);
+  --info: oklch(0.7 0.12 240);
+
+  --border: oklch(0.3 0.01 75 / 60%);
+  --input: oklch(0.32 0.01 75 / 60%);
+  --ring: oklch(0.82 0.16 84);
+
+  --cat-pdf: oklch(0.68 0.2 27);
+  --cat-image: oklch(0.7 0.16 300);
+  --cat-csv: oklch(0.72 0.15 150);
+  --cat-text: oklch(0.7 0.13 240);
+  --cat-dev: oklch(0.7 0.13 200);
+  --cat-ai: oklch(0.72 0.18 330);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-cat-pdf: var(--cat-pdf);
+  --color-cat-image: var(--cat-image);
+  --color-cat-csv: var(--cat-csv);
+  --color-cat-text: var(--cat-text);
+  --color-cat-dev: var(--cat-dev);
+  --color-cat-ai: var(--cat-ai);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, monospace;
+
+  --animate-fade-in: fade-in 0.5s ease-out both;
+  --animate-slide-up: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-float: float 6s ease-in-out infinite;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  /* Respect reduced motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .container-page {
+    width: 100%;
+    margin-inline: auto;
+    max-width: 80rem;
+    padding-inline: 1rem;
+  }
+  @media (min-width: 640px) {
+    .container-page { padding-inline: 1.5rem; }
+  }
+  @media (min-width: 1024px) {
+    .container-page { padding-inline: 2rem; }
+  }
+  .text-gradient-brand {
+    background: linear-gradient(120deg, var(--color-primary), oklch(0.7 0.18 50));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, color-mix(in oklch, var(--color-border) 60%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklch, var(--color-border) 60%, transparent) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+}

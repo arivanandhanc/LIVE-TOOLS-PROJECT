@@ -1,0 +1,23 @@
+# Root-level ignores (each app also has its own .gitignore)
+node_modules/
+dist/
+.next/
+out/
+build/
+coverage/
+
+# Env — keep examples only
+.env
+.env.*
+!.env.example
+
+# Local processed-file storage
+server/storage/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
+*.tsbuildinfo
+.vscode/
+.idea/

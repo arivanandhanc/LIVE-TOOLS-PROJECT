@@ -1,0 +1,224 @@
+// ConvertFlow database schema
+// PostgreSQL via Prisma. The app also runs with NO database (guest-only mode);
+// persistence features activate when DATABASE_URL is configured.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  DELETED
+}
+
+enum JobStatus {
+  QUEUED
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum FileOwnerType {
+  GUEST
+  USER
+}
+
+enum PlanTier {
+  FREE
+  PRO
+  BUSINESS
+  ENTERPRISE
+}
+
+model User {
+  id            String     @id @default(cuid())
+  email         String     @unique
+  emailVerified DateTime?
+  name          String?
+  passwordHash  String?
+  image         String?
+  role          Role       @default(USER)
+  status        UserStatus @default(ACTIVE)
+  mfaEnabled    Boolean    @default(false)
+  mfaSecret     String?
+  planTier      PlanTier   @default(FREE)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  files         File[]
+  jobs          Job[]
+  toolUsage     ToolUsage[]
+  auditLogs     AuditLog[]
+  favorites     Favorite[]
+  notifications Notification[]
+
+  @@index([status])
+}
+
+// OAuth provider accounts (Google, GitHub, Microsoft)
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  provider          String
+  providerAccountId String
+  refreshToken      String?
+  accessToken       String?
+  expiresAt         Int?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  refreshToken String   @unique
+  userAgent    String?
+  ip           String?
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model File {
+  id          String        @id @default(cuid())
+  ownerType   FileOwnerType @default(GUEST)
+  userId      String?
+  originalName String
+  storageKey  String
+  mimeType    String
+  size        Int
+  checksum    String?
+  scanned     Boolean       @default(false)
+  infected    Boolean       @default(false)
+  expiresAt   DateTime
+  createdAt   DateTime      @default(now())
+
+  user        User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  inputForJobs Job[]        @relation("JobInputs")
+  outputOfJob Job?          @relation("JobOutputs", fields: [jobId], references: [id], onDelete: SetNull)
+  jobId       String?
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Job {
+  id          String    @id @default(cuid())
+  tool        String
+  status      JobStatus @default(QUEUED)
+  userId      String?
+  guestId     String?
+  params      Json?
+  error       String?
+  startedAt   DateTime?
+  finishedAt  DateTime?
+  durationMs  Int?
+  createdAt   DateTime  @default(now())
+
+  user        User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  inputs      File[]    @relation("JobInputs")
+  outputs     File[]    @relation("JobOutputs")
+
+  @@index([userId])
+  @@index([status])
+  @@index([tool])
+}
+
+model ToolUsage {
+  id         String   @id @default(cuid())
+  tool       String
+  userId     String?
+  guestId    String?
+  success    Boolean  @default(true)
+  durationMs Int?
+  createdAt  DateTime @default(now())
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([tool])
+  @@index([createdAt])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String
+  actorId   String?
+  targetId  String?
+  ip        String?
+  userAgent String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+  actor     User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([action])
+  @@index([createdAt])
+}
+
+model ConsentRecord {
+  id             String   @id @default(cuid())
+  userId         String?
+  ip             String?
+  userAgent      String?
+  country        String?
+  browser        String?
+  necessary      Boolean  @default(true)
+  analytics      Boolean  @default(false)
+  marketing      Boolean  @default(false)
+  consentVersion String
+  createdAt      DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model Plan {
+  id          String   @id @default(cuid())
+  tier        PlanTier @unique
+  name        String
+  priceMonthly Int     @default(0)
+  features    Json?
+  active      Boolean  @default(true)
+}
+
+model Setting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  body      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  toolSlug  String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, toolSlug])
+}
