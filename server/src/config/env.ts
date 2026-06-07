@@ -20,7 +20,11 @@ export const env = {
   port: int(process.env.PORT, 4000),
 
   // Public origin of THIS API (used to build absolute download URLs).
-  apiBaseUrl: process.env.API_BASE_URL ?? `http://localhost:${int(process.env.PORT, 4000)}`,
+  // Falls back to Render's auto-injected RENDER_EXTERNAL_URL so it "just works".
+  apiBaseUrl:
+    process.env.API_BASE_URL ??
+    process.env.RENDER_EXTERNAL_URL ??
+    `http://localhost:${int(process.env.PORT, 4000)}`,
 
   // Comma-separated allowlist of front-end origins for CORS.
   corsOrigins: (process.env.CORS_ORIGINS ?? "http://localhost:3000")

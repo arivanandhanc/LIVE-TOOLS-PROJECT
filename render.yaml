@@ -13,10 +13,11 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: API_BASE_URL
-        value: https://api.arivanandhan.in
+      # API_BASE_URL is auto-derived from RENDER_EXTERNAL_URL; override only if
+      # you put the API behind the api.arivanandhan.in custom domain.
+      # Set CORS_ORIGINS to your deployed frontend origin after Vercel is live.
       - key: CORS_ORIGINS
-        value: https://tools.arivanandhan.in
+        sync: false
       - key: JWT_SECRET
         generateValue: true
       - key: DATABASE_URL
