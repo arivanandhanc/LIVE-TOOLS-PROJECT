@@ -13,6 +13,8 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:deploy": "prisma migrate deploy",
+    "db:push": "prisma db push --skip-generate",
+    "db:push:safe": "node -e \"process.env.DATABASE_URL ? require('child_process').execSync('npx prisma db push --skip-generate',{stdio:'inherit'}) : console.log('No DATABASE_URL set — skipping schema push (guest mode).')\"",
     "test": "vitest run"
   },
   "dependencies": {
