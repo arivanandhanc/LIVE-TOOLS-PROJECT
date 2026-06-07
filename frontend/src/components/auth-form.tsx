@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Loader2, AlertCircle } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
-import { useRecaptcha } from "@/lib/recaptcha";
+import { useRecaptcha, preloadRecaptcha } from "@/lib/recaptcha";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Field } from "@/components/tools/panel";
@@ -26,8 +26,14 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   const [password, setPassword] = React.useState("");
   const [busy, setBusy] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [socialMsg, setSocialMsg] = React.useState<string | null>(null);
 
   const isSignup = mode === "signup";
+
+  // Load reCAPTCHA so the v3 badge is visible on this page.
+  React.useEffect(() => {
+    preloadRecaptcha();
+  }, []);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -65,11 +71,17 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
 
       <div className="grid grid-cols-3 gap-2">
         {OAUTH.map((p) => (
-          <Button key={p.id} variant="outline" asChild>
-            <a href={`/api/auth/oauth/${p.id}`}>{p.label}</a>
+          <Button
+            key={p.id}
+            variant="outline"
+            type="button"
+            onClick={() => setSocialMsg(`${p.label} sign-in is coming soon — please use email for now.`)}
+          >
+            {p.label}
           </Button>
         ))}
       </div>
+      {socialMsg && <p className="mt-2 text-center text-xs text-muted-foreground">{socialMsg}</p>}
 
       <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
         <span className="h-px flex-1 bg-border" /> or with email <span className="h-px flex-1 bg-border" />

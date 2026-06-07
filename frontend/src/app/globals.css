@@ -25,6 +25,8 @@
   --primary: oklch(0.82 0.16 84);
   --primary-foreground: oklch(0.27 0.05 70);
   --primary-hover: oklch(0.77 0.16 80);
+  /* Gradient end for brand text — deep orange, readable on light backgrounds */
+  --gradient-brand-end: oklch(0.55 0.19 40);
 
   /* Neutral secondary */
   --secondary: oklch(0.97 0.005 90);
@@ -67,6 +69,8 @@
   --primary: oklch(0.82 0.16 84);
   --primary-foreground: oklch(0.24 0.05 70);
   --primary-hover: oklch(0.86 0.15 86);
+  /* Brighter end on dark backgrounds so gradient text stays visible */
+  --gradient-brand-end: oklch(0.85 0.15 70);
 
   --secondary: oklch(0.27 0.012 75);
   --secondary-foreground: oklch(0.92 0.005 90);
@@ -197,10 +201,14 @@
     .container-page { padding-inline: 2rem; }
   }
   .text-gradient-brand {
-    background: linear-gradient(120deg, var(--color-primary), oklch(0% 0 0));
+    background-image: linear-gradient(120deg, var(--color-primary), var(--gradient-brand-end));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    /* Prevent descenders (g, p, y) being clipped by background-clip: text */
+    padding-bottom: 0.12em;
+    /* Fallback color for browsers without background-clip: text */
+    -webkit-text-fill-color: transparent;
   }
   .bg-grid {
     background-image:

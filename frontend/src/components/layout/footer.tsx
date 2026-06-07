@@ -13,6 +13,7 @@ const footerLinks = {
     { title: "About", href: "/about" },
     { title: "Blog", href: "/blog" },
     { title: "Contact", href: "/contact" },
+    { title: "Support", href: "https://support.arivanandhan.in" },
   ],
   Legal: [
     { title: "Privacy Policy", href: "/legal/privacy" },

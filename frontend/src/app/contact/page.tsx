@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Mail, Shield, MessageSquare } from "lucide-react";
+import { Mail, Shield, LifeBuoy } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 };
 
 const channels = [
-  { icon: Mail, title: "Email", body: "support@arivanandhan.in", href: "mailto:support@arivanandhan.in" },
-  { icon: Shield, title: "Privacy & data requests", body: "privacy@arivanandhan.in", href: "mailto:privacy@arivanandhan.in" },
-  { icon: MessageSquare, title: "Feedback", body: "We read every message and reply fast.", href: null },
+  { icon: Mail, title: "Support email", body: "support@arivanandhan.in", href: "mailto:support@arivanandhan.in" },
+  { icon: LifeBuoy, title: "Support center", body: "support.arivanandhan.in", href: "https://support.arivanandhan.in" },
+  { icon: Shield, title: "Privacy & data requests", body: "support@arivanandhan.in", href: "mailto:support@arivanandhan.in?subject=Privacy%20request" },
 ];
 
 export default function ContactPage() {

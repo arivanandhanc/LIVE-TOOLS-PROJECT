@@ -11,7 +11,10 @@ import * as React from "react";
  * token alone proves nothing without server verification.
  */
 
-const SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+// Public site key (safe to ship). Falls back to the production key so the
+// widget works even if the NEXT_PUBLIC env var is missing/blank at build time.
+const SITE_KEY =
+  process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "6LdsWBItAAAAAIAZEQDVdtUuAcg368U3hPOI9YFL";
 
 declare global {
   interface Window {
@@ -40,6 +43,14 @@ function loadScript(): Promise<void> {
     document.head.appendChild(script);
   });
   return scriptPromise;
+}
+
+/**
+ * Eagerly load the reCAPTCHA script so the v3 badge becomes visible on the
+ * page (e.g. on auth/contact forms). Safe to call on mount.
+ */
+export function preloadRecaptcha() {
+  loadScript().catch(() => undefined);
 }
 
 export function useRecaptcha() {
