@@ -197,7 +197,7 @@
     .container-page { padding-inline: 2rem; }
   }
   .text-gradient-brand {
-    background: linear-gradient(120deg, var(--color-primary), oklch(0.7 0.18 50));
+    background: linear-gradient(120deg, var(--color-primary), oklch(0% 0 0));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;

@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "PowerShell(npm *)"
+      "PowerShell(npm *)",
+      "PowerShell(Write-Output \"=== DNS for tools.arivanandhan.in ===\"; try { Resolve-DnsName tools.arivanandhan.in -Type CNAME -ErrorAction Stop | Select-Object Name, NameHost, Type } catch { Write-Output \"No CNAME / not resolving: $\\($_.Exception.Message\\)\" }; Write-Output \"=== A record ===\"; try { Resolve-DnsName tools.arivanandhan.in -Type A -ErrorAction Stop | Select-Object Name, IPAddress, Type } catch { Write-Output \"No A record\" }; Write-Output \"=== HTTP check ===\"; try { $r = Invoke-WebRequest \"https://tools.arivanandhan.in\" -Method Head -TimeoutSec 15 -UseBasicParsing; Write-Output \"Status: $\\($r.StatusCode\\)\" } catch { Write-Output \"Not serving yet: $\\($_.Exception.Message\\)\" })",
+      "PowerShell(Push-Location *)"
     ]
   }
 }

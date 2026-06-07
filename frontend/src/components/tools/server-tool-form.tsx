@@ -57,9 +57,20 @@ export function ServerToolForm({ slug }: { slug: string }) {
         body: fd,
         credentials: "include",
       });
-      const data = await res.json();
+      // Guard against non-JSON (e.g. an HTML error page from a misroute/CORS).
+      const text = await res.text();
+      let data: { error?: string; file?: ResultState };
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error(
+          res.ok
+            ? "Unexpected response from the server."
+            : `The processing server returned an error (HTTP ${res.status}). It may be blocking this site (CORS) or still starting up.`
+        );
+      }
       if (!res.ok) throw new Error(data.error ?? "Processing failed.");
-      setResult(data.file);
+      setResult(data.file!);
     } catch (err) {
       setError(
         err instanceof Error
