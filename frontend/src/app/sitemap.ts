@@ -5,7 +5,9 @@ import { siteConfig } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = siteConfig.url;
-  const now = new Date();
+  // Date-only lastmod (YYYY-MM-DD) — the most universally-accepted W3C-datetime
+  // form; avoids fractional seconds that a few strict sitemap parsers reject.
+  const now = new Date().toISOString().slice(0, 10);
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: base, lastModified: now, changeFrequency: "daily", priority: 1 },
@@ -33,7 +35,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const blogPages: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${base}/blog/${post.slug}`,
-    lastModified: new Date(post.updated),
+    lastModified: new Date(post.updated).toISOString().slice(0, 10),
     changeFrequency: "monthly",
     priority: 0.6,
   }));
