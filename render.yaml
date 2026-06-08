@@ -7,7 +7,7 @@ services:
     region: singapore
     plan: free
     rootDir: server
-    buildCommand: npm install && npm run build && npx prisma generate
+    buildCommand: npm install && npx prisma generate && npm run build
     # `db push` creates/syncs tables directly from schema.prisma (no migration
     # files needed). Safe & idempotent for first deploy. It no-ops if DATABASE_URL
     # is unset (guest mode).
