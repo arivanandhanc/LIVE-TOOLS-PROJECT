@@ -53,10 +53,17 @@ export const env = {
   jwtAccessTtl: process.env.JWT_ACCESS_TTL ?? "15m",
   jwtRefreshTtlDays: int(process.env.JWT_REFRESH_TTL_DAYS, 30),
 
-  // AI tools (Anthropic). Tools activate only when an API key is configured.
-  anthropic: {
-    apiKey: process.env.ANTHROPIC_API_KEY || null,
-    model: process.env.AI_MODEL || "claude-opus-4-8",
+  // AI tools. Provider priority: Groq → Hugging Face → Anthropic.
+  // Tools activate when ANY provider key is configured.
+  ai: {
+    groqKey: process.env.GROQ_API_KEY || null,
+    groqModel: process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
+    // A vision-capable Groq model is needed for image-analysis / OCR.
+    groqVisionModel: process.env.GROQ_VISION_MODEL || "meta-llama/llama-4-scout-17b-16e-instruct",
+    hfKey: process.env.HUGGINGFACE_API_KEY || null,
+    hfModel: process.env.HUGGINGFACE_MODEL || "mistralai/Mistral-7B-Instruct-v0.3",
+    anthropicKey: process.env.ANTHROPIC_API_KEY || null,
+    anthropicModel: process.env.AI_MODEL || "claude-opus-4-8",
   },
 
   // Google OAuth (sign in with Google). Activates when client id/secret are set.
@@ -71,12 +78,16 @@ export const env = {
 
   // SMTP for transactional email (OTP/verification). Falls back to logging the
   // code to the server log when not configured (dev mode).
+  // Supports either explicit SMTP_* vars or simple Gmail (GMAIL_USER + app password).
   smtp: {
-    host: process.env.SMTP_HOST || null,
-    port: int(process.env.SMTP_PORT, 587),
-    user: process.env.SMTP_USER || null,
-    pass: process.env.SMTP_PASS || null,
-    from: process.env.SMTP_FROM || "ConvertFlow <no-reply@arivanandhan.in>",
+    host: process.env.SMTP_HOST || (process.env.GMAIL_APP_PASSWORD ? "smtp.gmail.com" : null),
+    port: int(process.env.SMTP_PORT, process.env.GMAIL_APP_PASSWORD ? 465 : 587),
+    user: process.env.SMTP_USER || process.env.GMAIL_USER || null,
+    // Gmail shows app passwords with spaces; strip them so auth works.
+    pass: process.env.SMTP_PASS || (process.env.GMAIL_APP_PASSWORD ?? "").replace(/\s+/g, "") || null,
+    from:
+      process.env.SMTP_FROM ||
+      (process.env.GMAIL_USER ? `ConvertFlow <${process.env.GMAIL_USER}>` : "ConvertFlow <no-reply@arivanandhan.in>"),
   },
 
   // Google reCAPTCHA (secret stays server-side only)

@@ -45,7 +45,21 @@ export function AiTool({ slug }: { slug: string }) {
     setError(null);
     setResult("");
     try {
-      if (isFile) {
+      if (slug === "pdf-summary") {
+        if (!file) throw new Error("Please choose a PDF first.");
+        const { pdfjsLib } = await import("@/lib/pdfjs");
+        const data = new Uint8Array(await file.arrayBuffer());
+        const pdf = await pdfjsLib.getDocument({ data }).promise;
+        let text = "";
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          text += (content.items as { str?: string }[]).map((it) => it.str ?? "").join(" ") + "\n";
+        }
+        if (!text.trim()) throw new Error("This PDF has no selectable text (it may be scanned). Try the OCR tool.");
+        const { result } = await runAiTextTool("pdf-summary", { text: text.slice(0, 100000) });
+        setResult(result);
+      } else if (isFile) {
         if (!file) throw new Error("Please choose a file first.");
         const fields = cfg.kind === "image" && question.trim() ? { question: question.trim() } : undefined;
         const { result } = await runAiFileTool(slug, file, fields);

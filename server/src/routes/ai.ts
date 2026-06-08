@@ -65,9 +65,8 @@ aiRouter.post(
           break;
         }
         case "pdf-summary": {
-          if (!file) throw new HttpError(400, "Upload a PDF to summarize.");
-          if (file.mimetype !== "application/pdf") throw new HttpError(415, "Please upload a PDF file.");
-          result = await ai.pdfSummary(file.buffer.toString("base64"));
+          if (!body.text) throw new HttpError(400, "Provide the PDF text to summarize.");
+          result = await ai.pdfSummary(body.text);
           break;
         }
         default:
