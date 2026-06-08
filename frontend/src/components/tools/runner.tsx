@@ -64,6 +64,8 @@ const registry: Record<string, ComponentType> = {
   "excel-to-pdf": dynamic(() => import("./impl/excel-to-pdf"), { loading: Loading }),
   "pdf-to-jpg": dynamic(() => import("./impl/pdf-to-jpg"), { loading: Loading, ssr: false }),
   "pdf-to-word": dynamic(() => import("./impl/pdf-to-word"), { loading: Loading, ssr: false }),
+  "organize-pages": dynamic(() => import("./impl/organize-pages"), { loading: Loading, ssr: false }),
+  "ocr-pdf": dynamic(() => import("./impl/ocr-pdf"), { loading: Loading, ssr: false }),
 
   // Image
   "jpg-to-png": dynamic(() => import("./impl/jpg-to-png"), { loading: Loading }),
