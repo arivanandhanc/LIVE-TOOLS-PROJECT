@@ -99,12 +99,12 @@ export const tools: Tool[] = [
   t({ slug: "tsv-to-csv", name: "TSV to CSV", description: "Convert tab-separated values to CSV.", category: "csv", icon: ArrowLeftRight, keywords: ["tab", "convert"], mode: "client", status: "live", savable: true }),
   t({ slug: "csv-cleaner", name: "CSV Cleaner", description: "Trim whitespace, drop empty rows and normalize CSV.", category: "csv", icon: Eraser, keywords: ["clean", "tidy"], mode: "client", status: "live", savable: true }),
   t({ slug: "duplicate-remover", name: "Duplicate Remover", description: "Remove duplicate rows from CSV data.", category: "csv", icon: CopyMinus, keywords: ["dedupe", "unique"], mode: "client", status: "live", savable: true }),
-  t({ slug: "csv-to-excel", name: "CSV to Excel", description: "Convert CSV files to XLSX spreadsheets.", category: "csv", icon: FileSpreadsheet, keywords: ["xlsx", "convert"], mode: "server", status: "soon", savable: true }),
-  t({ slug: "excel-to-csv", name: "Excel to CSV", description: "Convert XLSX spreadsheets to CSV.", category: "csv", icon: Table2, keywords: ["xlsx", "convert"], mode: "server", status: "soon", savable: true }),
+  t({ slug: "csv-to-excel", name: "CSV to Excel", description: "Convert CSV files to XLSX spreadsheets.", category: "csv", icon: FileSpreadsheet, keywords: ["xlsx", "convert"], mode: "client", status: "live", savable: true }),
+  t({ slug: "excel-to-csv", name: "Excel to CSV", description: "Convert XLSX spreadsheets to CSV.", category: "csv", icon: Table2, keywords: ["xlsx", "convert"], mode: "client", status: "live", savable: true }),
   t({ slug: "xml-to-csv", name: "XML to CSV", description: "Flatten XML records into CSV rows.", category: "csv", icon: Code2, keywords: ["convert", "xml"], mode: "client", status: "live", savable: true }),
   t({ slug: "column-splitter", name: "Column Splitter", description: "Split one CSV column into multiple by a delimiter.", category: "csv", icon: SplitSquareHorizontal, keywords: ["split", "column"], mode: "client", status: "live", savable: true }),
   t({ slug: "column-merger", name: "Column Merger", description: "Merge multiple CSV columns into one.", category: "csv", icon: Merge, keywords: ["merge", "column"], mode: "client", status: "live", savable: true }),
-  t({ slug: "data-formatter", name: "Data Formatter", description: "Reformat dates, numbers and casing across columns.", category: "csv", icon: Columns3, keywords: ["format", "normalize"], mode: "client", status: "soon", savable: true }),
+  t({ slug: "data-formatter", name: "Data Formatter", description: "Trim, tidy and normalize CSV data and headers.", category: "csv", icon: Columns3, keywords: ["format", "normalize"], mode: "client", status: "live", savable: true }),
 
   // ─────────────────────────── Image ───────────────────────────
   t({ slug: "jpg-to-png", name: "JPG to PNG", description: "Convert JPG images to lossless PNG.", category: "image", icon: ImageIcon, keywords: ["convert", "png"], mode: "client", status: "live", featured: true, savable: true }),

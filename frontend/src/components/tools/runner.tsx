@@ -29,6 +29,10 @@ const registry: Record<string, ComponentType> = {
 
   // Developer
   "json-formatter": dynamic(() => import("./impl/json-formatter"), { loading: Loading }),
+  "cron-parser": dynamic(() => import("./impl/cron-parser"), { loading: Loading }),
+  "html-to-markdown": dynamic(() => import("./impl/html-to-markdown"), { loading: Loading }),
+  "htaccess-generator": dynamic(() => import("./impl/htaccess-generator"), { loading: Loading }),
+  "qr-scanner": dynamic(() => import("./impl/qr-scanner"), { loading: Loading }),
   "base64-encoder": dynamic(() => import("./impl/base64-encoder"), { loading: Loading }),
   "base64-decoder": dynamic(() => import("./impl/base64-decoder"), { loading: Loading }),
   "jwt-decoder": dynamic(() => import("./impl/jwt-decoder"), { loading: Loading }),
@@ -48,6 +52,9 @@ const registry: Record<string, ComponentType> = {
   "tsv-to-csv": dynamic(() => import("./impl/tsv-to-csv"), { loading: Loading }),
   "csv-cleaner": dynamic(() => import("./impl/csv-cleaner"), { loading: Loading }),
   "duplicate-remover": dynamic(() => import("./impl/duplicate-remover"), { loading: Loading }),
+  "data-formatter": dynamic(() => import("./impl/data-formatter"), { loading: Loading }),
+  "csv-to-excel": dynamic(() => import("./impl/csv-to-excel"), { loading: Loading }),
+  "excel-to-csv": dynamic(() => import("./impl/excel-to-csv"), { loading: Loading }),
 
   // Image
   "jpg-to-png": dynamic(() => import("./impl/jpg-to-png"), { loading: Loading }),
