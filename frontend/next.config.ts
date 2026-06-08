@@ -20,7 +20,7 @@ const csp = [
   `style-src 'self' 'unsafe-inline'`,
   `img-src 'self' blob: data: ${recaptcha}`,
   `font-src 'self' data:`,
-  `connect-src 'self' ${apiOrigin} ${recaptcha} https://www.google-analytics.com`,
+  `connect-src 'self' blob: ${apiOrigin} ${recaptcha} https://www.google-analytics.com`,
   `frame-src https://www.google.com`,
   `worker-src 'self' blob:`,
   `media-src 'self' blob:`,
