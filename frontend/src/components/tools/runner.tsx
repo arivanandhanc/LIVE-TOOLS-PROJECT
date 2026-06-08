@@ -57,6 +57,15 @@ const registry: Record<string, ComponentType> = {
   "excel-to-csv": dynamic(() => import("./impl/excel-to-csv"), { loading: Loading }),
 
   // Image
+  // PDF (client-side via pdf-lib / pdf.js)
+  "add-header-footer": dynamic(() => import("./impl/add-header-footer"), { loading: Loading }),
+  "repair-pdf": dynamic(() => import("./impl/repair-pdf"), { loading: Loading }),
+  "sign-pdf": dynamic(() => import("./impl/sign-pdf"), { loading: Loading }),
+  "excel-to-pdf": dynamic(() => import("./impl/excel-to-pdf"), { loading: Loading }),
+  "pdf-to-jpg": dynamic(() => import("./impl/pdf-to-jpg"), { loading: Loading, ssr: false }),
+  "pdf-to-word": dynamic(() => import("./impl/pdf-to-word"), { loading: Loading, ssr: false }),
+
+  // Image
   "jpg-to-png": dynamic(() => import("./impl/jpg-to-png"), { loading: Loading }),
   "png-to-jpg": dynamic(() => import("./impl/png-to-jpg"), { loading: Loading }),
   "webp-converter": dynamic(() => import("./impl/webp-converter"), { loading: Loading }),
