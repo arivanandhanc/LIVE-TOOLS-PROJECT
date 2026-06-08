@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight, ShieldCheck, Zap, Lock, Trash2, Cpu, Globe2,
@@ -18,6 +19,10 @@ const trust = [
   { icon: Cpu, title: "No sign-up needed", body: "Use every tool as a guest. Sign in only to save your history." },
   { icon: Globe2, title: "Works everywhere", body: "Responsive, accessible and installable as a PWA on any device." },
 ];
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default function HomePage() {
   const featured = getFeaturedTools();
