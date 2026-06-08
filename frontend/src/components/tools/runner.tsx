@@ -74,6 +74,50 @@ const registry: Record<string, ComponentType> = {
   "resize-image": dynamic(() => import("./impl/resize-image"), { loading: Loading }),
   "compress-image": dynamic(() => import("./impl/compress-image"), { loading: Loading }),
   "rotate-image": dynamic(() => import("./impl/rotate-image"), { loading: Loading }),
+
+  // PDF moved fully in-browser (no Render round-trip, no cold start)
+  "merge-pdf": dynamic(() => import("./impl/merge-pdf"), { loading: Loading }),
+  "split-pdf": dynamic(() => import("./impl/split-pdf"), { loading: Loading }),
+  "compress-pdf": dynamic(() => import("./impl/compress-pdf"), { loading: Loading }),
+  "jpg-to-pdf": dynamic(() => import("./impl/jpg-to-pdf"), { loading: Loading }),
+  "rotate-pdf": dynamic(() => import("./impl/rotate-pdf"), { loading: Loading }),
+  "watermark-pdf": dynamic(() => import("./impl/watermark-pdf"), { loading: Loading }),
+  "extract-pages": dynamic(() => import("./impl/extract-pages"), { loading: Loading }),
+  "remove-pages": dynamic(() => import("./impl/remove-pages"), { loading: Loading }),
+  "add-page-numbers": dynamic(() => import("./impl/add-page-numbers"), { loading: Loading }),
+
+  // CSV / data
+  "xml-to-csv": dynamic(() => import("./impl/xml-to-csv"), { loading: Loading }),
+  "column-splitter": dynamic(() => import("./impl/column-splitter"), { loading: Loading }),
+  "column-merger": dynamic(() => import("./impl/column-merger"), { loading: Loading }),
+
+  // Image
+  "crop-image": dynamic(() => import("./impl/crop-image"), { loading: Loading }),
+  "image-watermark": dynamic(() => import("./impl/image-watermark"), { loading: Loading }),
+  "svg-converter": dynamic(() => import("./impl/svg-converter"), { loading: Loading }),
+
+  // Text
+  "lorem-ipsum": dynamic(() => import("./impl/lorem-ipsum"), { loading: Loading }),
+  "text-diff": dynamic(() => import("./impl/text-diff"), { loading: Loading }),
+
+  // Developer
+  "xml-formatter": dynamic(() => import("./impl/xml-formatter"), { loading: Loading }),
+  "yaml-converter": dynamic(() => import("./impl/yaml-converter"), { loading: Loading }),
+  "html-formatter": dynamic(() => import("./impl/html-formatter"), { loading: Loading }),
+  "css-minifier": dynamic(() => import("./impl/css-minifier"), { loading: Loading }),
+  "js-minifier": dynamic(() => import("./impl/js-minifier"), { loading: Loading }),
+  "sql-formatter": dynamic(() => import("./impl/sql-formatter"), { loading: Loading }),
+  "regex-tester": dynamic(() => import("./impl/regex-tester"), { loading: Loading }),
+  "color-converter": dynamic(() => import("./impl/color-converter"), { loading: Loading }),
+  "gradient-generator": dynamic(() => import("./impl/gradient-generator"), { loading: Loading }),
+  "timestamp-converter": dynamic(() => import("./impl/timestamp-converter"), { loading: Loading }),
+  "number-base-converter": dynamic(() => import("./impl/number-base-converter"), { loading: Loading }),
+  "json-to-xml": dynamic(() => import("./impl/json-to-xml"), { loading: Loading }),
+  "xml-to-json": dynamic(() => import("./impl/xml-to-json"), { loading: Loading }),
+  "markdown-to-html": dynamic(() => import("./impl/markdown-to-html"), { loading: Loading }),
+  "user-agent-parser": dynamic(() => import("./impl/user-agent-parser"), { loading: Loading }),
+  "robots-generator": dynamic(() => import("./impl/robots-generator"), { loading: Loading }),
+  "meta-tag-generator": dynamic(() => import("./impl/meta-tag-generator"), { loading: Loading }),
 };
 
 export function ToolRunner({ slug }: { slug: string }) {

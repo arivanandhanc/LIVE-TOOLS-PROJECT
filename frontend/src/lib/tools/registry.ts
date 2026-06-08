@@ -67,9 +67,9 @@ const t = (tool: Tool): Tool => tool;
 
 export const tools: Tool[] = [
   // ─────────────────────────── PDF (server-side) ───────────────────────────
-  t({ slug: "merge-pdf", name: "Merge PDF", description: "Combine multiple PDFs into one document in any order.", category: "pdf", icon: Merge, keywords: ["combine", "join", "pdf"], mode: "server", status: "live", featured: true, savable: true }),
-  t({ slug: "split-pdf", name: "Split PDF", description: "Separate a PDF into multiple files or extract page ranges.", category: "pdf", icon: SplitSquareHorizontal, keywords: ["divide", "separate"], mode: "server", status: "live", featured: true, savable: true }),
-  t({ slug: "compress-pdf", name: "Compress PDF", description: "Reduce PDF file size while preserving quality.", category: "pdf", icon: Minimize2, keywords: ["reduce", "size", "optimize"], mode: "server", status: "live", featured: true, savable: true }),
+  t({ slug: "merge-pdf", name: "Merge PDF", description: "Combine multiple PDFs into one document in any order.", category: "pdf", icon: Merge, keywords: ["combine", "join", "pdf"], mode: "client", status: "live", featured: true, savable: true }),
+  t({ slug: "split-pdf", name: "Split PDF", description: "Separate a PDF into multiple files or extract page ranges.", category: "pdf", icon: SplitSquareHorizontal, keywords: ["divide", "separate"], mode: "client", status: "live", featured: true, savable: true }),
+  t({ slug: "compress-pdf", name: "Compress PDF", description: "Reduce PDF file size while preserving quality.", category: "pdf", icon: Minimize2, keywords: ["reduce", "size", "optimize"], mode: "client", status: "live", featured: true, savable: true }),
   t({ slug: "pdf-to-word", name: "PDF to Word", description: "Extract a PDF's text into an editable DOCX file.", category: "pdf", icon: FileType2, keywords: ["docx", "convert"], mode: "client", status: "live", savable: true }),
   t({ slug: "word-to-pdf", name: "Word to PDF", description: "Convert DOC and DOCX files to PDF.", category: "pdf", icon: FileOutput, keywords: ["docx", "convert"], mode: "server", status: "soon", savable: true }),
   t({ slug: "pdf-to-excel", name: "PDF to Excel", description: "Extract tables from PDF into XLSX spreadsheets.", category: "pdf", icon: FileSpreadsheet, keywords: ["xlsx", "table"], mode: "server", status: "soon", savable: true }),
@@ -77,19 +77,19 @@ export const tools: Tool[] = [
   t({ slug: "pdf-to-powerpoint", name: "PDF to PowerPoint", description: "Turn PDF slides into editable PPTX presentations.", category: "pdf", icon: Presentation, keywords: ["pptx", "slides"], mode: "server", status: "soon", savable: true }),
   t({ slug: "powerpoint-to-pdf", name: "PowerPoint to PDF", description: "Convert PPT and PPTX presentations to PDF.", category: "pdf", icon: FileOutput, keywords: ["pptx", "slides"], mode: "server", status: "soon", savable: true }),
   t({ slug: "pdf-to-jpg", name: "PDF to JPG", description: "Convert each PDF page into a JPG image.", category: "pdf", icon: FileImage, keywords: ["image", "convert"], mode: "client", status: "live", savable: true }),
-  t({ slug: "jpg-to-pdf", name: "JPG to PDF", description: "Combine JPG images into a single PDF.", category: "pdf", icon: FileInput, keywords: ["image", "convert"], mode: "server", status: "live", featured: true, savable: true }),
-  t({ slug: "rotate-pdf", name: "Rotate PDF", description: "Rotate all or selected pages of a PDF.", category: "pdf", icon: RotateCw, keywords: ["turn", "orientation"], mode: "server", status: "live", savable: true }),
-  t({ slug: "watermark-pdf", name: "Watermark PDF", description: "Add text or image watermarks to a PDF.", category: "pdf", icon: Stamp, keywords: ["brand", "overlay"], mode: "server", status: "live", savable: true }),
+  t({ slug: "jpg-to-pdf", name: "JPG to PDF", description: "Combine JPG images into a single PDF.", category: "pdf", icon: FileInput, keywords: ["image", "convert"], mode: "client", status: "live", featured: true, savable: true }),
+  t({ slug: "rotate-pdf", name: "Rotate PDF", description: "Rotate all or selected pages of a PDF.", category: "pdf", icon: RotateCw, keywords: ["turn", "orientation"], mode: "client", status: "live", savable: true }),
+  t({ slug: "watermark-pdf", name: "Watermark PDF", description: "Add text or image watermarks to a PDF.", category: "pdf", icon: Stamp, keywords: ["brand", "overlay"], mode: "client", status: "live", savable: true }),
   t({ slug: "unlock-pdf", name: "Unlock PDF", description: "Remove password protection from a PDF you own.", category: "pdf", icon: LockOpen, keywords: ["password", "decrypt"], mode: "server", status: "soon", savable: true }),
   t({ slug: "protect-pdf", name: "Protect PDF", description: "Encrypt a PDF with a password.", category: "pdf", icon: Lock, keywords: ["password", "encrypt"], mode: "server", status: "soon", savable: true }),
   t({ slug: "repair-pdf", name: "Repair PDF", description: "Attempt to recover a damaged or corrupt PDF.", category: "pdf", icon: Wrench, keywords: ["fix", "recover"], mode: "client", status: "live", savable: true }),
   t({ slug: "ocr-pdf", name: "OCR PDF", description: "Extract text from scanned PDFs with AI text recognition.", category: "pdf", icon: ScanText, keywords: ["scan", "recognize"], mode: "client", status: "live", savable: true }),
   t({ slug: "sign-pdf", name: "Sign PDF", description: "Add your signature image to a PDF document.", category: "pdf", icon: PenTool, keywords: ["signature", "esign"], mode: "client", status: "live", savable: true }),
   t({ slug: "edit-pdf", name: "Edit PDF", description: "Add text, shapes and annotations to a PDF.", category: "pdf", icon: Pencil, keywords: ["annotate", "modify"], mode: "server", status: "soon", savable: true }),
-  t({ slug: "extract-pages", name: "Extract Pages", description: "Pull selected pages out of a PDF into a new file.", category: "pdf", icon: FileStack, keywords: ["pages", "select"], mode: "server", status: "live", savable: true }),
+  t({ slug: "extract-pages", name: "Extract Pages", description: "Pull selected pages out of a PDF into a new file.", category: "pdf", icon: FileStack, keywords: ["pages", "select"], mode: "client", status: "live", savable: true }),
   t({ slug: "organize-pages", name: "Organize Pages", description: "Reorder, rotate and delete pages visually.", category: "pdf", icon: Files, keywords: ["reorder", "arrange"], mode: "client", status: "live", savable: true }),
-  t({ slug: "remove-pages", name: "Remove Pages", description: "Delete unwanted pages from a PDF.", category: "pdf", icon: Scissors, keywords: ["delete", "pages"], mode: "server", status: "live", savable: true }),
-  t({ slug: "add-page-numbers", name: "Add Page Numbers", description: "Insert page numbers with custom position and style.", category: "pdf", icon: ListOrdered, keywords: ["pagination", "numbers"], mode: "server", status: "live", savable: true }),
+  t({ slug: "remove-pages", name: "Remove Pages", description: "Delete unwanted pages from a PDF.", category: "pdf", icon: Scissors, keywords: ["delete", "pages"], mode: "client", status: "live", savable: true }),
+  t({ slug: "add-page-numbers", name: "Add Page Numbers", description: "Insert page numbers with custom position and style.", category: "pdf", icon: ListOrdered, keywords: ["pagination", "numbers"], mode: "client", status: "live", savable: true }),
   t({ slug: "add-header-footer", name: "Add Header & Footer", description: "Add headers, footers and page numbers to every PDF page.", category: "pdf", icon: AlignLeft, keywords: ["header", "footer"], mode: "client", status: "live", savable: true }),
 
   // ─────────────────────────── CSV & Spreadsheet ───────────────────────────
