@@ -32,10 +32,13 @@ export function identity(req: Request, res: Response, next: NextFunction) {
     let guestId = req.cookies?.cf_guest as string | undefined;
     if (!guestId) {
       guestId = randomUUID();
+      const isProd = process.env.NODE_ENV === "production";
       res.cookie("cf_guest", guestId, {
         httpOnly: true,
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
+        // Cross-site (web app ⇄ API on different domains) needs SameSite=None
+        // so the guest id persists across requests in production.
+        sameSite: isProd ? "none" : "lax",
+        secure: isProd,
         maxAge: 1000 * 60 * 60 * 24 * 30,
       });
     }

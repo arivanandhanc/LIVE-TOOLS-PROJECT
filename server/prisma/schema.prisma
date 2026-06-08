@@ -201,6 +201,20 @@ model Setting {
   updatedAt DateTime @updatedAt
 }
 
+// One-time codes for email verification / sign-in OTP.
+model EmailOtp {
+  id        String   @id @default(cuid())
+  email     String
+  codeHash  String
+  purpose   String   @default("verify")
+  attempts  Int      @default(0)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([expiresAt])
+}
+
 model Notification {
   id        String   @id @default(cuid())
   userId    String

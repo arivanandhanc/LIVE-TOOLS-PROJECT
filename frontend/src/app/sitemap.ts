@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { tools, categories } from "@/lib/tools/registry";
+import { posts } from "@/lib/blog";
 import { siteConfig } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -10,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: base, lastModified: now, changeFrequency: "daily", priority: 1 },
     { url: `${base}/tools`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
     { url: `${base}/pricing`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
+    { url: `${base}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.6 },
     { url: `${base}/legal/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     { url: `${base}/legal/cookies`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     { url: `${base}/legal/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
@@ -29,5 +31,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: tool.featured ? 0.9 : 0.7,
   }));
 
-  return [...staticPages, ...categoryPages, ...toolPages];
+  const blogPages: MetadataRoute.Sitemap = posts.map((post) => ({
+    url: `${base}/blog/${post.slug}`,
+    lastModified: new Date(post.updated),
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
+
+  return [...staticPages, ...categoryPages, ...toolPages, ...blogPages];
 }

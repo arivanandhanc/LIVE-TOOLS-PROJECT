@@ -1,8 +1,10 @@
 "use client";
 
+import * as React from "react";
 import dynamic from "next/dynamic";
 import { Loader2 } from "lucide-react";
 import type { ComponentType } from "react";
+import { recordToolUsage } from "@/lib/api";
 
 const Loading = () => (
   <div className="flex min-h-64 items-center justify-center rounded-xl border border-border bg-card text-muted-foreground">
@@ -58,6 +60,16 @@ const registry: Record<string, ComponentType> = {
 
 export function ToolRunner({ slug }: { slug: string }) {
   const Component = registry[slug];
+
+  // Record that this tool was used so it appears in the dashboard history.
+  // Guarded so React StrictMode's double-mount in dev only fires once.
+  const recorded = React.useRef(false);
+  React.useEffect(() => {
+    if (!Component || recorded.current) return;
+    recorded.current = true;
+    recordToolUsage(slug);
+  }, [slug, Component]);
+
   if (!Component) {
     return (
       <div className="rounded-xl border border-dashed border-border bg-card p-10 text-center">

@@ -53,6 +53,32 @@ export const env = {
   jwtAccessTtl: process.env.JWT_ACCESS_TTL ?? "15m",
   jwtRefreshTtlDays: int(process.env.JWT_REFRESH_TTL_DAYS, 30),
 
+  // AI tools (Anthropic). Tools activate only when an API key is configured.
+  anthropic: {
+    apiKey: process.env.ANTHROPIC_API_KEY || null,
+    model: process.env.AI_MODEL || "claude-opus-4-8",
+  },
+
+  // Google OAuth (sign in with Google). Activates when client id/secret are set.
+  oauth: {
+    google: {
+      clientId: process.env.OAUTH_GOOGLE_CLIENT_ID || null,
+      clientSecret: process.env.OAUTH_GOOGLE_CLIENT_SECRET || null,
+    },
+    // Where to send the user back in the web app after OAuth completes.
+    webAppUrl: process.env.WEB_APP_URL || (process.env.CORS_ORIGINS ?? "http://localhost:3000").split(",")[0].trim(),
+  },
+
+  // SMTP for transactional email (OTP/verification). Falls back to logging the
+  // code to the server log when not configured (dev mode).
+  smtp: {
+    host: process.env.SMTP_HOST || null,
+    port: int(process.env.SMTP_PORT, 587),
+    user: process.env.SMTP_USER || null,
+    pass: process.env.SMTP_PASS || null,
+    from: process.env.SMTP_FROM || "ConvertFlow <no-reply@arivanandhan.in>",
+  },
+
   // Google reCAPTCHA (secret stays server-side only)
   recaptcha: {
     secret: process.env.RECAPTCHA_SECRET_KEY || null,

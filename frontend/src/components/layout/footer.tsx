@@ -75,7 +75,18 @@ export function Footer() {
           <p>
             © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
           </p>
-          <p>Built for speed, security and privacy.</p>
+          <p>
+            Built by{" "}
+            <a
+              href="https://arivanandhan.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-foreground transition-colors hover:text-primary"
+            >
+              arivanandhan.in
+            </a>{" "}
+            — for speed, security and privacy.
+          </p>
         </div>
       </div>
     </footer>

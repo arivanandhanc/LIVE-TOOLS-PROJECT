@@ -10,6 +10,8 @@ import { filesRouter } from "./routes/files";
 import { consentRouter } from "./routes/consent";
 import { authRouter } from "./routes/auth";
 import { adminRouter } from "./routes/admin";
+import { meRouter } from "./routes/me";
+import { aiRouter } from "./routes/ai";
 
 export function createApp() {
   const app = express();
@@ -29,6 +31,8 @@ export function createApp() {
   app.use("/api", apiRateLimiter);
   app.use("/api", authRouter);
   app.use("/api", adminRouter);
+  app.use("/api", meRouter);
+  app.use("/api", aiRouter);
   app.use("/api", toolsRouter);
   app.use("/api", filesRouter);
   app.use("/api", consentRouter);

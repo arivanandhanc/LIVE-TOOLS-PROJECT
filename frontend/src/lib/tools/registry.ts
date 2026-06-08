@@ -167,11 +167,11 @@ export const tools: Tool[] = [
   t({ slug: "meta-tag-generator", name: "Meta Tag Generator", description: "Generate SEO and Open Graph meta tags.", category: "developer", icon: Code2, keywords: ["meta", "seo", "og"], mode: "client", status: "live" }),
 
   // ─────────────────────────── AI ───────────────────────────
-  t({ slug: "document-summary", name: "Document Summary", description: "Summarize long documents into key points with AI.", category: "ai", icon: Brain, keywords: ["summary", "ai"], mode: "server", status: "soon", savable: true }),
-  t({ slug: "pdf-summary", name: "PDF Summary", description: "Get an AI summary of any PDF.", category: "ai", icon: FileSearch, keywords: ["summary", "pdf", "ai"], mode: "server", status: "soon", savable: true }),
-  t({ slug: "ocr-extraction", name: "OCR Text Extraction", description: "Extract text from images and scans with AI.", category: "ai", icon: ScanText, keywords: ["ocr", "extract"], mode: "server", status: "soon", savable: true }),
-  t({ slug: "content-generator", name: "AI Content Generator", description: "Generate marketing copy, summaries and more.", category: "ai", icon: Bot, keywords: ["generate", "ai", "copy"], mode: "server", status: "soon", savable: true }),
-  t({ slug: "image-analysis", name: "AI Image Analysis", description: "Describe and analyze image contents with AI.", category: "ai", icon: Eye, keywords: ["vision", "analyze"], mode: "server", status: "soon", savable: true }),
+  t({ slug: "document-summary", name: "Document Summary", description: "Summarize long documents into key points with AI.", category: "ai", icon: Brain, keywords: ["summary", "ai"], mode: "server", status: "live", featured: true, savable: true }),
+  t({ slug: "pdf-summary", name: "PDF Summary", description: "Get an AI summary of any PDF.", category: "ai", icon: FileSearch, keywords: ["summary", "pdf", "ai"], mode: "server", status: "live", savable: true }),
+  t({ slug: "ocr-extraction", name: "OCR Text Extraction", description: "Extract text from images and scans with AI.", category: "ai", icon: ScanText, keywords: ["ocr", "extract"], mode: "server", status: "live", savable: true }),
+  t({ slug: "content-generator", name: "AI Content Generator", description: "Generate marketing copy, summaries and more.", category: "ai", icon: Bot, keywords: ["generate", "ai", "copy"], mode: "server", status: "live", savable: true }),
+  t({ slug: "image-analysis", name: "AI Image Analysis", description: "Describe and analyze image contents with AI.", category: "ai", icon: Eye, keywords: ["vision", "analyze"], mode: "server", status: "live", savable: true }),
 ];
 
 // ───────────────────────────── helpers ─────────────────────────────

@@ -15,10 +15,21 @@ export interface AuthUser {
 interface AuthContextValue {
   user: AuthUser | null;
   loading: boolean;
-  login: (email: string, password: string, recaptchaToken?: string | null) => Promise<void>;
-  register: (email: string, password: string, name: string, recaptchaToken?: string | null) => Promise<void>;
+  login: (email: string, password: string, recaptchaToken?: string | null) => Promise<AuthOutcome>;
+  register: (email: string, password: string, name: string, recaptchaToken?: string | null) => Promise<AuthOutcome>;
+  verifyOtp: (email: string, code: string) => Promise<void>;
+  resendOtp: (email: string) => Promise<void>;
   logout: () => Promise<void>;
+  /** Finish a social/OAuth sign-in: store the access token and load the user. */
+  completeOAuth: (accessToken: string) => Promise<void>;
 }
+
+/** Either signed in, or an OTP/email verification step is required. */
+export type AuthOutcome = { verificationRequired: boolean };
+
+type AuthResponse =
+  | { accessToken: string; user: AuthUser }
+  | { verificationRequired: true; email: string };
 
 const AuthContext = React.createContext<AuthContextValue | null>(null);
 
@@ -42,28 +53,52 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     })();
   }, []);
 
+  const applyAuth = React.useCallback((data: AuthResponse): AuthOutcome => {
+    if ("verificationRequired" in data) return { verificationRequired: true };
+    setAccessToken(data.accessToken);
+    setUser(data.user);
+    return { verificationRequired: false };
+  }, []);
+
   const login = React.useCallback(async (email: string, password: string, recaptchaToken?: string | null) => {
-    const data = await apiFetch<{ accessToken: string; user: AuthUser }>("/api/auth/login", {
+    const data = await apiFetch<AuthResponse>("/api/auth/login", {
       method: "POST",
       headers: recaptchaToken ? { "X-Recaptcha-Token": recaptchaToken } : {},
       body: JSON.stringify({ email, password }),
+    });
+    return applyAuth(data);
+  }, [applyAuth]);
+
+  const register = React.useCallback(
+    async (email: string, password: string, name: string, recaptchaToken?: string | null) => {
+      const data = await apiFetch<AuthResponse>("/api/auth/register", {
+        method: "POST",
+        headers: recaptchaToken ? { "X-Recaptcha-Token": recaptchaToken } : {},
+        body: JSON.stringify({ email, password, name }),
+      });
+      return applyAuth(data);
+    },
+    [applyAuth]
+  );
+
+  const verifyOtp = React.useCallback(async (email: string, code: string) => {
+    const data = await apiFetch<{ accessToken: string; user: AuthUser }>("/api/auth/verify-otp", {
+      method: "POST",
+      body: JSON.stringify({ email, code }),
     });
     setAccessToken(data.accessToken);
     setUser(data.user);
   }, []);
 
-  const register = React.useCallback(
-    async (email: string, password: string, name: string, recaptchaToken?: string | null) => {
-      const data = await apiFetch<{ accessToken: string; user: AuthUser }>("/api/auth/register", {
-        method: "POST",
-        headers: recaptchaToken ? { "X-Recaptcha-Token": recaptchaToken } : {},
-        body: JSON.stringify({ email, password, name }),
-      });
-      setAccessToken(data.accessToken);
-      setUser(data.user);
-    },
-    []
-  );
+  const resendOtp = React.useCallback(async (email: string) => {
+    await apiFetch("/api/auth/resend-otp", { method: "POST", body: JSON.stringify({ email }) });
+  }, []);
+
+  const completeOAuth = React.useCallback(async (accessToken: string) => {
+    setAccessToken(accessToken);
+    const { user } = await apiFetch<{ user: AuthUser }>("/api/auth/me", { auth: true });
+    setUser(user);
+  }, []);
 
   const logout = React.useCallback(async () => {
     await apiFetch("/api/auth/logout", { method: "POST" }).catch(() => undefined);
@@ -72,8 +107,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const value = React.useMemo(
-    () => ({ user, loading, login, register, logout }),
-    [user, loading, login, register, logout]
+    () => ({ user, loading, login, register, verifyOtp, resendOtp, logout, completeOAuth }),
+    [user, loading, login, register, verifyOtp, resendOtp, logout, completeOAuth]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

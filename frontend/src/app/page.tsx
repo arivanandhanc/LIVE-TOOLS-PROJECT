@@ -74,28 +74,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured tools */}
-      <section className="border-y border-border bg-card/40">
-        <div className="container-page py-16">
-          <div className="mb-8 flex items-end justify-between">
-            <div>
-              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Popular tools</h2>
-              <p className="mt-1 text-muted-foreground">The tools people reach for most.</p>
-            </div>
-            <Button asChild variant="ghost" className="hidden sm:inline-flex">
-              <Link href="/tools">
-                View all <ArrowRight />
-              </Link>
-            </Button>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {featured.map((tool) => (
-              <ToolCard key={tool.slug} tool={tool} />
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Trust / security */}
       <section className="container-page py-16">
         <div className="mb-10 text-center">
@@ -138,6 +116,28 @@ export default function HomePage() {
             <Button asChild size="lg" variant="outline">
               <Link href="/signup">Create account</Link>
             </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured tools — moved to the bottom, on its own separated section */}
+      <section className="border-t border-border bg-card/40">
+        <div className="container-page py-16">
+          <div className="mb-8 flex items-end justify-between">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Popular tools</h2>
+              <p className="mt-1 text-muted-foreground">The tools people reach for most.</p>
+            </div>
+            <Button asChild variant="ghost" className="hidden sm:inline-flex">
+              <Link href="/tools">
+                View all <ArrowRight />
+              </Link>
+            </Button>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {featured.map((tool) => (
+              <ToolCard key={tool.slug} tool={tool} />
+            ))}
           </div>
         </div>
       </section>

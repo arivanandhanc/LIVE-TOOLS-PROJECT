@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ArrowRight, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { posts } from "@/lib/blog";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -9,53 +11,6 @@ export const metadata: Metadata = {
   alternates: { canonical: "/blog" },
 };
 
-const blogSections = [
-  {
-    title: "PDF Tools",
-    articles: [
-      "How to merge PDF files online",
-      "Compress PDFs without losing quality",
-      "Convert PDF to Word easily",
-      "Best PDF workflow tips for professionals",
-    ],
-  },
-  {
-    title: "Image Tools",
-    articles: [
-      "How to convert PNG to JPG",
-      "Reduce image size without quality loss",
-      "Best image formats explained",
-      "Image optimization guide for websites",
-    ],
-  },
-  {
-    title: "Developer Utilities",
-    articles: [
-      "JSON formatting best practices",
-      "Base64 encode and decode guide",
-      "URL encoding explained",
-      "Useful online tools for developers",
-    ],
-  },
-  {
-    title: "AI Tools",
-    articles: [
-      "Using AI to improve productivity",
-      "AI tools every developer should know",
-      "Benefits of browser-based AI tools",
-      "Future of AI-powered utilities",
-    ],
-  },
-  {
-    title: "Productivity",
-    articles: [
-      "Save time with online tools",
-      "Automating repetitive tasks",
-      "Digital workflow optimization",
-      "Productivity tips for remote workers",
-    ],
-  },
-];
 export default function BlogPage() {
   return (
     <div className="container-page max-w-4xl py-16">
@@ -70,33 +25,28 @@ export default function BlogPage() {
         </p>
       </div>
 
-      <div className="mt-12 space-y-4">
-        {blogSections.map((section) => (
-          <details
-            key={section.title}
-            className="rounded-lg border bg-card p-5"
+      <div className="mt-12 grid gap-4 sm:grid-cols-2">
+        {posts.map((post) => (
+          <Link
+            key={post.slug}
+            href={`/blog/${post.slug}`}
+            className="group flex flex-col rounded-xl border border-border bg-card p-5 transition-colors hover:border-primary"
           >
-            <summary className="cursor-pointer text-lg font-semibold">
-              {section.title}
-            </summary>
-
-            <ul className="mt-4 space-y-2 text-muted-foreground">
-              {section.articles.map((article) => (
-                <li key={article}>• {article}</li>
-              ))}
-            </ul>
-          </details>
+            <span className="text-xs font-medium uppercase tracking-wide text-primary">{post.category}</span>
+            <h2 className="mt-2 font-semibold leading-snug group-hover:text-primary">{post.title}</h2>
+            <p className="mt-2 flex-1 text-sm text-muted-foreground">{post.description}</p>
+            <span className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
+              <Clock className="size-3.5" /> {post.readingMinutes} min read
+              <ArrowRight className="ml-auto size-4 text-primary transition-transform group-hover:translate-x-0.5" />
+            </span>
+          </Link>
         ))}
       </div>
 
       <div className="mt-12 rounded-lg border bg-card p-6 text-center">
-        <h2 className="text-xl font-semibold">
-          More Articles Coming Soon
-        </h2>
-
+        <h2 className="text-xl font-semibold">More guides coming soon</h2>
         <p className="mt-2 text-muted-foreground">
-          New tutorials, tool guides, AI resources, and productivity content
-          are regularly added.
+          New tutorials, tool guides, AI resources, and productivity content are added regularly.
         </p>
       </div>
 

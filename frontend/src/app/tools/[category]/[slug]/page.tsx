@@ -9,6 +9,7 @@ import { getHowToSteps, getFaqs, getLongDescription } from "@/lib/tools/seo";
 import { getServerToolConfig } from "@/lib/tools/server-tools";
 import { ToolRunner } from "@/components/tools/runner";
 import { ServerToolForm } from "@/components/tools/server-tool-form";
+import { AiTool } from "@/components/tools/ai-tool";
 import { ToolCard } from "@/components/tool-card";
 import { Badge } from "@/components/ui/badge";
 import { siteConfig } from "@/lib/site";
@@ -131,7 +132,9 @@ export default async function ToolPage(props: PageProps<"/tools/[category]/[slug
       </header>
 
       {/* Working surface */}
-      {serverConfig ? (
+      {tool.category === "ai" && tool.status === "live" ? (
+        <AiTool slug={tool.slug} />
+      ) : serverConfig ? (
         <ServerToolForm slug={tool.slug} />
       ) : isServer || tool.status === "soon" ? (
         <ServerToolNotice toolName={tool.name} isAi={tool.category === "ai"} />
