@@ -5,7 +5,7 @@ import { ChevronRight, ShieldCheck, Server, Sparkles } from "lucide-react";
 import {
   tools, getTool, getCategory, getToolsByCategory,
 } from "@/lib/tools/registry";
-import { getHowToSteps, getFaqs, getLongDescription } from "@/lib/tools/seo";
+import { getHowToSteps, getFaqs, getLongDescription, getIntro, getBenefits } from "@/lib/tools/seo";
 import { getServerToolConfig } from "@/lib/tools/server-tools";
 import { ToolRunner } from "@/components/tools/runner";
 import { ServerToolForm } from "@/components/tools/server-tool-form";
@@ -24,16 +24,37 @@ export async function generateMetadata(
   const { slug } = await props.params;
   const tool = getTool(slug);
   if (!tool) return {};
-  const title = `${tool.name} — Free Online Tool`;
+  const cat = getCategory(tool.category);
+  const title = `${tool.name} — Free Online ${cat?.name ?? "File"} Tool`;
+  const description = getLongDescription(tool);
+  const canonical = `/tools/${tool.category}/${tool.slug}`;
+  const keywords = Array.from(
+    new Set([
+      ...(tool.keywords ?? []),
+      tool.name.toLowerCase(),
+      `${tool.name.toLowerCase()} online`,
+      `free ${tool.name.toLowerCase()}`,
+      `${tool.name.toLowerCase()} no sign up`,
+    ])
+  );
   return {
     title,
-    description: getLongDescription(tool),
-    keywords: tool.keywords,
-    alternates: { canonical: `/tools/${tool.category}/${tool.slug}` },
+    description,
+    keywords,
+    alternates: { canonical },
     openGraph: {
+      type: "website",
       title,
-      description: tool.description,
-      url: `${siteConfig.url}/tools/${tool.category}/${tool.slug}`,
+      description,
+      url: `${siteConfig.url}${canonical}`,
+      siteName: siteConfig.name,
+      images: [{ url: "/og.png", width: 1200, height: 630, alt: tool.name }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/og.png"],
     },
   };
 }
@@ -51,6 +72,8 @@ export default async function ToolPage(props: PageProps<"/tools/[category]/[slug
 
   const steps = getHowToSteps(tool);
   const faqs = getFaqs(tool);
+  const intro = getIntro(tool);
+  const benefits = getBenefits(tool);
   const url = `${siteConfig.url}/tools/${tool.category}/${tool.slug}`;
 
   const jsonLd = {
@@ -61,14 +84,14 @@ export default async function ToolPage(props: PageProps<"/tools/[category]/[slug
         name: tool.name,
         applicationCategory: "UtilitiesApplication",
         operatingSystem: "Any (web)",
+        browserRequirements: "Requires a modern web browser (JavaScript enabled).",
         description: getLongDescription(tool),
         url,
+        image: `${siteConfig.url}/og.png`,
+        isAccessibleForFree: true,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-        aggregateRating: {
-          "@type": "AggregateRating",
-          ratingValue: "4.8",
-          ratingCount: "1280",
-        },
+        featureList: benefits,
+        publisher: { "@type": "Organization", name: siteConfig.name, url: siteConfig.url },
       },
       {
         "@type": "BreadcrumbList",
@@ -151,6 +174,22 @@ export default async function ToolPage(props: PageProps<"/tools/[category]/[slug
             : "This tool runs entirely in your browser. Your data never leaves your device — nothing is uploaded to our servers."}
         </p>
       </div>
+
+      {/* About / unique intro — original indexable prose */}
+      <section className="mt-14 max-w-3xl">
+        <h2 className="mb-4 text-xl font-bold tracking-tight">
+          {tool.name}: free online {cat.name.toLowerCase()} tool
+        </h2>
+        <p className="text-muted-foreground leading-relaxed">{intro}</p>
+        <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+          {benefits.map((benefit) => (
+            <li key={benefit} className="flex items-start gap-2 text-sm text-muted-foreground">
+              <ShieldCheck className="mt-0.5 size-4 shrink-0 text-success" />
+              <span>{benefit}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
 
       {/* How it works */}
       <section className="mt-14 grid gap-10 lg:grid-cols-2">
