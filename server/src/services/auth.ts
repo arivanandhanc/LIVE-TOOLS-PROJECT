@@ -4,7 +4,7 @@ import { env } from "../config/env";
 import { hashPassword, verifyPassword } from "../lib/password";
 import { signJwt } from "../lib/jwt";
 import { HttpError } from "../middleware/error";
-import { sendOtpEmail } from "./email";
+import { sendOtpEmail, emailConfigured } from "./email";
 
 export interface AuthTokens {
   accessToken: string;
@@ -115,7 +115,7 @@ async function issueTokens(
 
 export async function register(
   input: { email: string; password: string; name?: string },
-  _ctx: { ip?: string | null; userAgent?: string | null }
+  ctx: { ip?: string | null; userAgent?: string | null }
 ): Promise<AuthResult> {
   const database = requireDb();
   const email = input.email.toLowerCase().trim();
@@ -123,12 +123,23 @@ export async function register(
   if (existing) throw new HttpError(409, "An account with this email already exists.");
 
   const passwordHash = await hashPassword(input.password);
-  await database.user.create({
-    data: { email, name: input.name ?? null, passwordHash },
+  const user = await database.user.create({
+    data: {
+      email,
+      name: input.name ?? null,
+      passwordHash,
+      // If email delivery isn't configured we can't run OTP, so mark verified
+      // and sign the user in directly (keeps email auth working in prod until
+      // SMTP is added — OTP turns on automatically once it is).
+      emailVerified: emailConfigured() ? null : new Date(),
+    },
   });
-  // Require email verification before issuing tokens.
-  await requestOtp(email);
-  return { verificationRequired: true, email };
+  if (emailConfigured()) {
+    await requestOtp(email);
+    return { verificationRequired: true, email };
+  }
+  const tokens = await issueTokens(user, ctx);
+  return { ...tokens, user: toPublic(user) };
 }
 
 export async function login(
@@ -144,8 +155,9 @@ export async function login(
   const ok = await verifyPassword(input.password, user.passwordHash);
   if (!ok) throw new HttpError(401, "Invalid email or password.");
 
-  // Unverified accounts must confirm an emailed code before signing in.
-  if (!user.emailVerified) {
+  // Unverified accounts must confirm an emailed code before signing in — but
+  // only when email delivery is configured, otherwise we'd lock users out.
+  if (!user.emailVerified && emailConfigured()) {
     await requestOtp(email);
     return { verificationRequired: true, email };
   }
