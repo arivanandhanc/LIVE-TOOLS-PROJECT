@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Search, X } from "lucide-react";
-import { categories, tools } from "@/lib/tools/registry";
+import { categories, tools, liveFirst } from "@/lib/tools/registry";
 import { ToolCard } from "@/components/tool-card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -14,13 +14,15 @@ export function ToolsExplorer() {
 
   const filtered = React.useMemo(() => {
     const q = query.trim().toLowerCase();
-    return tools.filter((tool) => {
-      const matchesCat = activeCat === "all" || tool.category === activeCat;
-      if (!matchesCat) return false;
-      if (!q) return true;
-      const haystack = [tool.name, tool.description, ...tool.keywords].join(" ").toLowerCase();
-      return haystack.includes(q);
-    });
+    return liveFirst(
+      tools.filter((tool) => {
+        const matchesCat = activeCat === "all" || tool.category === activeCat;
+        if (!matchesCat) return false;
+        if (!q) return true;
+        const haystack = [tool.name, tool.description, ...tool.keywords].join(" ").toLowerCase();
+        return haystack.includes(q);
+      })
+    );
   }, [query, activeCat]);
 
   return (

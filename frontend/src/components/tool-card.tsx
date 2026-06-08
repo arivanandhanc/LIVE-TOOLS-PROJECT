@@ -28,9 +28,13 @@ export function ToolCard({ tool }: { tool: Tool }) {
         <span className={cn("grid size-11 place-items-center rounded-lg", accent)}>
           <Icon className="size-5" />
         </span>
-        {tool.status === "soon" && (
+        {tool.status === "soon" ? (
           <Badge variant="muted" className="text-[10px]">
             Soon
+          </Badge>
+        ) : (
+          <Badge variant="success" className="gap-1 text-[10px]">
+            <span className="size-1.5 rounded-full bg-success-foreground" /> Active
           </Badge>
         )}
       </div>

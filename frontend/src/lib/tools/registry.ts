@@ -187,8 +187,13 @@ export function getCategory(id: string): ToolCategory | undefined {
   return categoryById.get(id);
 }
 
+/** Sort live/active tools first, "coming soon" last, preserving original order within each group. */
+export function liveFirst(list: Tool[]): Tool[] {
+  return [...list].sort((a, b) => (a.status === b.status ? 0 : a.status === "live" ? -1 : 1));
+}
+
 export function getToolsByCategory(id: string): Tool[] {
-  return tools.filter((tool) => tool.category === id);
+  return liveFirst(tools.filter((tool) => tool.category === id));
 }
 
 export function getFeaturedTools(): Tool[] {
