@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { apiFetch, setAccessToken, tryRefresh } from "@/lib/api";
+import { apiFetch, setAccessToken, tryRefresh, hasSessionHint } from "@/lib/api";
 
 export interface AuthUser {
   id: string;
@@ -37,9 +37,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = React.useState<AuthUser | null>(null);
   const [loading, setLoading] = React.useState(true);
 
-  // On mount, attempt a silent refresh to restore the session.
+  // On mount, attempt a silent refresh to restore the session — but only if the
+  // user has signed in before. Guests skip this entirely (no console 401 noise).
   React.useEffect(() => {
     (async () => {
+      if (!hasSessionHint()) {
+        setLoading(false);
+        return;
+      }
       const ok = await tryRefresh();
       if (ok) {
         try {

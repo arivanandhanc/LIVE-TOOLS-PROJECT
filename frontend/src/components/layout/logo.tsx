@@ -20,8 +20,8 @@ export function Logo({ className }: { className?: string }) {
           />
         </svg>
       </span>
-      <span className="text-lg">
-        Convert<span className="text-primary">Flow</span>
+      <span className="text-lg whitespace-nowrap">
+        Arivu&apos;s <span className="text-primary">Scrab Tools</span>
       </span>
     </Link>
   );

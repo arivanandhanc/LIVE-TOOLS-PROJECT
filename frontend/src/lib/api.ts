@@ -8,8 +8,33 @@ import { siteConfig } from "./site";
 
 let accessToken: string | null = null;
 
+// A non-sensitive hint that a session *might* exist, so guests who never logged
+// in don't trigger a 401 on /api/auth/refresh every page load. The real token is
+// the httpOnly refresh cookie; this is just a "should we bother trying" flag.
+const SESSION_HINT = "st_session";
+
+export function hasSessionHint(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.localStorage.getItem(SESSION_HINT) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function setSessionHint(on: boolean) {
+  if (typeof window === "undefined") return;
+  try {
+    if (on) window.localStorage.setItem(SESSION_HINT, "1");
+    else window.localStorage.removeItem(SESSION_HINT);
+  } catch {
+    /* ignore storage failures */
+  }
+}
+
 export function setAccessToken(token: string | null) {
   accessToken = token;
+  setSessionHint(!!token);
 }
 export function getAccessToken() {
   return accessToken;
@@ -154,9 +179,12 @@ export async function tryRefresh(): Promise<boolean> {
       method: "POST",
       credentials: "include",
     });
-    if (!res.ok) return false;
+    if (!res.ok) {
+      setSessionHint(false); // expired/none — stop retrying on future loads
+      return false;
+    }
     const data = (await res.json()) as { accessToken: string };
-    accessToken = data.accessToken;
+    setAccessToken(data.accessToken);
     return true;
   } catch {
     return false;

@@ -36,11 +36,11 @@ export default function OpengraphImage() {
               color: "#27241d",
             }}
           >
-            CF
+            ST
           </div>
-          <div style={{ display: "flex", fontSize: 52, fontWeight: 800, color: "#27241d" }}>
-            <span>Convert</span>
-            <span style={{ color: "#d97706" }}>Flow</span>
+          <div style={{ display: "flex", gap: 12, fontSize: 52, fontWeight: 800, color: "#27241d" }}>
+            <span>Arivu&apos;s</span>
+            <span style={{ color: "#d97706" }}>Scrab Tools</span>
           </div>
         </div>
         <div style={{ fontSize: 76, fontWeight: 800, color: "#1c1917", lineHeight: 1.1, maxWidth: 980 }}>
