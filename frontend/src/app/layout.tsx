@@ -79,6 +79,16 @@ export default function RootLayout({
                   url: siteConfig.url,
                   logo: `${siteConfig.url}/icon.svg`,
                   description: siteConfig.description,
+                  founder: {
+                    "@type": "Person",
+                    name: "Arivanandhan Chitheshwaran",
+                    url: `${siteConfig.url}/about/founder`,
+                  },
+                  sameAs: [
+                    "https://arivanandhan.in",
+                    "https://www.linkedin.com/in/arivanandhan",
+                    "https://github.com/arivanandhanc",
+                  ],
                 },
                 {
                   "@type": "WebSite",

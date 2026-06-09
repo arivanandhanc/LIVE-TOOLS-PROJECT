@@ -15,6 +15,7 @@ const footerLinks = {
     { title: "Support", href: "https://support.arivanandhan.in" },
   ],
   Legal: [
+    { title: "Security", href: "/security" },
     { title: "Privacy Policy", href: "/legal/privacy" },
     { title: "Cookie Policy", href: "/legal/cookies" },
     { title: "Terms of Service", href: "/legal/terms" },

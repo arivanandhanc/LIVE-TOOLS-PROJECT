@@ -183,6 +183,240 @@ export const posts: BlogPost[] = [
       },
     ],
   },
+  {
+    slug: "how-to-split-a-pdf-online",
+    title: "How to split a PDF online (extract or separate pages, free)",
+    description:
+      "Split a large PDF into separate files or pull out specific page ranges — instantly, in your browser, with no sign-up.",
+    category: "PDF Tools",
+    toolHref: "/tools/pdf/split-pdf",
+    toolLabel: "Split PDF",
+    readingMinutes: 3,
+    updated: "2026-06-09",
+    sections: [
+      {
+        heading: "When you need to split a PDF",
+        body: [
+          "Splitting a PDF is essential when you only need a few pages from a long document, want to separate chapters, or need to send one section without exposing the rest. Instead of printing the pages you want and re-scanning them, a clean split keeps text selectable and quality untouched.",
+        ],
+      },
+      {
+        heading: "How to split a PDF step by step",
+        body: [
+          "1. Open the Split PDF tool and drop in your file.",
+          "2. Enter the page ranges you want (for example 1-3, 5, 8-10).",
+          "3. Run the tool — each range becomes its own PDF.",
+          "4. Download your files. Everything happens in your browser, so the document never leaves your device.",
+        ],
+      },
+      {
+        heading: "Private and instant",
+        body: [
+          "Because Split PDF runs entirely on your device, there is no upload, no waiting on a server, and no privacy risk — ideal for contracts, statements, and anything confidential.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "how-to-compress-a-pdf-online",
+    title: "How to compress a PDF online without losing quality",
+    description:
+      "Reduce PDF file size for email and uploads while keeping it readable — free, private, and in your browser.",
+    category: "PDF Tools",
+    toolHref: "/tools/pdf/compress-pdf",
+    toolLabel: "Compress PDF",
+    readingMinutes: 3,
+    updated: "2026-06-09",
+    sections: [
+      {
+        heading: "Why PDFs get so large",
+        body: [
+          "Most oversized PDFs are heavy because of high-resolution images and embedded fonts. Email attachment limits (often 25 MB) and upload forms that cap at 5 or 10 MB make a bloated PDF a real problem. Compressing it solves this in seconds.",
+        ],
+      },
+      {
+        heading: "How to compress a PDF",
+        body: [
+          "1. Open the Compress PDF tool and add your file.",
+          "2. Let it optimise images and structure to shrink the size.",
+          "3. Download the smaller file — readable, shareable, and still selectable text.",
+        ],
+      },
+      {
+        heading: "Your file stays private",
+        body: [
+          "Compression runs in your browser. The PDF is never uploaded to a server, so even sensitive documents stay completely on your device.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "convert-pdf-to-jpg-online",
+    title: "How to convert a PDF to JPG images (free, high quality)",
+    description:
+      "Turn each PDF page into a crisp JPG image for slides, previews, or sharing — instantly and privately.",
+    category: "PDF Tools",
+    toolHref: "/tools/pdf/pdf-to-jpg",
+    toolLabel: "PDF to JPG",
+    readingMinutes: 3,
+    updated: "2026-06-09",
+    sections: [
+      {
+        heading: "Why convert PDF pages to images",
+        body: [
+          "JPG images drop straight into presentations, social posts, and chat apps where PDFs are awkward. Converting a PDF to JPG also lets you share a single page as a quick visual preview without handing over the whole document.",
+        ],
+      },
+      {
+        heading: "How to convert PDF to JPG",
+        body: [
+          "1. Open the PDF to JPG tool and drop in your PDF.",
+          "2. Each page is rendered to a high-quality JPG image.",
+          "3. Download the images individually or as a zip.",
+        ],
+      },
+      {
+        heading: "No upload, no quality loss",
+        body: [
+          "Rendering happens in your browser at full resolution, so images stay sharp and your file never leaves your device.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "convert-jpg-to-pdf-online",
+    title: "How to convert JPG to PDF online (combine images into one PDF)",
+    description:
+      "Merge photos and scans into a single, tidy PDF in the right order — free, no watermark, no sign-up.",
+    category: "PDF Tools",
+    toolHref: "/tools/pdf/jpg-to-pdf",
+    toolLabel: "JPG to PDF",
+    readingMinutes: 3,
+    updated: "2026-06-09",
+    sections: [
+      {
+        heading: "Turn images into a shareable document",
+        body: [
+          "Sending five separate photos of a receipt or a signed form looks messy. Combining them into one ordered PDF is cleaner, easier to print, and what most offices and portals expect.",
+        ],
+      },
+      {
+        heading: "How to convert JPG to PDF",
+        body: [
+          "1. Open the JPG to PDF tool and add your images.",
+          "2. Drag them into the order you want.",
+          "3. Click convert and download a single PDF containing every image.",
+        ],
+      },
+      {
+        heading: "Private by design",
+        body: [
+          "Your images are assembled into a PDF locally in the browser — nothing is uploaded, so personal photos and documents stay private.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "convert-csv-to-json-online",
+    title: "How to convert CSV to JSON online (for developers and analysts)",
+    description:
+      "Transform spreadsheet CSV data into clean, structured JSON in seconds — entirely in your browser.",
+    category: "CSV & Spreadsheet",
+    toolHref: "/tools/csv/csv-to-json",
+    toolLabel: "CSV to JSON",
+    readingMinutes: 3,
+    updated: "2026-06-09",
+    sections: [
+      {
+        heading: "Why convert CSV to JSON",
+        body: [
+          "CSV is great for spreadsheets but awkward for code. JSON is the language of APIs and modern apps. Converting CSV to JSON lets you feed exported data straight into a frontend, a database seed, or a test fixture without hand-editing.",
+        ],
+      },
+      {
+        heading: "How to convert CSV to JSON",
+        body: [
+          "1. Open the CSV to JSON tool and paste or upload your CSV.",
+          "2. The first row is treated as the keys; each following row becomes an object.",
+          "3. Copy or download the structured JSON output.",
+        ],
+      },
+      {
+        heading: "Safe for sensitive data",
+        body: [
+          "The conversion runs in your browser, so customer lists or internal exports never touch a server.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "convert-png-to-jpg-online",
+    title: "How to convert PNG to JPG online (smaller files, free)",
+    description:
+      "Convert PNG images to compressed JPG for smaller files and easier sharing — instant and private.",
+    category: "Image Tools",
+    toolHref: "/tools/image/png-to-jpg",
+    toolLabel: "PNG to JPG",
+    readingMinutes: 3,
+    updated: "2026-06-09",
+    sections: [
+      {
+        heading: "PNG vs JPG",
+        body: [
+          "PNG is lossless and supports transparency, which makes it perfect for logos and screenshots but heavy for photos. JPG uses lossy compression to produce much smaller files for photographic images. Converting PNG to JPG is the quickest way to cut file size when you do not need transparency.",
+        ],
+      },
+      {
+        heading: "How to convert PNG to JPG",
+        body: [
+          "1. Open the PNG to JPG tool and drop in your PNG.",
+          "2. Choose a quality level to balance size against detail.",
+          "3. Click convert, then download your JPG.",
+        ],
+      },
+      {
+        heading: "Runs entirely in your browser",
+        body: [
+          "The conversion uses the Canvas API on your own device. Nothing is uploaded, so it is both instant and completely private.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "best-free-online-pdf-tools-no-upload",
+    title: "The best free online PDF tools that don't upload your files",
+    description:
+      "A privacy-first toolbox for merging, splitting, compressing and converting PDFs — all running in your browser, free and without sign-up.",
+    category: "PDF Tools",
+    toolHref: "/tools/pdf",
+    toolLabel: "All PDF tools",
+    readingMinutes: 5,
+    updated: "2026-06-09",
+    sections: [
+      {
+        heading: "Why 'no upload' matters",
+        body: [
+          "Most popular PDF sites upload your file to their servers to process it. For invoices, contracts, IDs, and medical records, that means handing a copy of sensitive data to a third party. Browser-based tools process the file on your own device, so the document never leaves your computer — the strongest privacy guarantee there is.",
+        ],
+      },
+      {
+        heading: "Everything you can do in the browser",
+        body: [
+          "Merge PDF — combine multiple files into one, in any order.",
+          "Split PDF — extract pages or separate a document into parts.",
+          "Compress PDF — shrink file size for email and upload limits.",
+          "Rotate, add page numbers, watermark, extract and remove pages.",
+          "Convert PDF to JPG, and JPG to PDF — without sending anything to a server.",
+        ],
+      },
+      {
+        heading: "Free, with no catches",
+        body: [
+          "Every tool is completely free: no watermarks, no file-size paywall, and no sign-up required. You can create a free account if you want your history and favorites saved, but you never have to.",
+        ],
+      },
+    ],
+  },
 ];
 
 export function getPost(slug: string): BlogPost | undefined {
