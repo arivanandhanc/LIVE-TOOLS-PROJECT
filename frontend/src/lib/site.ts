@@ -28,5 +28,4 @@ export const mainNav = [
   { title: "Image", href: "/tools/image" },
   { title: "CSV", href: "/tools/csv" },
   { title: "Developer", href: "/tools/developer" },
-  { title: "Pricing", href: "/pricing" },
 ];

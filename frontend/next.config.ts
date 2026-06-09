@@ -60,6 +60,10 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
+  async redirects() {
+    // Pricing removed — everything is free. Send any old/bookmarked links home.
+    return [{ source: "/pricing", destination: "/", permanent: true }];
+  },
 };
 
 export default nextConfig;

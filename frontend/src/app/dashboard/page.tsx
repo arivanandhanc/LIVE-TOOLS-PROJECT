@@ -73,7 +73,7 @@ export default function DashboardPage() {
           <h1 className="text-3xl font-bold tracking-tight">
             Welcome back{user.name ? `, ${user.name.split(" ")[0]}` : ""}
           </h1>
-          <p className="mt-1 text-muted-foreground">{user.email} · {user.planTier} plan</p>
+          <p className="mt-1 text-muted-foreground">{user.email}</p>
         </div>
         <Button variant="outline" onClick={() => logout().then(() => router.push("/"))}>
           <LogOut /> Sign out
@@ -152,7 +152,6 @@ export default function DashboardPage() {
         <DashCard icon={Settings} title="Account & security">
           <ul className="space-y-2 text-sm">
             <li className="flex justify-between"><span>Two-factor auth</span><span className="text-muted-foreground">{user.mfaEnabled ? "Enabled" : "Not set up"}</span></li>
-            <li className="flex justify-between"><span>Plan</span><span className="text-muted-foreground">{user.planTier}</span></li>
             <li className="flex justify-between"><span>Role</span><span className="text-muted-foreground">{user.role}</span></li>
           </ul>
         </DashCard>

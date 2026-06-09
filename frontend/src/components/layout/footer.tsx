@@ -6,7 +6,6 @@ import { siteConfig } from "@/lib/site";
 const footerLinks = {
   Product: [
     { title: "All Tools", href: "/tools" },
-    { title: "Pricing", href: "/pricing" },
     { title: "Dashboard", href: "/dashboard" },
   ],
   Company: [
