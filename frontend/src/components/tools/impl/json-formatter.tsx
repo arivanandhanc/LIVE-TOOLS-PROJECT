@@ -2,7 +2,7 @@
 
 import { Transformer } from "@/components/tools/transformer";
 
-const sample = '{"name":"ConvertFlow","tools":108,"live":true,"tags":["pdf","csv","image"]}';
+const sample = '{"name":"Scrab Tools","tools":108,"live":true,"tags":["pdf","csv","image"]}';
 
 export default function JsonFormatter() {
   return (

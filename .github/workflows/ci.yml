@@ -53,6 +53,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build server image
-        run: docker build -t convertflow-server ./server
+        run: docker build -t scrab-tools-server ./server
       - name: Build web image
-        run: docker build -t convertflow-web ./frontend
+        run: docker build -t scrab-tools-web ./frontend

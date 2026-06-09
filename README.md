@@ -1,4 +1,4 @@
-# ConvertFlow
+# Arivu's Scrab Tools
 
 > Every file tool you need, in one fast workspace. A privacy-first, enterprise-grade
 > alternative to iLovePDF & Adobe Online Tools — **100+ tools**, free, no sign-up required.
@@ -22,7 +22,7 @@ Live target: **https://tools.arivanandhan.in**
 ## 🏗 Architecture
 
 ```
-convertflow/
+scrab-tools/
 ├── frontend/         Next.js 16 · React 19 · TypeScript · Tailwind v4 · PWA  → Vercel
 ├── server/           Express · TypeScript · Prisma · pdf-lib · BullMQ-ready  → Render
 ├── docker-compose.yml   Full local stack (Postgres + Redis + MinIO + apps)
@@ -103,4 +103,4 @@ CI (`.github/workflows/ci.yml`) runs lint/typecheck/test/build for both apps and
 
 ## 📄 License
 
-Proprietary — © ConvertFlow. All rights reserved.
+Proprietary — © Arivu's Scrab Tools. All rights reserved.

@@ -104,7 +104,7 @@ export function getFaqs(tool: Tool): FaqItem[] {
 export function getLongDescription(tool: Tool): string {
   return (
     tool.longDescription ??
-    `${tool.description} ${tool.name} is a fast, free and secure online tool from ConvertFlow — no sign-up, no watermarks, and ${
+    `${tool.description} ${tool.name} is a fast, free and secure online tool from Arivu's Scrab Tools — no sign-up, no watermarks, and ${
       tool.mode === "client" ? "100% private (runs in your browser)" : "with automatic file deletion"
     }.`
   );

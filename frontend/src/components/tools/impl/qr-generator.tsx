@@ -10,7 +10,7 @@ import { ToolPanel, Field } from "@/components/tools/panel";
 import { downloadBlob } from "@/lib/utils";
 
 export default function QrGenerator() {
-  const [text, setText] = React.useState("https://convertflow.app");
+  const [text, setText] = React.useState("https://tools.arivanandhan.in");
   const [fg, setFg] = React.useState("#171717");
   const [bg, setBg] = React.useState("#ffffff");
   const [dataUrl, setDataUrl] = React.useState("");

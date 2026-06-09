@@ -19,19 +19,19 @@ export const legalDocs: Record<string, LegalDoc> = {
     title: "Privacy Policy",
     updated,
     intro:
-      "ConvertFlow is built privacy-first. This policy explains, in detail, what personal data we collect, why we collect it, how long we keep it, who we share it with, and the rights you have under the GDPR, UK GDPR, CCPA/CPRA and similar laws. It applies to tools.arivanandhan.in and the ConvertFlow API.",
+      "Arivu's Scrab Tools is built privacy-first. This policy explains, in detail, what personal data we collect, why we collect it, how long we keep it, who we share it with, and the rights you have under the GDPR, UK GDPR, CCPA/CPRA and similar laws. It applies to tools.arivanandhan.in and the Arivu's Scrab Tools API.",
     sections: [
       {
         heading: "1. Who we are (data controller)",
         body: [
-          "ConvertFlow (\"we\", \"us\", \"our\") operates the website at tools.arivanandhan.in and is the data controller for the personal data described in this policy.",
+          "Arivu's Scrab Tools (\"we\", \"us\", \"our\") operates the website at tools.arivanandhan.in and is the data controller for the personal data described in this policy.",
           "For any privacy question or to exercise your rights, contact us through the Contact page or at the email address published there. If you are in the EEA/UK and are not satisfied with our response, you may also lodge a complaint with your local data protection authority.",
         ],
       },
       {
         heading: "2. Our privacy-first model",
         body: [
-          "Most ConvertFlow tools run entirely in your browser. For these client-side tools (the majority of our image, text, CSV, and developer utilities), your files and text are processed locally on your device and are never uploaded to or seen by our servers.",
+          "Most Arivu's Scrab Tools tools run entirely in your browser. For these client-side tools (the majority of our image, text, CSV, and developer utilities), your files and text are processed locally on your device and are never uploaded to or seen by our servers.",
           "A smaller set of tools require server-side processing — for example certain PDF operations and all AI tools. For these, the data you submit is transmitted to our backend over an encrypted (TLS/HTTPS) connection, processed, and then deleted according to the retention schedule in section 6.",
           "Each tool page tells you whether it 'Runs in your browser' or uses 'Secure server processing', so you always know before you act.",
         ],
@@ -101,7 +101,7 @@ export const legalDocs: Record<string, LegalDoc> = {
       {
         heading: "11. Children's privacy",
         body: [
-          "ConvertFlow is not directed to children under 16 (or the age required by your jurisdiction). We do not knowingly collect their personal data; if you believe a child has provided us data, contact us and we will delete it.",
+          "Arivu's Scrab Tools is not directed to children under 16 (or the age required by your jurisdiction). We do not knowingly collect their personal data; if you believe a child has provided us data, contact us and we will delete it.",
         ],
       },
       {
@@ -130,7 +130,7 @@ export const legalDocs: Record<string, LegalDoc> = {
     title: "Cookie Policy",
     updated,
     intro:
-      "This Cookie Policy explains what cookies and similar technologies ConvertFlow uses, why we use them, how long they last, and how you can control them. It should be read together with our Privacy Policy.",
+      "This Cookie Policy explains what cookies and similar technologies Arivu's Scrab Tools uses, why we use them, how long they last, and how you can control them. It should be read together with our Privacy Policy.",
     sections: [
       {
         heading: "1. What are cookies?",
@@ -172,24 +172,24 @@ export const legalDocs: Record<string, LegalDoc> = {
     title: "Terms of Service",
     updated,
     intro:
-      "These Terms of Service ('Terms') govern your access to and use of ConvertFlow at tools.arivanandhan.in and the ConvertFlow API. By using the service you agree to these Terms. If you do not agree, please do not use the service.",
+      "These Terms of Service ('Terms') govern your access to and use of Arivu's Scrab Tools at tools.arivanandhan.in and the Arivu's Scrab Tools API. By using the service you agree to these Terms. If you do not agree, please do not use the service.",
     sections: [
       {
         heading: "1. Eligibility and accounts",
         body: [
-          "You must be at least 16 years old (or the age of digital consent in your country) to use ConvertFlow. Accounts are optional; if you create one, you are responsible for keeping your credentials secure and for all activity under your account. Provide accurate information and keep it up to date.",
+          "You must be at least 16 years old (or the age of digital consent in your country) to use Arivu's Scrab Tools. Accounts are optional; if you create one, you are responsible for keeping your credentials secure and for all activity under your account. Provide accurate information and keep it up to date.",
         ],
       },
       {
         heading: "2. The service",
         body: [
-          "ConvertFlow provides online tools to convert, compress, edit, and transform files, plus optional AI-powered tools. Many tools run in your browser; some are processed on our servers. Features, tool availability, and limits may change over time.",
+          "Arivu's Scrab Tools provides online tools to convert, compress, edit, and transform files, plus optional AI-powered tools. Many tools run in your browser; some are processed on our servers. Features, tool availability, and limits may change over time.",
         ],
       },
       {
         heading: "3. Acceptable use",
         body: [
-          "You may use ConvertFlow only for lawful purposes. You must own or have the necessary rights and permissions for any file or content you upload or process.",
+          "You may use Arivu's Scrab Tools only for lawful purposes. You must own or have the necessary rights and permissions for any file or content you upload or process.",
           "You may not: process illegal, infringing, or harmful content; violate others' intellectual property or privacy; attempt to disrupt, overload, reverse engineer, or gain unauthorized access to the service; circumvent rate limits or security; or use the service to build a competing product by scraping or bulk extraction.",
           "We may suspend or terminate access that violates these Terms or that poses a security or legal risk.",
         ],
@@ -215,7 +215,7 @@ export const legalDocs: Record<string, LegalDoc> = {
       {
         heading: "7. Intellectual property",
         body: [
-          "The ConvertFlow name, software, design, and content (excluding your files) are owned by us or our licensors and are protected by law. We grant you a limited, non-exclusive, non-transferable right to use the service in accordance with these Terms.",
+          "The Arivu's Scrab Tools name, software, design, and content (excluding your files) are owned by us or our licensors and are protected by law. We grant you a limited, non-exclusive, non-transferable right to use the service in accordance with these Terms.",
         ],
       },
       {
@@ -227,7 +227,7 @@ export const legalDocs: Record<string, LegalDoc> = {
       {
         heading: "9. Limitation of liability",
         body: [
-          "To the maximum extent permitted by law, ConvertFlow and its operators will not be liable for any indirect, incidental, special, consequential, or punitive damages, or for any loss of data, profits, or goodwill, arising from or related to your use of the service. Our total liability for any claim is limited to the amount you paid us (if any) in the 12 months before the claim.",
+          "To the maximum extent permitted by law, Arivu's Scrab Tools and its operators will not be liable for any indirect, incidental, special, consequential, or punitive damages, or for any loss of data, profits, or goodwill, arising from or related to your use of the service. Our total liability for any claim is limited to the amount you paid us (if any) in the 12 months before the claim.",
         ],
       },
       {
@@ -259,12 +259,12 @@ export const legalDocs: Record<string, LegalDoc> = {
     title: "GDPR Compliance",
     updated,
     intro:
-      "This page explains how ConvertFlow aligns with the EU General Data Protection Regulation (GDPR) and the UK GDPR. It complements our Privacy Policy with detail aimed at data subjects and business customers.",
+      "This page explains how Arivu's Scrab Tools aligns with the EU General Data Protection Regulation (GDPR) and the UK GDPR. It complements our Privacy Policy with detail aimed at data subjects and business customers.",
     sections: [
       {
         heading: "1. Roles",
         body: [
-          "For personal data of our users, ConvertFlow acts as the data controller. Where we process files on your behalf through our tools, we act as a processor for that content and engage subprocessors (listed in our Privacy Policy) under appropriate agreements.",
+          "For personal data of our users, Arivu's Scrab Tools acts as the data controller. Where we process files on your behalf through our tools, we act as a processor for that content and engage subprocessors (listed in our Privacy Policy) under appropriate agreements.",
         ],
       },
       {

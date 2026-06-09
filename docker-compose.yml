@@ -1,4 +1,4 @@
-# Full local stack for ConvertFlow.
+# Full local stack for Arivu's Scrab Tools.
 #   docker compose up --build
 # Brings up Postgres, Redis, MinIO (S3/R2-compatible), the API and the web app.
 
@@ -6,15 +6,15 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: convertflow
-      POSTGRES_PASSWORD: convertflow
-      POSTGRES_DB: convertflow
+      POSTGRES_USER: scrabtools
+      POSTGRES_PASSWORD: scrabtools
+      POSTGRES_DB: scrabtools
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U convertflow"]
+      test: ["CMD-SHELL", "pg_isready -U scrabtools"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -53,12 +53,12 @@ services:
       PORT: 4000
       API_BASE_URL: http://localhost:4000
       CORS_ORIGINS: http://localhost:3000
-      DATABASE_URL: postgresql://convertflow:convertflow@postgres:5432/convertflow
+      DATABASE_URL: postgresql://scrabtools:scrabtools@postgres:5432/scrabtools
       REDIS_URL: redis://redis:6379
       STORAGE_DRIVER: s3
       S3_ENDPOINT: http://minio:9000
       S3_REGION: us-east-1
-      S3_BUCKET: convertflow
+      S3_BUCKET: scrabtools
       S3_ACCESS_KEY_ID: minioadmin
       S3_SECRET_ACCESS_KEY: minioadmin
       JWT_SECRET: local-dev-secret-change-in-production

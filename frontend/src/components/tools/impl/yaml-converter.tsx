@@ -10,7 +10,7 @@ export default function YamlConverter() {
       outputLabel="Output"
       inputPlaceholder="Paste YAML or JSON…"
       downloadName="converted.txt"
-      sampleInput={'name: ConvertFlow\ntools:\n  - pdf\n  - csv\nlive: true'}
+      sampleInput={'name: Scrab Tools\ntools:\n  - pdf\n  - csv\nlive: true'}
       actions={[
         {
           label: "YAML → JSON",

@@ -1,8 +1,8 @@
 {
-  "name": "convertflow-server",
+  "name": "scrab-tools-server",
   "version": "0.1.0",
   "private": true,
-  "description": "ConvertFlow backend — file processing API with queue, storage and security.",
+  "description": "Arivu's Scrab Tools backend — file processing API with queue, storage and security.",
   "main": "dist/index.js",
   "type": "commonjs",
   "scripts": {

@@ -1,4 +1,4 @@
-// ConvertFlow database schema
+// Arivu's Scrab Tools database schema
 // PostgreSQL via Prisma. The app also runs with NO database (guest-only mode);
 // persistence features activate when DATABASE_URL is configured.
 

@@ -11,7 +11,7 @@ export default function XmlToJson() {
       inputPlaceholder="<root><item>value</item></root>"
       downloadName="output.json"
       downloadMime="application/json"
-      sampleInput={"<book><title>ConvertFlow</title><tag>pdf</tag><tag>csv</tag></book>"}
+      sampleInput={"<book><title>Scrab Tools</title><tag>pdf</tag><tag>csv</tag></book>"}
       actions={[{ label: "Convert to JSON", run: xmlToJson }]}
     />
   );

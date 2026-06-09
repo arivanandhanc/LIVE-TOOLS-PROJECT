@@ -1,8 +1,8 @@
 export const siteConfig = {
-  name: "ConvertFlow",
+  name: "Arivu's Scrab Tools",
   tagline: "Every file tool you need. Faster, cleaner, free.",
   description:
-    "ConvertFlow is a fast, secure, privacy-first platform with 100+ tools to convert, compress, merge, edit and transform PDF, image, CSV and text files online.",
+    "Arivu's Scrab Tools is a fast, secure, privacy-first platform with 100+ tools to convert, compress, merge, edit and transform PDF, image, CSV and text files online.",
   // `||` (not `??`) so an empty-string env var also falls back. These are
   // public values; the fallbacks keep production working even if the Vercel
   // env var is missing/blank. Local dev overrides apiUrl via .env.local.

@@ -1,6 +1,6 @@
-# ConvertFlow — Repo, Domain & Deployment Setup
+# Arivu's Scrab Tools — Repo, Domain & Deployment Setup
 
-This guide gets ConvertFlow from local code to a live site at **tools.arivanandhan.in**.
+This guide gets Arivu's Scrab Tools from local code to a live site at **tools.arivanandhan.in**.
 Do these steps side-by-side while development continues.
 
 ---
@@ -12,14 +12,14 @@ From the project root (`D:\ENHANCEMENT\PROJECTS\TOOLS`):
 ```bash
 git init
 git add .
-git commit -m "Initial commit: ConvertFlow platform"
+git commit -m "Initial commit: Arivu's Scrab Tools platform"
 ```
 
-Create an empty repo on GitHub (e.g. `convertflow`), then:
+Create an empty repo on GitHub (e.g. `scrab-tools`), then:
 
 ```bash
 git branch -M main
-git remote add origin https://github.com/<you>/convertflow.git
+git remote add origin https://github.com/<you>/scrab-tools.git
 git push -u origin main
 ```
 

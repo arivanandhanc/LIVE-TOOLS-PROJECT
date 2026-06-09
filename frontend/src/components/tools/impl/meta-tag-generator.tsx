@@ -9,7 +9,7 @@ import { ToolPanel, Field } from "@/components/tools/panel";
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 
 export default function MetaTagGenerator() {
-  const [title, setTitle] = React.useState("ConvertFlow — Free Online File Tools");
+  const [title, setTitle] = React.useState("Scrab Tools — Free Online File Tools");
   const [description, setDescription] = React.useState("Fast, private PDF, image, CSV and developer tools that run in your browser.");
   const [url, setUrl] = React.useState("https://tools.arivanandhan.in");
   const [image, setImage] = React.useState("https://tools.arivanandhan.in/og.png");

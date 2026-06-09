@@ -3,7 +3,7 @@ import { AuthForm } from "@/components/auth-form";
 
 export const metadata: Metadata = {
   title: "Sign in",
-  description: "Sign in to ConvertFlow to access your file history, favorites and saved files.",
+  description: "Sign in to Arivu's Scrab Tools to access your file history, favorites and saved files.",
   robots: { index: false, follow: true },
 };
 

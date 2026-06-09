@@ -11,7 +11,7 @@ export default function JsonToXml() {
       inputPlaceholder='{"name":"value"}'
       downloadName="output.xml"
       downloadMime="application/xml"
-      sampleInput={'{"book":{"title":"ConvertFlow","tags":["pdf","csv"]}}'}
+      sampleInput={'{"book":{"title":"Scrab Tools","tags":["pdf","csv"]}}'}
       actions={[{ label: "Convert to XML", run: jsonToXml }]}
     />
   );

@@ -8,7 +8,7 @@ const app = createApp();
 const server = app.listen(env.port, () => {
   logger.info(
     { port: env.port, env: env.nodeEnv, storage: env.storageDriver },
-    `ConvertFlow API listening on http://localhost:${env.port}`
+    `Arivu's Scrab Tools API listening on http://localhost:${env.port}`
   );
 });
 

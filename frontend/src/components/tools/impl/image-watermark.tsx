@@ -13,7 +13,7 @@ const POSITIONS = ["bottom-right", "bottom-left", "top-right", "top-left", "cent
 
 export default function ImageWatermark() {
   const [file, setFile] = React.useState<File | null>(null);
-  const [text, setText] = React.useState("© ConvertFlow");
+  const [text, setText] = React.useState("© Scrab Tools");
   const [position, setPosition] = React.useState<(typeof POSITIONS)[number]>("bottom-right");
   const [opacity, setOpacity] = React.useState(0.6);
   const [busy, setBusy] = React.useState(false);

@@ -4,7 +4,7 @@ import { ToolsExplorer } from "@/components/tools-explorer";
 
 export const metadata: Metadata = {
   title: "All Tools",
-  description: `Browse all ${TOOL_COUNT}+ ConvertFlow tools: PDF, image, CSV, text, developer and AI utilities. Fast, secure and free.`,
+  description: `Browse all ${TOOL_COUNT}+ Arivu's Scrab Tools tools: PDF, image, CSV, text, developer and AI utilities. Fast, secure and free.`,
   alternates: { canonical: "/tools" },
 };
 

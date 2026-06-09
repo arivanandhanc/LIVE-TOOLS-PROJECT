@@ -4,7 +4,7 @@ import { PricingPlans } from "@/components/pricing-plans";
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "ConvertFlow Basic is free forever. Upgrade to Pro for AI tools and high-resource processing — ₹10/month in India, $10/month elsewhere.",
+    "Arivu's Scrab Tools Basic is free forever. Upgrade to Pro for AI tools and high-resource processing — ₹10/month in India, $10/month elsewhere.",
   alternates: { canonical: "/pricing" },
 };
 

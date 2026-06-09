@@ -34,8 +34,8 @@ export async function sendOtpEmail(to: string, code: string): Promise<void> {
   await t.sendMail({
     from: env.smtp.from,
     to,
-    subject: `Your ConvertFlow verification code: ${code}`,
-    text: `Your ConvertFlow verification code is ${code}. It expires in 10 minutes.\n\nIf you didn't request this, you can ignore this email.`,
-    html: `<p>Your ConvertFlow verification code is:</p><p style="font-size:24px;font-weight:bold;letter-spacing:4px">${code}</p><p>It expires in 10 minutes. If you didn't request this, you can ignore this email.</p>`,
+    subject: `Your Arivu's Scrab Tools verification code: ${code}`,
+    text: `Your Arivu's Scrab Tools verification code is ${code}. It expires in 10 minutes.\n\nIf you didn't request this, you can ignore this email.`,
+    html: `<p>Your Arivu's Scrab Tools verification code is:</p><p style="font-size:24px;font-weight:bold;letter-spacing:4px">${code}</p><p>It expires in 10 minutes. If you didn't request this, you can ignore this email.</p>`,
   });
 }

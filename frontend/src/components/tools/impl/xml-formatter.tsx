@@ -11,7 +11,7 @@ export default function XmlFormatter() {
       inputPlaceholder="<root><item>value</item></root>"
       downloadName="formatted.xml"
       downloadMime="application/xml"
-      sampleInput={'<catalog><book id="1"><title>ConvertFlow</title></book></catalog>'}
+      sampleInput={'<catalog><book id="1"><title>Scrab Tools</title></book></catalog>'}
       actions={[
         { label: "Beautify", run: formatXml },
         { label: "Minify", variant: "secondary", run: minifyXml },

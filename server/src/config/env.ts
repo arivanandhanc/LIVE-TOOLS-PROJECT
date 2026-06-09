@@ -87,7 +87,7 @@ export const env = {
     pass: process.env.SMTP_PASS || (process.env.GMAIL_APP_PASSWORD ?? "").replace(/\s+/g, "") || null,
     from:
       process.env.SMTP_FROM ||
-      (process.env.GMAIL_USER ? `ConvertFlow <${process.env.GMAIL_USER}>` : "ConvertFlow <no-reply@arivanandhan.in>"),
+      (process.env.GMAIL_USER ? `Arivu's Scrab Tools <${process.env.GMAIL_USER}>` : "Arivu's Scrab Tools <no-reply@arivanandhan.in>"),
   },
 
   // Google reCAPTCHA (secret stays server-side only)

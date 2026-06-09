@@ -1,6 +1,6 @@
 # Testing Strategy
 
-ConvertFlow uses a layered testing approach so that the most valuable, highest-risk
+Arivu's Scrab Tools uses a layered testing approach so that the most valuable, highest-risk
 logic is covered first, with fast feedback in CI.
 
 ## Layers
