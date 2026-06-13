@@ -142,3 +142,22 @@ adminRouter.put("/admin/services/:key", asyncHandler(async (req, res) => {
 adminRouter.get("/admin/health", asyncHandler(async (_req, res) => {
   res.json(await admin.getSystemHealth());
 }));
+
+// TEMP diagnostic: reveals which proxy header carries the real client IP.
+adminRouter.get("/admin/whoami", asyncHandler(async (req, res) => {
+  const h = req.headers;
+  res.json({
+    reqIp: req.ip,
+    reqIps: req.ips,
+    resolvedClientIp: clientIp(req),
+    headers: {
+      "cf-connecting-ip": h["cf-connecting-ip"] ?? null,
+      "true-client-ip": h["true-client-ip"] ?? null,
+      "x-real-ip": h["x-real-ip"] ?? null,
+      "x-forwarded-for": h["x-forwarded-for"] ?? null,
+      "x-vercel-forwarded-for": h["x-vercel-forwarded-for"] ?? null,
+      "x-vercel-ip-country": h["x-vercel-ip-country"] ?? null,
+      "cf-ipcountry": h["cf-ipcountry"] ?? null,
+    },
+  });
+}));
