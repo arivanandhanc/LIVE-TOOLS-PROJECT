@@ -47,7 +47,9 @@ export const uploadRateLimiter = rateLimit({
 
 export function applySecurity(app: Express) {
   app.disable("x-powered-by");
-  app.set("trust proxy", 1); // behind Render/CDN proxy
+  // Two hops in production: Vercel (same-origin API proxy) -> Render edge -> app.
+  // This makes req.ip the real client IP for consent/audit logging & rate limits.
+  app.set("trust proxy", 2);
   app.use(requestId);
   app.use(
     helmet({
