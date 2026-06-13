@@ -32,11 +32,18 @@ adminRouter.patch("/admin/users/:id", asyncHandler(async (req, res) => {
 }));
 
 adminRouter.get("/admin/consent/export", asyncHandler(async (req, res) => {
-  const csv = await admin.exportConsentCsv();
-  const format = req.query.format === "csv" ? "csv" : "csv";
-  res.setHeader("Content-Type", "text/csv");
-  res.setHeader("Content-Disposition", `attachment; filename="consent-records.${format}"`);
-  res.send(csv);
+  // Default to native Excel (.xlsx); pass ?format=csv for plain CSV.
+  if (req.query.format === "csv") {
+    const csv = await admin.exportConsentCsv();
+    res.setHeader("Content-Type", "text/csv");
+    res.setHeader("Content-Disposition", `attachment; filename="consent-records.csv"`);
+    res.send(csv);
+    return;
+  }
+  const xlsx = await admin.exportConsentXlsx();
+  res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+  res.setHeader("Content-Disposition", `attachment; filename="consent-records.xlsx"`);
+  res.send(xlsx);
 }));
 
 // Audit log feed (admin)

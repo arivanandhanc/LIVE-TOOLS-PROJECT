@@ -1,3 +1,4 @@
+import * as XLSX from "xlsx";
 import { db } from "../db/prisma";
 import { HttpError } from "../middleware/error";
 
@@ -84,4 +85,26 @@ export async function exportConsentCsv(): Promise<string> {
       .join(",")
   );
   return [header.join(","), ...rows].join("\n");
+}
+
+/** Native Excel (.xlsx) export of consent records. */
+export async function exportConsentXlsx(): Promise<Buffer> {
+  const d = requireDb();
+  const records = await d.consentRecord.findMany({ orderBy: { createdAt: "desc" }, take: 10000 });
+  const data = records.map((r) => ({
+    "Record ID": r.id,
+    "Date (UTC)": r.createdAt.toISOString(),
+    "IP": r.ip,
+    "Country": r.country,
+    "Browser": r.browser,
+    "Necessary": r.necessary,
+    "Analytics": r.analytics,
+    "Marketing": r.marketing,
+    "Consent version": r.consentVersion,
+    "User ID": r.userId,
+  }));
+  const ws = XLSX.utils.json_to_sheet(data);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Consents");
+  return XLSX.write(wb, { type: "buffer", bookType: "xlsx" }) as Buffer;
 }

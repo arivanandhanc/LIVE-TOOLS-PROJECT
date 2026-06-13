@@ -63,12 +63,16 @@ export default function AdminPage() {
   }
 
   async function exportConsent() {
-    const res = await fetch(`${siteConfig.apiUrl}/api/admin/consent/export?format=csv`, {
+    const res = await fetch(`${siteConfig.apiUrl}/api/admin/consent/export`, {
       headers: { Authorization: `Bearer ${getAccessToken()}` },
       credentials: "include",
     });
     if (!res.ok) return setError("Export failed.");
-    downloadBlob(await res.blob(), "consent-records.csv", "text/csv");
+    downloadBlob(
+      await res.blob(),
+      "consent-records.xlsx",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
   }
 
   if (loading || !user || user.role !== "ADMIN") {
@@ -89,7 +93,7 @@ export default function AdminPage() {
           <p className="mt-1 text-muted-foreground">Platform analytics, users and compliance.</p>
         </div>
         <Button variant="outline" onClick={exportConsent}>
-          <Download /> Export consent (CSV)
+          <Download /> Export consent (Excel)
         </Button>
       </header>
 
