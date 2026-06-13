@@ -7,6 +7,7 @@ import { requireAuth } from "../middleware/identity";
 import { uploadRateLimiter } from "../middleware/security";
 import * as ai from "../services/ai";
 import * as me from "../services/me";
+import { isServiceEnabled } from "../services/admin";
 
 export const aiRouter = Router();
 
@@ -33,6 +34,9 @@ aiRouter.post(
   uploadRateLimiter,
   upload.single("file"),
   asyncHandler(async (req, res) => {
+    if (!(await isServiceEnabled("ai_tools_enabled"))) {
+      throw new HttpError(503, "AI tools are temporarily disabled by the administrator.");
+    }
     const tool = req.params.tool;
     const start = Date.now();
 

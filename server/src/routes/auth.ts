@@ -5,6 +5,7 @@ import { asyncHandler, HttpError } from "../middleware/error";
 import { verifyRecaptcha } from "../middleware/recaptcha";
 import { requireAuth } from "../middleware/identity";
 import * as auth from "../services/auth";
+import { isServiceEnabled } from "../services/admin";
 import { env } from "../config/env";
 
 export const authRouter = Router();
@@ -44,6 +45,9 @@ authRouter.post(
   "/auth/register",
   verifyRecaptcha,
   asyncHandler(async (req, res) => {
+    if (!(await isServiceEnabled("registration_enabled"))) {
+      throw new HttpError(503, "New registrations are temporarily disabled.");
+    }
     const parsed = registerSchema.safeParse(req.body);
     if (!parsed.success) throw new HttpError(400, "Invalid input", parsed.error.flatten());
     const result = await auth.register(parsed.data, ctxOf(req));
