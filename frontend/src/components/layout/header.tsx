@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, Search, X } from "lucide-react";
-import { LayoutDashboard } from "lucide-react";
+import { LayoutDashboard, Shield } from "lucide-react";
 import { Logo } from "./logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
@@ -56,11 +56,20 @@ export function Header() {
           </Button>
           <ThemeToggle />
           {user ? (
-            <Button asChild size="sm" className="hidden sm:inline-flex">
-              <Link href="/dashboard">
-                <LayoutDashboard /> Dashboard
-              </Link>
-            </Button>
+            <>
+              {user.role === "ADMIN" && (
+                <Button asChild variant="outline" size="sm" className="hidden sm:inline-flex">
+                  <Link href="/admin">
+                    <Shield /> Admin
+                  </Link>
+                </Button>
+              )}
+              <Button asChild size="sm" className="hidden sm:inline-flex">
+                <Link href="/dashboard">
+                  <LayoutDashboard /> Dashboard
+                </Link>
+              </Button>
+            </>
           ) : (
             <>
               <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
@@ -96,13 +105,28 @@ export function Header() {
                 {item.title}
               </Link>
             ))}
-            <div className="mt-2 flex gap-2 border-t border-border pt-3">
-              <Button asChild variant="outline" className="flex-1">
-                <Link href="/login">Sign in</Link>
-              </Button>
-              <Button asChild className="flex-1">
-                <Link href="/signup">Get started</Link>
-              </Button>
+            <div className="mt-2 flex flex-col gap-2 border-t border-border pt-3">
+              {user ? (
+                <>
+                  {user.role === "ADMIN" && (
+                    <Button asChild variant="outline" className="w-full">
+                      <Link href="/admin"><Shield /> Admin</Link>
+                    </Button>
+                  )}
+                  <Button asChild className="w-full">
+                    <Link href="/dashboard"><LayoutDashboard /> Dashboard</Link>
+                  </Button>
+                </>
+              ) : (
+                <div className="flex gap-2">
+                  <Button asChild variant="outline" className="flex-1">
+                    <Link href="/login">Sign in</Link>
+                  </Button>
+                  <Button asChild className="flex-1">
+                    <Link href="/signup">Get started</Link>
+                  </Button>
+                </div>
+              )}
             </div>
           </nav>
         </div>
