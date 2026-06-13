@@ -4,6 +4,7 @@ import type { Request } from "express";
 import { asyncHandler, HttpError } from "../middleware/error";
 import { requireAdmin } from "../middleware/identity";
 import * as admin from "../services/admin";
+import { clientIp } from "../lib/client-ip";
 
 export const adminRouter = Router();
 
@@ -11,7 +12,7 @@ export const adminRouter = Router();
 adminRouter.use("/admin", requireAdmin);
 
 function auditCtx(req: Request, metadata?: unknown) {
-  return { ip: req.ip ?? null, userAgent: req.headers["user-agent"] ?? null, metadata };
+  return { ip: clientIp(req), userAgent: req.headers["user-agent"] ?? null, metadata };
 }
 
 // ───────────────────────────── overview ─────────────────────────────

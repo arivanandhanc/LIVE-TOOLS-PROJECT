@@ -3,6 +3,7 @@ import { z } from "zod";
 import { asyncHandler } from "../middleware/error";
 import { db } from "../db/prisma";
 import { logger } from "../config/logger";
+import { clientIp } from "../lib/client-ip";
 
 export const consentRouter = Router();
 
@@ -32,7 +33,7 @@ consentRouter.post(
     const ua = req.headers["user-agent"] ?? "";
     const record = {
       userId: req.userId ?? null,
-      ip: req.ip ?? null,
+      ip: clientIp(req),
       userAgent: ua,
       browser: detectBrowser(ua),
       // CDN (Cloudflare) provides country in this header.
