@@ -26,6 +26,15 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
 
   const isSignup = mode === "signup";
 
+  // Where to go after a successful sign-in. Honour a ?next= return path (e.g.
+  // set by the /admin guard), but only same-origin relative paths to avoid an
+  // open-redirect. Falls back to the dashboard.
+  function destination(): string {
+    if (typeof window === "undefined") return "/dashboard";
+    const next = new URLSearchParams(window.location.search).get("next");
+    return next && next.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
+  }
+
   // Load reCAPTCHA so the v3 badge is visible on this page.
   React.useEffect(() => {
     preloadRecaptcha();
@@ -43,7 +52,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
       if (outcome.verificationRequired) {
         setStage("otp");
       } else {
-        router.push("/dashboard");
+        router.push(destination());
       }
     } catch (err) {
       setError(
@@ -64,7 +73,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
     setError(null);
     try {
       await verifyOtp(email, otp);
-      router.push("/dashboard");
+      router.push(destination());
     } catch (err) {
       setError(err instanceof Error ? err.message : "Verification failed.");
     } finally {

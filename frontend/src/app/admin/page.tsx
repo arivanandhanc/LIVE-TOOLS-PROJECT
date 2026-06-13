@@ -63,14 +63,31 @@ export default function AdminPage() {
   const [tab, setTab] = React.useState<Tab>("overview");
   const [error, setError] = React.useState<string | null>(null);
 
+  // Only bounce to /login when there is genuinely NO session. An authenticated
+  // non-admin is shown an inline message instead of being thrown to the login
+  // page (which looks like a bug). Send a return path so re-login lands here.
   React.useEffect(() => {
-    if (!loading && (!user || user.role !== "ADMIN")) router.replace("/login");
+    if (!loading && !user) router.replace("/login?next=/admin");
   }, [loading, user, router]);
 
-  if (loading || !user || user.role !== "ADMIN") {
+  if (loading || !user) {
     return (
       <div className="container-page flex min-h-[60vh] items-center justify-center">
         <Loader2 className="size-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (user.role !== "ADMIN") {
+    return (
+      <div className="container-page flex min-h-[60vh] flex-col items-center justify-center gap-3 text-center">
+        <Shield className="size-10 text-muted-foreground" />
+        <h1 className="text-xl font-semibold">Not authorized</h1>
+        <p className="max-w-md text-sm text-muted-foreground">
+          You&apos;re signed in as <span className="font-medium">{user.email}</span>, but this account
+          doesn&apos;t have the ADMIN role. Ask an administrator to grant access.
+        </p>
+        <Button variant="outline" onClick={() => router.push("/dashboard")}>Go to dashboard</Button>
       </div>
     );
   }
