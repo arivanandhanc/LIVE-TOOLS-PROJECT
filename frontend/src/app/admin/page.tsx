@@ -422,6 +422,12 @@ function ConsentsTab({ onError }: { onError: ErrFn }) {
     downloadBlob(await res.blob(), `consent-records.${format}`, format === "csv" ? "text/csv" : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
   }
 
+  async function delConsent(id: string) {
+    if (!confirm("Delete this consent record? (GDPR right-to-erasure)")) return;
+    try { await apiFetch(`/api/admin/consent/${id}`, { method: "DELETE", auth: true }); list.reload(); }
+    catch (e) { onError(e instanceof Error ? e.message : "Delete failed."); }
+  }
+
   return (
     <Card>
       <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-2">
@@ -438,19 +444,21 @@ function ConsentsTab({ onError }: { onError: ErrFn }) {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead><tr className="text-left text-muted-foreground">
-                  <th className="pb-2">Date</th><th className="pb-2">Country</th><th className="pb-2">Browser</th>
-                  <th className="pb-2">Analytics</th><th className="pb-2">Marketing</th><th className="pb-2">Ver</th><th className="pb-2">User</th>
+                  <th className="pb-2">Date</th><th className="pb-2">IP</th><th className="pb-2">Country</th><th className="pb-2">Browser</th>
+                  <th className="pb-2">Analytics</th><th className="pb-2">Marketing</th><th className="pb-2">Ver</th><th className="pb-2">User</th><th className="pb-2"></th>
                 </tr></thead>
                 <tbody>
                   {list.data.items.map((c) => (
                     <tr key={c.id} className="border-t border-border">
                       <td className="py-2 whitespace-nowrap">{fmtDate(c.createdAt)}</td>
+                      <td className="py-2 font-mono text-xs">{c.ip ?? "—"}</td>
                       <td className="py-2">{c.country ?? "—"}</td>
                       <td className="py-2">{c.browser ?? "—"}</td>
                       <td className="py-2">{c.analytics ? <Badge variant="success">yes</Badge> : <Badge variant="muted">no</Badge>}</td>
                       <td className="py-2">{c.marketing ? <Badge variant="success">yes</Badge> : <Badge variant="muted">no</Badge>}</td>
                       <td className="py-2">{c.consentVersion}</td>
                       <td className="py-2 max-w-[8rem] truncate text-xs text-muted-foreground">{c.userId ?? "guest"}</td>
+                      <td className="py-2"><Button size="sm" variant="ghost" onClick={() => delConsent(c.id)}><Trash2 className="size-4 text-destructive" /></Button></td>
                     </tr>
                   ))}
                 </tbody>

@@ -103,6 +103,12 @@ adminRouter.get("/admin/consent", asyncHandler(async (req, res) => {
   res.json(await admin.listConsents({ page, country }));
 }));
 
+adminRouter.delete("/admin/consent/:id", asyncHandler(async (req, res) => {
+  const result = await admin.deleteConsent(req.params.id);
+  await admin.recordAudit("consent.delete", req.userId ?? null, req.params.id, auditCtx(req));
+  res.json(result);
+}));
+
 adminRouter.get("/admin/consent/export", asyncHandler(async (req, res) => {
   // Default to native Excel (.xlsx); pass ?format=csv for plain CSV.
   if (req.query.format === "csv") {

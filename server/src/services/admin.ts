@@ -253,6 +253,13 @@ export async function listConsents(opts: { country?: string; page?: number; take
   return { items, total, page, take };
 }
 
+/** Delete a single consent record (GDPR right-to-erasure / cleanup). */
+export async function deleteConsent(id: string) {
+  const d = requireDb();
+  await d.consentRecord.delete({ where: { id } });
+  return { id, deleted: true };
+}
+
 // ───────────────────────────── audit log ─────────────────────────────
 
 export async function recordAudit(action: string, actorId: string | null, targetId: string | null, ctx: { ip?: string | null; userAgent?: string | null; metadata?: unknown } = {}) {

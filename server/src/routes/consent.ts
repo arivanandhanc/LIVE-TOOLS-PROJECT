@@ -46,17 +46,6 @@ consentRouter.post(
     } else {
       logger.info({ record }, "Consent recorded (no DB — logged only)");
     }
-    // TEMP debug: surface which headers reach this route (remove after diag).
-    const h = req.headers;
-    res.status(201).json({
-      ok: true,
-      _debug: {
-        resolved: clientIp(req),
-        reqIp: req.ip,
-        xVercel: h["x-vercel-forwarded-for"] ?? null,
-        cfip: h["cf-connecting-ip"] ?? null,
-        xff: h["x-forwarded-for"] ?? null,
-      },
-    });
+    res.status(201).json({ ok: true });
   })
 );
