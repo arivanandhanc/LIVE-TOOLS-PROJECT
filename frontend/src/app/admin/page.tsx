@@ -8,7 +8,6 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
 import { apiFetch, getAccessToken } from "@/lib/api";
-import { siteConfig } from "@/lib/site";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -416,7 +415,7 @@ function ConsentsTab({ onError }: { onError: ErrFn }) {
   const list = useAsync(() => apiFetch<{ items: ConsentRow[]; total: number; take: number }>(`/api/admin/consent?page=${page}${country ? `&country=${encodeURIComponent(country)}` : ""}`, { auth: true }), [page, country], onError);
 
   async function exportConsent(format: "xlsx" | "csv") {
-    const res = await fetch(`${siteConfig.apiUrl}/api/admin/consent/export${format === "csv" ? "?format=csv" : ""}`, {
+    const res = await fetch(`/api/admin/consent/export${format === "csv" ? "?format=csv" : ""}`, {
       headers: { Authorization: `Bearer ${getAccessToken()}` }, credentials: "include",
     });
     if (!res.ok) return onError("Export failed.");

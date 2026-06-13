@@ -8,6 +8,15 @@ import { siteConfig } from "./site";
 
 let accessToken: string | null = null;
 
+/**
+ * API base URL. In the browser we call the API SAME-ORIGIN (empty base → "/api/…")
+ * so Next.js rewrites proxy to the backend and the refresh cookie stays first-party.
+ * On the server (SSR/build) there is no proxy, so use the absolute backend origin.
+ */
+function apiBase(): string {
+  return typeof window === "undefined" ? siteConfig.apiUrl : "";
+}
+
 // A non-sensitive hint that a session *might* exist, so guests who never logged
 // in don't trigger a 401 on /api/auth/refresh every page load. The real token is
 // the httpOnly refresh cookie; this is just a "should we bother trying" flag.
@@ -47,7 +56,7 @@ interface RequestOptions extends RequestInit {
 
 export async function apiFetch<T = unknown>(path: string, opts: RequestOptions = {}): Promise<T> {
   const { auth = false, retry = true, headers, ...rest } = opts;
-  const res = await fetch(`${siteConfig.apiUrl}${path}`, {
+  const res = await fetch(`${apiBase()}${path}`, {
     ...rest,
     credentials: "include",
     headers: {
@@ -122,7 +131,7 @@ export async function runAiFileTool(tool: string, file: File, fields?: Record<st
   for (const [k, v] of Object.entries(fields ?? {})) form.append(k, v);
 
   const doFetch = () =>
-    fetch(`${siteConfig.apiUrl}/api/ai/${tool}`, {
+    fetch(`${apiBase()}/api/ai/${tool}`, {
       method: "POST",
       credentials: "include",
       headers: getAccessToken() ? { Authorization: `Bearer ${getAccessToken()}` } : {},
@@ -175,7 +184,7 @@ export function recordToolUsage(tool: string, durationMs?: number) {
 
 export async function tryRefresh(): Promise<boolean> {
   try {
-    const res = await fetch(`${siteConfig.apiUrl}/api/auth/refresh`, {
+    const res = await fetch(`${apiBase()}/api/auth/refresh`, {
       method: "POST",
       credentials: "include",
     });

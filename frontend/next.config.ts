@@ -3,7 +3,10 @@ import type { NextConfig } from "next";
 const isDev = process.env.NODE_ENV === "development";
 
 // Backend origin allowed for fetch/XHR (BullMQ job API, auth, uploads).
-const apiOrigin = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+// In the browser the app calls the API same-origin (/api/*) and Next proxies
+// to this origin via rewrites() — that keeps the auth refresh cookie first-party.
+const apiOrigin =
+  process.env.NEXT_PUBLIC_API_URL || (isDev ? "http://localhost:4000" : "https://tools-live.onrender.com");
 
 // Google reCAPTCHA + Google Fonts endpoints that must be allowlisted.
 const recaptcha = "https://www.google.com https://www.gstatic.com";
@@ -56,6 +59,12 @@ const nextConfig: NextConfig = {
   output: "standalone",
   images: {
     formats: ["image/avif", "image/webp"],
+  },
+  async rewrites() {
+    // Proxy API calls under our own origin so the httpOnly refresh cookie is
+    // first-party (third-party cookies are blocked by modern browsers, which
+    // otherwise breaks "stay signed in" across page loads).
+    return [{ source: "/api/:path*", destination: `${apiOrigin}/api/:path*` }];
   },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
