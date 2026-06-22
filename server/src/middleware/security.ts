@@ -45,6 +45,18 @@ export const uploadRateLimiter = rateLimit({
   message: { error: "Too many uploads — please try again shortly." },
 });
 
+// Brute-force / credential-stuffing protection for auth endpoints. Successful
+// requests aren't counted, so a legitimate user who logs in is never blocked;
+// only repeated failed attempts from an IP trip the limit.
+export const authRateLimiter = rateLimit({
+  windowMs: env.rateLimitWindowMs,
+  max: env.authRateLimitMax,
+  skipSuccessfulRequests: true,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many attempts — please wait a few minutes and try again." },
+});
+
 export function applySecurity(app: Express) {
   app.disable("x-powered-by");
   // Two hops in production: Vercel (same-origin API proxy) -> Render edge -> app.

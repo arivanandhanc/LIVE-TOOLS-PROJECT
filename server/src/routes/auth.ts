@@ -3,6 +3,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { asyncHandler, HttpError } from "../middleware/error";
 import { verifyRecaptcha } from "../middleware/recaptcha";
+import { authRateLimiter } from "../middleware/security";
 import { requireAuth } from "../middleware/identity";
 import * as auth from "../services/auth";
 import { isServiceEnabled } from "../services/admin";
@@ -43,6 +44,7 @@ function ctxOf(req: import("express").Request) {
 
 authRouter.post(
   "/auth/register",
+  authRateLimiter,
   verifyRecaptcha,
   asyncHandler(async (req, res) => {
     if (!(await isServiceEnabled("registration_enabled"))) {
@@ -61,6 +63,7 @@ authRouter.post(
 
 authRouter.post(
   "/auth/login",
+  authRateLimiter,
   verifyRecaptcha,
   asyncHandler(async (req, res) => {
     const parsed = loginSchema.safeParse(req.body);
@@ -78,6 +81,7 @@ const verifyOtpSchema = z.object({ email: z.string().email(), code: z.string().m
 
 authRouter.post(
   "/auth/verify-otp",
+  authRateLimiter,
   asyncHandler(async (req, res) => {
     const parsed = verifyOtpSchema.safeParse(req.body);
     if (!parsed.success) throw new HttpError(400, "Enter the 6-digit code we emailed you.");

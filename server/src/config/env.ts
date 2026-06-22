@@ -108,6 +108,9 @@ export const env = {
   rateLimitWindowMs: int(process.env.RATE_LIMIT_WINDOW_MS, 15 * 60 * 1000),
   rateLimitMax: int(process.env.RATE_LIMIT_MAX, 300),
   uploadRateLimitMax: int(process.env.UPLOAD_RATE_LIMIT_MAX, 40),
+  // Strict limiter for auth endpoints; counts only failed attempts, so it stops
+  // brute-force / credential-stuffing without affecting legitimate users.
+  authRateLimitMax: int(process.env.AUTH_RATE_LIMIT_MAX, 20),
 
   logLevel: process.env.LOG_LEVEL ?? (nodeEnv === "production" ? "info" : "debug"),
 };
