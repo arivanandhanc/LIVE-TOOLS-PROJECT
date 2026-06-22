@@ -1,0 +1,23 @@
+# Paste these into GSC → URL Inspection → Request Indexing (top ~20 first).
+# The other ~366 URLs are covered automatically once you submit sitemap.xml.
+
+https://tools.arivanandhan.in/
+https://tools.arivanandhan.in/tools
+https://tools.arivanandhan.in/compress-pdf-to-100kb
+https://tools.arivanandhan.in/compress-pdf-to-50kb
+https://tools.arivanandhan.in/compress-pdf-to-200kb
+https://tools.arivanandhan.in/compress-jpg-to-50kb
+https://tools.arivanandhan.in/compress-jpg-to-20kb
+https://tools.arivanandhan.in/compress-jpg-to-100kb
+https://tools.arivanandhan.in/compress-png-to-100kb
+https://tools.arivanandhan.in/resize-image-to-1080x1080
+https://tools.arivanandhan.in/passport-size-photo-india
+https://tools.arivanandhan.in/us-passport-photo-2x2
+https://tools.arivanandhan.in/instagram-post-size
+https://tools.arivanandhan.in/youtube-thumbnail-size
+https://tools.arivanandhan.in/linkedin-banner-size
+https://tools.arivanandhan.in/whatsapp-profile-picture-size
+https://tools.arivanandhan.in/tools/pdf/compress-pdf
+https://tools.arivanandhan.in/tools/image/resize-image
+https://tools.arivanandhan.in/tools/image/compress-image
+https://tools.arivanandhan.in/blog
