@@ -7,6 +7,7 @@ import {
 } from "@/lib/tools/registry";
 import { getHowToSteps, getFaqs, getLongDescription, getIntro, getBenefits } from "@/lib/tools/seo";
 import { getServerToolConfig } from "@/lib/tools/server-tools";
+import { compressTargets } from "@/lib/seo-pages/compress-pdf";
 import { ToolRunner } from "@/components/tools/runner";
 import { ServerToolForm } from "@/components/tools/server-tool-form";
 import { AiTool } from "@/components/tools/ai-tool";
@@ -230,6 +231,28 @@ export default async function ToolPage(props: PageProps<"/tools/[category]/[slug
           </div>
         </div>
       </section>
+
+      {/* Compress-to-exact-size cluster — only on the Compress PDF page */}
+      {tool.slug === "compress-pdf" && (
+        <section className="mt-14">
+          <h2 className="mb-4 text-xl font-bold tracking-tight">Compress PDF to an exact size</h2>
+          <p className="mb-4 max-w-2xl text-muted-foreground">
+            Need to hit a strict upload limit for an exam, government or admission form? Use a
+            target-size compressor that reduces your PDF to a specific size automatically:
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {compressTargets.map((target) => (
+              <Link
+                key={target.slug}
+                href={`/${target.slug}`}
+                className="rounded-full border border-border bg-card px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
+              >
+                to {target.display}
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Related */}
       {related.length > 0 && (
