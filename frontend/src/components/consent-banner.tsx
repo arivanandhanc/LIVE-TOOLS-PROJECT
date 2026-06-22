@@ -51,7 +51,7 @@ export function ConsentBanner() {
             <h2 className="font-semibold">We value your privacy</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               We use necessary cookies to make the site work. With your consent we also use
-              analytics to improve Arivu's Scrab Tools. Read our{" "}
+              analytics to improve Arivu&apos;s Scrab Tools. Read our{" "}
               <Link href="/legal/cookies" className="underline">Cookie Policy</Link>.
             </p>
 

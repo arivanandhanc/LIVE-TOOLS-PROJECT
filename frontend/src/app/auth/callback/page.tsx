@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Loader2, AlertCircle } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
@@ -30,7 +31,7 @@ export default function OAuthCallbackPage() {
           <AlertCircle className="size-6 text-destructive" />
           <p className="text-sm text-muted-foreground">
             We couldn&apos;t complete sign-in. Please{" "}
-            <a href="/login" className="font-medium text-primary hover:underline">try again</a>.
+            <Link href="/login" className="font-medium text-primary hover:underline">try again</Link>.
           </p>
         </>
       ) : (
