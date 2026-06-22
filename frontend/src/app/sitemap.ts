@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { tools, categories } from "@/lib/tools/registry";
 import { posts } from "@/lib/blog";
-import { compressTargets } from "@/lib/seo-pages/compress-pdf";
+import { allSeoPages } from "@/lib/seo-pages";
 import { siteConfig } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -43,13 +43,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  // Programmatic "Compress PDF to <size>" landing pages.
-  const compressPages: MetadataRoute.Sitemap = compressTargets.map((target) => ({
-    url: `${base}/${target.slug}`,
+  // Programmatic SEO landing pages (compress-to-size, resize-to-dimensions, …).
+  const seoPages: MetadataRoute.Sitemap = allSeoPages.map((page) => ({
+    url: `${base}/${page.slug}`,
     lastModified: now,
     changeFrequency: "monthly",
     priority: 0.8,
   }));
 
-  return [...staticPages, ...categoryPages, ...toolPages, ...blogPages, ...compressPages];
+  return [...staticPages, ...categoryPages, ...toolPages, ...blogPages, ...seoPages];
 }

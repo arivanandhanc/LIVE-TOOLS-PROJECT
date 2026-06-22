@@ -7,7 +7,7 @@ import {
 } from "@/lib/tools/registry";
 import { getHowToSteps, getFaqs, getLongDescription, getIntro, getBenefits } from "@/lib/tools/seo";
 import { getServerToolConfig } from "@/lib/tools/server-tools";
-import { compressTargets } from "@/lib/seo-pages/compress-pdf";
+import { clusterPagesForTool } from "@/lib/seo-pages";
 import { ToolRunner } from "@/components/tools/runner";
 import { ServerToolForm } from "@/components/tools/server-tool-form";
 import { AiTool } from "@/components/tools/ai-tool";
@@ -70,6 +70,26 @@ export default async function ToolPage(props: PageProps<"/tools/[category]/[slug
   const related = getToolsByCategory(tool.category)
     .filter((current) => current.slug !== tool.slug)
     .slice(0, 4);
+
+  const clusterPages = clusterPagesForTool(tool.slug);
+  const clusterCopy: Record<string, { heading: string; intro: string }> = {
+    "compress-pdf": {
+      heading: "Compress PDF to an exact size",
+      intro:
+        "Need to hit a strict upload limit for an exam, government or admission form? Use a target-size compressor that reduces your PDF to a specific size automatically:",
+    },
+    "compress-image": {
+      heading: "Compress an image to an exact size",
+      intro:
+        "Hit a strict KB limit for a photo, ID or profile upload — pick your format and target size:",
+    },
+    "resize-image": {
+      heading: "Resize an image to exact dimensions",
+      intro: "Resize to a popular preset in one click, or enter your own dimensions on the page:",
+    },
+  };
+  const { heading: clusterHeading, intro: clusterIntro } =
+    clusterCopy[tool.slug] ?? { heading: "", intro: "" };
 
   const steps = getHowToSteps(tool);
   const faqs = getFaqs(tool);
@@ -232,22 +252,19 @@ export default async function ToolPage(props: PageProps<"/tools/[category]/[slug
         </div>
       </section>
 
-      {/* Compress-to-exact-size cluster — only on the Compress PDF page */}
-      {tool.slug === "compress-pdf" && (
+      {/* Programmatic landing-page cluster for this tool (exact-size / dimensions) */}
+      {clusterPages.length > 0 && (
         <section className="mt-14">
-          <h2 className="mb-4 text-xl font-bold tracking-tight">Compress PDF to an exact size</h2>
-          <p className="mb-4 max-w-2xl text-muted-foreground">
-            Need to hit a strict upload limit for an exam, government or admission form? Use a
-            target-size compressor that reduces your PDF to a specific size automatically:
-          </p>
+          <h2 className="mb-4 text-xl font-bold tracking-tight">{clusterHeading}</h2>
+          <p className="mb-4 max-w-2xl text-muted-foreground">{clusterIntro}</p>
           <div className="flex flex-wrap gap-2">
-            {compressTargets.map((target) => (
+            {clusterPages.map((page) => (
               <Link
-                key={target.slug}
-                href={`/${target.slug}`}
+                key={page.slug}
+                href={`/${page.slug}`}
                 className="rounded-full border border-border bg-card px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
               >
-                to {target.display}
+                {page.chip}
               </Link>
             ))}
           </div>
