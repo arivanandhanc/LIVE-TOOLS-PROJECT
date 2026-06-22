@@ -10,11 +10,13 @@ type Fmt = "jpg" | "png" | "webp";
 
 const FMT_DISPLAY: Record<Fmt, string> = { jpg: "JPG", png: "PNG", webp: "WebP" };
 
-// Each format gets a curated, realistic set of KB targets people search for.
+// Each format gets a realistic set of KB targets people search for. Limited to
+// formats a browser canvas can actually encode (JPEG/PNG/WebP) — GIF/AVIF can't
+// be produced client-side, so we don't fake pages for them.
 const SIZES: Record<Fmt, number[]> = {
-  jpg: [10, 20, 30, 50, 100, 150, 200, 300, 500],
-  png: [50, 100, 200, 300, 500],
-  webp: [20, 50, 100, 200],
+  jpg: [10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200, 250, 300, 400, 500],
+  png: [20, 30, 50, 75, 100, 150, 200, 250, 300, 400, 500],
+  webp: [10, 20, 30, 50, 75, 100, 150, 200, 300, 500],
 };
 
 function display(kb: number): string {

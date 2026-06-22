@@ -28,6 +28,14 @@ const seoGroups = [
     label: "Resize images to exact dimensions",
     pages: allSeoPages.filter((p) => p.cluster === "resize-image").slice(0, 8),
   },
+  {
+    label: "Social media image sizes",
+    pages: allSeoPages.filter((p) => p.cluster.startsWith("social-")).slice(0, 12),
+  },
+  {
+    label: "Passport & ID photo sizes",
+    pages: allSeoPages.filter((p) => p.cluster === "photo-id").slice(0, 10),
+  },
 ];
 
 const trust = [
