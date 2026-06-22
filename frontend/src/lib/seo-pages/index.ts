@@ -15,6 +15,7 @@ import {
 import { imageCompressPages } from "./compress-image";
 import { imageResizePages } from "./resize-image";
 import { photoIdPages } from "./photo-id";
+import { socialMediaPages } from "./social-media";
 
 export type { SeoPage } from "./types";
 
@@ -51,6 +52,7 @@ export const allSeoPages: SeoPage[] = [
   ...imageCompressPages,
   ...imageResizePages,
   ...photoIdPages,
+  ...socialMediaPages,
 ];
 
 const bySlug = new Map(allSeoPages.map((p) => [p.slug, p]));

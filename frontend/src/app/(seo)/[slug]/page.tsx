@@ -45,7 +45,7 @@ export default async function SeoLandingPage(props: PageProps<"/[slug]">) {
   if (!page) notFound();
 
   const url = `${siteConfig.url}/${page.slug}`;
-  const siblings = siblingPages(page);
+  const siblings = siblingPages(page).slice(0, 32);
   const parent = page.breadcrumb[page.breadcrumb.length - 1];
   const related = getToolsByCategory(page.relatedCategory)
     .filter((t) => t.status === "live")

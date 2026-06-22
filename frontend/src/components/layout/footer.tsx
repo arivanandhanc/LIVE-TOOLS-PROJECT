@@ -8,6 +8,16 @@ const footerLinks = {
     { title: "All Tools", href: "/tools" },
     { title: "Dashboard", href: "/dashboard" },
   ],
+  // High-intent programmatic landing pages — sitewide links concentrate crawl
+  // and internal PageRank on our best money-pages.
+  Popular: [
+    { title: "Compress PDF to 100KB", href: "/compress-pdf-to-100kb" },
+    { title: "Compress PDF to 50KB", href: "/compress-pdf-to-50kb" },
+    { title: "Compress JPG to 50KB", href: "/compress-jpg-to-50kb" },
+    { title: "Compress JPG to 20KB", href: "/compress-jpg-to-20kb" },
+    { title: "Resize Image to 1080×1080", href: "/resize-image-to-1080x1080" },
+    { title: "Compress PDF to 200KB", href: "/compress-pdf-to-200kb" },
+  ],
   Company: [
     { title: "About", href: "/about" },
     { title: "Blog", href: "/blog" },
@@ -27,7 +37,7 @@ export function Footer() {
   return (
     <footer className="border-t border-border bg-card/40">
       <div className="container-page py-14">
-        <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr_1fr_1fr]">
+        <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-[1.5fr_repeat(5,1fr)]">
           <div className="space-y-4">
             <Logo />
             <p className="max-w-xs text-sm text-muted-foreground">{siteConfig.tagline}</p>

@@ -10,16 +10,56 @@ interface Dim {
 }
 
 const DIMS: Dim[] = [
-  { w: 1080, h: 1080, use: "Instagram posts and square profile pictures" },
-  { w: 1080, h: 1920, use: "Instagram, Facebook and WhatsApp stories and reels" },
-  { w: 1920, h: 1080, use: "full-HD wallpapers, YouTube thumbnails and slide backgrounds" },
-  { w: 1280, h: 720, use: "HD video thumbnails and presentation images" },
-  { w: 1200, h: 630, use: "Open Graph / social-share preview images for links" },
-  { w: 1000, h: 1000, use: "marketplace and e-commerce product photos" },
-  { w: 800, h: 600, use: "classic 4:3 web images and email banners" },
-  { w: 600, h: 600, use: "small square thumbnails and avatars" },
+  // Squares — avatars, product shots, icons
+  { w: 100, h: 100, use: "favicons, tiny avatars and form thumbnails" },
+  { w: 150, h: 150, use: "small avatars and thumbnail grids" },
+  { w: 200, h: 200, use: "profile thumbnails and form photo boxes" },
+  { w: 250, h: 250, use: "compact avatars and catalog thumbnails" },
+  { w: 300, h: 300, use: "form photo boxes and small product images" },
+  { w: 350, h: 350, use: "profile photos and catalog thumbnails" },
+  { w: 400, h: 400, use: "social profile pictures and avatars" },
   { w: 500, h: 500, use: "compact profile photos and icons" },
-  { w: 300, h: 300, use: "tiny thumbnails and form photo boxes" },
+  { w: 512, h: 512, use: "app icons and AI image inputs" },
+  { w: 600, h: 600, use: "square thumbnails and avatars" },
+  { w: 700, h: 700, use: "medium square images" },
+  { w: 800, h: 800, use: "e-commerce product photos" },
+  { w: 900, h: 900, use: "large square images" },
+  { w: 1000, h: 1000, use: "marketplace and e-commerce product photos" },
+  { w: 1080, h: 1080, use: "Instagram posts and square profile pictures" },
+  { w: 1200, h: 1200, use: "high-res square product photos" },
+  { w: 1500, h: 1500, use: "print-ready square images" },
+  { w: 2000, h: 2000, use: "large square print and design assets" },
+  // Standard landscape resolutions
+  { w: 640, h: 480, use: "classic VGA web images" },
+  { w: 800, h: 600, use: "classic 4:3 web images and email banners" },
+  { w: 1024, h: 768, use: "presentation slides and tablet wallpapers" },
+  { w: 1280, h: 720, use: "HD video thumbnails and presentation images" },
+  { w: 1280, h: 800, use: "widescreen laptop wallpapers" },
+  { w: 1280, h: 1024, use: "5:4 monitor wallpapers" },
+  { w: 1366, h: 768, use: "common laptop screen wallpapers" },
+  { w: 1440, h: 900, use: "widescreen desktop wallpapers" },
+  { w: 1600, h: 900, use: "HD+ widescreen images" },
+  { w: 1600, h: 1200, use: "4:3 high-resolution photos" },
+  { w: 1920, h: 1080, use: "full-HD wallpapers, thumbnails and slide backgrounds" },
+  { w: 1920, h: 1200, use: "16:10 desktop wallpapers" },
+  { w: 2048, h: 1152, use: "high-res 16:9 banners" },
+  { w: 2560, h: 1440, use: "QHD wallpapers and channel art" },
+  { w: 3840, h: 2160, use: "4K UHD wallpapers and displays" },
+  // Portrait
+  { w: 768, h: 1024, use: "portrait tablet images and posters" },
+  { w: 1080, h: 1350, use: "Instagram portrait posts" },
+  { w: 1080, h: 1920, use: "stories, reels and TikTok videos" },
+  { w: 1200, h: 1600, use: "portrait product and poster images" },
+  { w: 1500, h: 2000, use: "portrait print photos" },
+  // Web / share
+  { w: 1200, h: 630, use: "Open Graph / social-share preview images for links" },
+  { w: 1280, h: 640, use: "wide blog headers and banners" },
+  // Photo print sizes (px @ 300 DPI)
+  { w: 1050, h: 1500, use: "3.5×5 inch photo prints" },
+  { w: 1200, h: 1800, use: "4×6 inch photo prints" },
+  { w: 1500, h: 2100, use: "5×7 inch photo prints" },
+  { w: 2400, h: 3000, use: "8×10 inch photo prints" },
+  { w: 2480, h: 3508, use: "A4 documents and posters at 300 DPI" },
 ];
 
 function faqs(d: Dim): SeoFaq[] {
@@ -86,4 +126,21 @@ function makePage(d: Dim): SeoPage {
   };
 }
 
-export const imageResizePages: SeoPage[] = DIMS.map(makePage);
+// Fill in common square sizes (every 25 px) people search for — each "resize to
+// N×N" is a distinct query. Deduped against the curated DIMS above.
+const SQUARES: Dim[] = [];
+for (let s = 50; s <= 2000; s += 25) {
+  if (DIMS.some((d) => d.w === s && d.h === s)) continue;
+  SQUARES.push({
+    w: s,
+    h: s,
+    use:
+      s <= 300
+        ? "thumbnails, avatars and form photo boxes"
+        : s <= 800
+          ? "profile photos and product images"
+          : "high-resolution square images and prints",
+  });
+}
+
+export const imageResizePages: SeoPage[] = [...DIMS, ...SQUARES].map(makePage);

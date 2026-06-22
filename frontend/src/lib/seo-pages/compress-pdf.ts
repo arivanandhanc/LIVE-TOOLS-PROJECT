@@ -24,24 +24,16 @@ export interface CompressTarget {
 const KB = 1024;
 const MB = 1024 * 1024;
 
-/** Curated, high-intent size targets people actually search for. */
+/** High-intent KB / MB size targets people actually search for. */
+const KB_SIZES = [
+  10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100,
+  110, 120, 125, 130, 150, 175, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900,
+];
+const MB_SIZES = [1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25];
+
 const RAW: Array<{ label: string; display: string; bytes: number }> = [
-  { label: "10kb", display: "10 KB", bytes: 10 * KB },
-  { label: "15kb", display: "15 KB", bytes: 15 * KB },
-  { label: "20kb", display: "20 KB", bytes: 20 * KB },
-  { label: "25kb", display: "25 KB", bytes: 25 * KB },
-  { label: "30kb", display: "30 KB", bytes: 30 * KB },
-  { label: "40kb", display: "40 KB", bytes: 40 * KB },
-  { label: "50kb", display: "50 KB", bytes: 50 * KB },
-  { label: "75kb", display: "75 KB", bytes: 75 * KB },
-  { label: "100kb", display: "100 KB", bytes: 100 * KB },
-  { label: "150kb", display: "150 KB", bytes: 150 * KB },
-  { label: "200kb", display: "200 KB", bytes: 200 * KB },
-  { label: "300kb", display: "300 KB", bytes: 300 * KB },
-  { label: "500kb", display: "500 KB", bytes: 500 * KB },
-  { label: "1mb", display: "1 MB", bytes: 1 * MB },
-  { label: "2mb", display: "2 MB", bytes: 2 * MB },
-  { label: "5mb", display: "5 MB", bytes: 5 * MB },
+  ...KB_SIZES.map((kb) => ({ label: `${kb}kb`, display: `${kb} KB`, bytes: kb * KB })),
+  ...MB_SIZES.map((mb) => ({ label: `${mb}mb`, display: `${mb} MB`, bytes: mb * MB })),
 ];
 
 export const compressTargets: CompressTarget[] = RAW.map((r) => ({
