@@ -14,6 +14,7 @@ import {
 } from "./compress-pdf";
 import { imageCompressPages } from "./compress-image";
 import { imageResizePages } from "./resize-image";
+import { photoIdPages } from "./photo-id";
 
 export type { SeoPage } from "./types";
 
@@ -49,6 +50,7 @@ export const allSeoPages: SeoPage[] = [
   ...pdfPages,
   ...imageCompressPages,
   ...imageResizePages,
+  ...photoIdPages,
 ];
 
 const bySlug = new Map(allSeoPages.map((p) => [p.slug, p]));
