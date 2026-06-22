@@ -9,7 +9,26 @@ import { ToolCard } from "@/components/tool-card";
 import {
   categories, getFeaturedTools, TOOL_COUNT, LIVE_TOOL_COUNT,
 } from "@/lib/tools/registry";
+import { allSeoPages } from "@/lib/seo-pages";
 import { siteConfig } from "@/lib/site";
+
+// Curated hub into the high-intent programmatic landing pages.
+const seoGroups = [
+  {
+    label: "Compress PDF to a target size",
+    pages: allSeoPages.filter((p) => p.cluster === "compress-pdf").slice(0, 10),
+  },
+  {
+    label: "Compress images to a target size",
+    pages: allSeoPages
+      .filter((p) => p.cluster.startsWith("compress-") && p.cluster !== "compress-pdf")
+      .slice(0, 10),
+  },
+  {
+    label: "Resize images to exact dimensions",
+    pages: allSeoPages.filter((p) => p.cluster === "resize-image").slice(0, 8),
+  },
+];
 
 const trust = [
   { icon: Zap, title: "Blazing fast", body: "Most tools run instantly in your browser — no upload, no waiting." },
@@ -76,6 +95,36 @@ export default function HomePage() {
           {categories.map((category) => (
             <CategoryCard key={category.id} category={category} />
           ))}
+        </div>
+      </section>
+
+      {/* High-intent landing-page hub — internal links from the highest-authority page */}
+      <section className="border-t border-border bg-card/40">
+        <div className="container-page py-16">
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Popular size &amp; format tasks</h2>
+            <p className="mt-1 text-muted-foreground">
+              Hit an exact file size or dimension in one click — free, private and instant in your browser.
+            </p>
+          </div>
+          <div className="space-y-6">
+            {seoGroups.map((group) => (
+              <div key={group.label}>
+                <h3 className="mb-3 text-sm font-semibold text-muted-foreground">{group.label}</h3>
+                <div className="flex flex-wrap gap-2">
+                  {group.pages.map((page) => (
+                    <Link
+                      key={page.slug}
+                      href={`/${page.slug}`}
+                      className="rounded-full border border-border bg-card px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
+                    >
+                      {page.h1}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
