@@ -4,6 +4,11 @@ import { posts } from "@/lib/blog";
 import { allSeoPages } from "@/lib/seo-pages";
 import { siteConfig } from "@/lib/site";
 
+// Prerender as a static file served from the CDN edge (no serverless cold
+// start). A slow/cold sitemap response is a common cause of GSC "couldn't
+// fetch"; static delivery makes it return instantly for Google's fetcher.
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = siteConfig.url;
   // Date-only lastmod (YYYY-MM-DD) — the most universally-accepted W3C-datetime
