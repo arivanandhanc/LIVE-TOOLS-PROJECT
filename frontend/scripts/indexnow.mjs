@@ -4,12 +4,19 @@
  * every URL in the live sitemap. No account/login needed: ownership is proven by
  * the key file served at https://<host>/<key>.txt.
  *
- * Usage:  node scripts/indexnow.mjs
+ * Usage:  node scripts/indexnow.mjs [key]
+ *   - No argument: uses the current key below (its key file must be live at
+ *     https://<host>/<key>.txt).
+ *   - Pass a key (or set INDEXNOW_KEY) to submit with a specific hosted key,
+ *     e.g. before a freshly-rotated key file has deployed:
+ *       node scripts/indexnow.mjs c119c0c0e75c5f8cf0914227a4f32259
  * Run it after each deploy (or wire into CI) to push fresh content for crawling.
  */
 
 const HOST = "tools.arivanandhan.in";
-const KEY = "c119c0c0e75c5f8cf0914227a4f32259";
+// Current IndexNow key. Override via argv[2] / INDEXNOW_KEY when the matching
+// key file isn't deployed yet. The key file must be live at https://HOST/<key>.txt.
+const KEY = process.argv[2] || process.env.INDEXNOW_KEY || "2e07c95e36124dc1a8f33572ea750e28";
 const SITEMAP = `https://${HOST}/sitemap.xml`;
 const ENDPOINT = "https://api.indexnow.org/indexnow";
 
