@@ -1,9 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import { Sparkles, Loader2, AlertCircle } from "lucide-react";
-import { useAuth } from "@/components/auth-provider";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { CopyButton } from "@/components/ui/copy-button";
@@ -12,7 +10,6 @@ import { FileInput } from "@/components/tools/file-input";
 import { getAiStatus, runAiFileTool } from "@/lib/api";
 
 export default function OcrPdf() {
-  const { user, loading } = useAuth();
   const [enabled, setEnabled] = React.useState<boolean | null>(null);
   const [file, setFile] = React.useState<File | null>(null);
   const [busy, setBusy] = React.useState(false);
@@ -66,20 +63,6 @@ export default function OcrPdf() {
       </ToolPanel>
     );
   }
-  if (!loading && !user) {
-    return (
-      <ToolPanel className="text-center">
-        <Sparkles className="mx-auto size-6 text-primary" />
-        <p className="mt-3 font-medium">Sign in to use AI OCR</p>
-        <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">OCR runs on our secure backend and is part of your account.</p>
-        <div className="mt-4 flex justify-center gap-2">
-          <Button asChild><Link href="/login">Sign in</Link></Button>
-          <Button asChild variant="outline"><Link href="/signup">Create account</Link></Button>
-        </div>
-      </ToolPanel>
-    );
-  }
-
   return (
     <div className="grid gap-4 lg:grid-cols-2">
       <ToolPanel className="space-y-4">

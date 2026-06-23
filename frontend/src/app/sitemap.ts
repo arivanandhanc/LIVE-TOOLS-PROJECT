@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { tools, categories } from "@/lib/tools/registry";
 import { posts } from "@/lib/blog";
 import { allSeoPages } from "@/lib/seo-pages";
+import { services, serviceCategories } from "@/lib/resources/services";
 import { siteConfig } from "@/lib/site";
 
 // Prerender as a static file served from the CDN edge (no serverless cold
@@ -18,6 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
     { url: base, lastModified: now, changeFrequency: "daily", priority: 1 },
     { url: `${base}/tools`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
+    { url: `${base}/resources`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
     { url: `${base}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.6 },
     { url: `${base}/security`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: `${base}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
@@ -56,5 +58,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return [...staticPages, ...categoryPages, ...toolPages, ...blogPages, ...seoPages];
+  const resourceCategoryPages: MetadataRoute.Sitemap = serviceCategories.map((c) => ({
+    url: `${base}/resources/${c.slug}`,
+    lastModified: now,
+    changeFrequency: "weekly",
+    priority: 0.6,
+  }));
+
+  const servicePages: MetadataRoute.Sitemap = services.map((svc) => ({
+    url: `${base}/resources/${svc.category}/${svc.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.5,
+  }));
+
+  return [
+    ...staticPages,
+    ...categoryPages,
+    ...toolPages,
+    ...blogPages,
+    ...seoPages,
+    ...resourceCategoryPages,
+    ...servicePages,
+  ];
 }

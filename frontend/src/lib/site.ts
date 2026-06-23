@@ -28,4 +28,5 @@ export const mainNav = [
   { title: "Image", href: "/tools/image" },
   { title: "CSV", href: "/tools/csv" },
   { title: "Developer", href: "/tools/developer" },
+  { title: "Resources", href: "/resources" },
 ];

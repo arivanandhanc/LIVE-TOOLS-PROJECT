@@ -12,6 +12,8 @@ const accentClass: Record<string, string> = {
   "cat-text": "text-cat-text bg-cat-text/10",
   "cat-dev": "text-cat-dev bg-cat-dev/10",
   "cat-ai": "text-cat-ai bg-cat-ai/10",
+  "cat-convert": "text-cat-convert bg-cat-convert/10",
+  "cat-fun": "text-cat-fun bg-cat-fun/10",
 };
 
 export function ToolCard({ tool }: { tool: Tool }) {
