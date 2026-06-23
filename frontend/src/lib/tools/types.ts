@@ -7,6 +7,7 @@ export type ToolCategoryId =
   | "text"
   | "developer"
   | "convert"
+  | "fun"
   | "ai";
 
 /** Where the tool's work happens. */

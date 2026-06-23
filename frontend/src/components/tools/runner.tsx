@@ -5,12 +5,15 @@ import dynamic from "next/dynamic";
 import { Loader2 } from "lucide-react";
 import type { ComponentType } from "react";
 import { recordToolUsage } from "@/lib/api";
+import { genToolMap } from "@/lib/tools/generated";
 
 const Loading = () => (
   <div className="flex min-h-64 items-center justify-center rounded-xl border border-border bg-card text-muted-foreground">
     <Loader2 className="size-6 animate-spin" />
   </div>
 );
+
+const GenericTool = dynamic(() => import("./generic-tool"), { loading: Loading });
 
 /**
  * Maps a tool slug to its lazily-loaded client implementation.
@@ -175,16 +178,20 @@ const registry: Record<string, ComponentType> = {
 };
 
 export function ToolRunner({ slug }: { slug: string }) {
+  const isGenerated = !!genToolMap[slug];
   const Component = registry[slug];
+  const available = isGenerated || !!Component;
 
   // Record that this tool was used so it appears in the dashboard history.
   // Guarded so React StrictMode's double-mount in dev only fires once.
   const recorded = React.useRef(false);
   React.useEffect(() => {
-    if (!Component || recorded.current) return;
+    if (!available || recorded.current) return;
     recorded.current = true;
     recordToolUsage(slug);
-  }, [slug, Component]);
+  }, [slug, available]);
+
+  if (isGenerated) return <GenericTool slug={slug} />;
 
   if (!Component) {
     return (

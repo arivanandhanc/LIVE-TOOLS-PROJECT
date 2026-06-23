@@ -11,7 +11,8 @@ import {
   AtSign, FlipVertical2, Radio, Repeat, Percent,
   type LucideIcon,
 } from "lucide-react";
-import type { Tool, ToolCategory } from "./types";
+import type { Tool, ToolCategory, ToolCategoryId } from "./types";
+import { genTools } from "./generated";
 
 export const categories: ToolCategory[] = [
   {
@@ -63,6 +64,14 @@ export const categories: ToolCategory[] = [
     icon: Calculator,
   },
   {
+    id: "fun",
+    name: "Fun & Text Art",
+    slug: "fun",
+    description: "Fancy text, emoji, random generators and games.",
+    accent: "cat-fun",
+    icon: Shuffle,
+  },
+  {
     id: "ai",
     name: "AI Tools",
     slug: "ai",
@@ -73,6 +82,18 @@ export const categories: ToolCategory[] = [
 ];
 
 const t = (tool: Tool): Tool => tool;
+
+/** Default icon per category for auto-generated tools. */
+const GEN_ICON: Record<ToolCategoryId, LucideIcon> = {
+  pdf: FileText,
+  image: ImageIcon,
+  csv: Table2,
+  text: Type,
+  developer: Code2,
+  convert: Calculator,
+  fun: Shuffle,
+  ai: Sparkles,
+};
 
 export const tools: Tool[] = [
   // ─────────────────────────── PDF (server-side) ───────────────────────────
@@ -225,6 +246,21 @@ export const tools: Tool[] = [
   t({ slug: "ocr-extraction", name: "OCR Text Extraction", description: "Extract text from images and scans with AI.", category: "ai", icon: ScanText, keywords: ["ocr", "extract"], mode: "server", status: "live", savable: true }),
   t({ slug: "content-generator", name: "AI Content Generator", description: "Generate marketing copy, summaries and more.", category: "ai", icon: Bot, keywords: ["generate", "ai", "copy"], mode: "server", status: "live", savable: true }),
   t({ slug: "image-analysis", name: "AI Image Analysis", description: "Describe and analyze image contents with AI.", category: "ai", icon: Eye, keywords: ["vision", "analyze"], mode: "server", status: "live", savable: true }),
+
+  // ───────── Auto-generated tools (data-driven engine) ─────────
+  ...genTools.map((g) =>
+    t({
+      slug: g.slug,
+      name: g.name,
+      description: g.description,
+      category: g.category,
+      icon: GEN_ICON[g.category] ?? Wrench,
+      keywords: g.keywords,
+      mode: "client",
+      status: "live",
+      featured: g.featured,
+    })
+  ),
 ];
 
 // ───────────────────────────── helpers ─────────────────────────────
