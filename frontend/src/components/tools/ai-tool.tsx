@@ -1,9 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import { Loader2, Sparkles, AlertCircle, Upload } from "lucide-react";
-import { useAuth } from "@/components/auth-provider";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -23,7 +21,6 @@ const CONFIG: Record<string, { kind: Kind; inputLabel: string; placeholder?: str
 
 export function AiTool({ slug }: { slug: string }) {
   const cfg = CONFIG[slug];
-  const { user, loading } = useAuth();
   const [enabled, setEnabled] = React.useState<boolean | null>(null);
   const [text, setText] = React.useState("");
   const [question, setQuestion] = React.useState("");
@@ -85,22 +82,6 @@ export function AiTool({ slug }: { slug: string }) {
         <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">
           This deployment doesn&apos;t have an AI provider configured yet. Check back soon.
         </p>
-      </ToolPanel>
-    );
-  }
-
-  if (!loading && !user) {
-    return (
-      <ToolPanel className="text-center">
-        <Sparkles className="mx-auto size-6 text-primary" />
-        <p className="mt-3 font-medium">Sign in to use AI tools</p>
-        <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">
-          AI tools run on our secure backend and are part of your account. Create a free account or sign in to continue.
-        </p>
-        <div className="mt-4 flex justify-center gap-2">
-          <Button asChild><Link href="/login">Sign in</Link></Button>
-          <Button asChild variant="outline"><Link href="/signup">Create account</Link></Button>
-        </div>
       </ToolPanel>
     );
   }

@@ -6,6 +6,7 @@ export type ToolCategoryId =
   | "csv"
   | "text"
   | "developer"
+  | "convert"
   | "ai";
 
 /** Where the tool's work happens. */
