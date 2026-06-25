@@ -25,6 +25,7 @@ const footerLinks = {
     { title: "Support", href: "https://support.arivanandhan.in" },
   ],
   Legal: [
+     { title: "Pen Test Report", href: "doc/Scrab-Tools-Pen-Test-Report.pdf" },
     { title: "Security", href: "/security" },
     { title: "Privacy Policy", href: "/legal/privacy" },
     { title: "Cookie Policy", href: "/legal/cookies" },

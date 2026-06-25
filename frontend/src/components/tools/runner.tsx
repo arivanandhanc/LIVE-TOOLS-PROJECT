@@ -117,6 +117,15 @@ const registry: Record<string, ComponentType> = {
   "extract-pages": dynamic(() => import("./impl/extract-pages"), { loading: Loading }),
   "remove-pages": dynamic(() => import("./impl/remove-pages"), { loading: Loading }),
   "add-page-numbers": dynamic(() => import("./impl/add-page-numbers"), { loading: Loading }),
+  "png-to-pdf": dynamic(() => import("./impl/png-to-pdf"), { loading: Loading }),
+  "crop-pdf": dynamic(() => import("./impl/crop-pdf"), { loading: Loading }),
+  "resize-pdf": dynamic(() => import("./impl/resize-pdf"), { loading: Loading }),
+  "flatten-pdf": dynamic(() => import("./impl/flatten-pdf"), { loading: Loading }),
+  "edit-pdf-metadata": dynamic(() => import("./impl/edit-pdf-metadata"), { loading: Loading }),
+  "reverse-pdf-pages": dynamic(() => import("./impl/reverse-pdf-pages"), { loading: Loading }),
+  "bates-numbering": dynamic(() => import("./impl/bates-numbering"), { loading: Loading }),
+  "n-up-pdf": dynamic(() => import("./impl/n-up-pdf"), { loading: Loading }),
+  "alternate-mix-pdf": dynamic(() => import("./impl/alternate-mix-pdf"), { loading: Loading }),
 
   // CSV / data
   "xml-to-csv": dynamic(() => import("./impl/xml-to-csv"), { loading: Loading }),

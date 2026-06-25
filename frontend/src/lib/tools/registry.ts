@@ -8,7 +8,7 @@ import {
   Shuffle, GitCompareArrows, Globe, Crop, Maximize2, Eye, Wand2,
   Replace, FileSpreadsheet, Presentation, FileImage, Quote, AlignLeft,
   KeySquare, Network, ShieldCheck, Database, Regex, Pipette,
-  AtSign, FlipVertical2, Radio, Repeat, Percent,
+  AtSign, FlipVertical2, Radio, Repeat, Percent, Layers, FileCog,
   type LucideIcon,
 } from "lucide-react";
 import type { Tool, ToolCategory, ToolCategoryId } from "./types";
@@ -114,6 +114,15 @@ export const tools: Tool[] = [
   t({ slug: "remove-pages", name: "Remove Pages", description: "Delete unwanted pages from a PDF.", category: "pdf", icon: Scissors, keywords: ["delete", "pages"], mode: "client", status: "live", savable: true }),
   t({ slug: "add-page-numbers", name: "Add Page Numbers", description: "Insert page numbers with custom position and style.", category: "pdf", icon: ListOrdered, keywords: ["pagination", "numbers"], mode: "client", status: "live", savable: true }),
   t({ slug: "add-header-footer", name: "Add Header & Footer", description: "Add headers, footers and page numbers to every PDF page.", category: "pdf", icon: AlignLeft, keywords: ["header", "footer"], mode: "client", status: "live", savable: true }),
+  t({ slug: "png-to-pdf", name: "PNG to PDF", description: "Combine PNG images into a single PDF document.", category: "pdf", icon: FileInput, keywords: ["png", "image", "convert"], mode: "client", status: "live", savable: true }),
+  t({ slug: "crop-pdf", name: "Crop PDF", description: "Trim white margins or borders from every page of a PDF.", category: "pdf", icon: Crop, keywords: ["trim", "margins", "border"], mode: "client", status: "live", savable: true }),
+  t({ slug: "resize-pdf", name: "Resize PDF", description: "Scale PDF pages to A4, Letter, Legal or another standard size.", category: "pdf", icon: Maximize2, keywords: ["scale", "a4", "letter", "page size"], mode: "client", status: "live", savable: true }),
+  t({ slug: "flatten-pdf", name: "Flatten PDF", description: "Bake form fields and annotations into the page so they can't be edited.", category: "pdf", icon: Layers, keywords: ["flatten", "form", "fields"], mode: "client", status: "live", savable: true }),
+  t({ slug: "edit-pdf-metadata", name: "Edit PDF Metadata", description: "Change a PDF's title, author, subject and keywords.", category: "pdf", icon: FileCog, keywords: ["metadata", "title", "author", "properties"], mode: "client", status: "live", savable: true }),
+  t({ slug: "reverse-pdf-pages", name: "Reverse PDF Pages", description: "Flip the page order of a PDF so the last page comes first.", category: "pdf", icon: FlipVertical2, keywords: ["reverse", "order", "flip", "pages"], mode: "client", status: "live", savable: true }),
+  t({ slug: "bates-numbering", name: "Bates Numbering", description: "Stamp sequential Bates numbers on every page for legal discovery.", category: "pdf", icon: Hash, keywords: ["bates", "legal", "numbering", "discovery"], mode: "client", status: "live", savable: true }),
+  t({ slug: "n-up-pdf", name: "N-up PDF", description: "Place 2, 4, 6 or 9 pages on each sheet to save paper.", category: "pdf", icon: Columns3, keywords: ["n-up", "pages per sheet", "print", "booklet"], mode: "client", status: "live", savable: true }),
+  t({ slug: "alternate-mix-pdf", name: "Alternate & Mix PDF", description: "Interleave two PDFs page by page — ideal for odd/even scan stacks.", category: "pdf", icon: Repeat, keywords: ["interleave", "alternate", "mix", "merge", "scan"], mode: "client", status: "live", savable: true }),
 
   // ─────────────────────────── CSV & Spreadsheet ───────────────────────────
   t({ slug: "csv-to-json", name: "CSV to JSON", description: "Convert CSV data into structured JSON.", category: "csv", icon: FileJson, keywords: ["convert", "json"], mode: "client", status: "live", featured: true, savable: true }),
