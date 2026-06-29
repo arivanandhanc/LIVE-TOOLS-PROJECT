@@ -2,7 +2,8 @@ import type { MetadataRoute } from "next";
 import { tools, categories } from "@/lib/tools/registry";
 import { posts } from "@/lib/blog";
 import { allSeoPages } from "@/lib/seo-pages";
-import { services, serviceCategories } from "@/lib/resources/services";
+import { serviceCategories } from "@/lib/resources/services";
+import { legalSlugs } from "@/lib/legal";
 import { siteConfig } from "@/lib/site";
 
 // Prerender as a static file served from the CDN edge (no serverless cold
@@ -24,10 +25,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/security`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: `${base}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${base}/about/founder`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
-    { url: `${base}/legal/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
-    { url: `${base}/legal/cookies`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
-    { url: `${base}/legal/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${base}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.4 },
   ];
+
+  // Legal pages are derived from the single source of truth so a new doc
+  // (e.g. gdpr) is never silently left out of the sitemap.
+  const legalPages: MetadataRoute.Sitemap = legalSlugs.map((slug) => ({
+    url: `${base}/legal/${slug}`,
+    lastModified: now,
+    changeFrequency: "yearly",
+    priority: 0.3,
+  }));
 
   const categoryPages: MetadataRoute.Sitemap = categories.map((c) => ({
     url: `${base}/tools/${c.slug}`,
@@ -65,20 +73,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  const servicePages: MetadataRoute.Sitemap = services.map((svc) => ({
-    url: `${base}/resources/${svc.category}/${svc.slug}`,
-    lastModified: now,
-    changeFrequency: "monthly",
-    priority: 0.5,
-  }));
+  // Individual service pages (/resources/[category]/[slug]) are intentionally
+  // omitted: they're thin, near-duplicate "describe + outbound link" pages and
+  // carry robots noindex. Listing them would only waste crawl budget. The
+  // category hubs above stay in the sitemap.
 
   return [
     ...staticPages,
+    ...legalPages,
     ...categoryPages,
     ...toolPages,
     ...blogPages,
     ...seoPages,
     ...resourceCategoryPages,
-    ...servicePages,
   ];
 }
