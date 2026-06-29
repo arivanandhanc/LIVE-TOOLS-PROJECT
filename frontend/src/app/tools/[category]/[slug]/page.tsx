@@ -26,7 +26,9 @@ export async function generateMetadata(
   const tool = getTool(slug);
   if (!tool) return {};
   const cat = getCategory(tool.category);
-  const title = `${tool.name} — Free Online ${cat?.name ?? "File"} Tool`;
+  // cat.name is already plural ("PDF Tools", "Image Tools"), so don't append
+  // "Tool" — that produced "PDF Tools Tool". Keep the category keyword intact.
+  const title = `${tool.name} — Free Online ${cat?.name ?? "File Tool"}`;
   const description = getLongDescription(tool);
   const canonical = `/tools/${tool.category}/${tool.slug}`;
   const keywords = Array.from(
