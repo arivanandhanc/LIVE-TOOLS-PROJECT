@@ -8,6 +8,18 @@ import rateLimit from "express-rate-limit";
 import { randomUUID } from "crypto";
 import { env } from "../config/env";
 import { logger } from "../config/logger";
+import { clientIp } from "../lib/client-ip";
+
+/**
+ * Rate-limit key. `req.ip` is derived from the forwarded-for chain under
+ * `trust proxy`, which a client hitting the Render origin directly can pad to
+ * rotate `req.ip` and slip the limit. `clientIp()` prefers the non-forgeable
+ * `x-vercel-forwarded-for` (set by our own proxy) before falling back, giving a
+ * stabler key for the normal browser path.
+ */
+function rateLimitKey(req: Request): string {
+  return clientIp(req) ?? req.ip ?? "unknown";
+}
 
 /** Attach a request id for tracing. */
 function requestId(req: Request, res: Response, next: NextFunction) {
@@ -22,7 +34,10 @@ const corsMiddleware = cors({
     // Allow same-origin / server-to-server (no origin) and allowlisted origins.
     if (!origin || env.corsOrigins.includes(origin)) return callback(null, true);
     logger.warn({ origin }, "Blocked by CORS");
-    return callback(new Error("Not allowed by CORS"));
+    // Reject by withholding CORS headers (callback(null, false)) rather than
+    // throwing — throwing surfaces as a 500 to the error handler. The browser
+    // still blocks the cross-origin read because no ACAO header is sent.
+    return callback(null, false);
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
@@ -34,6 +49,7 @@ export const apiRateLimiter = rateLimit({
   max: env.rateLimitMax,
   standardHeaders: true,
   legacyHeaders: false,
+  keyGenerator: rateLimitKey,
   message: { error: "Too many requests — please slow down." },
 });
 
@@ -42,6 +58,7 @@ export const uploadRateLimiter = rateLimit({
   max: env.uploadRateLimitMax,
   standardHeaders: true,
   legacyHeaders: false,
+  keyGenerator: rateLimitKey,
   message: { error: "Too many uploads — please try again shortly." },
 });
 
@@ -54,6 +71,7 @@ export const authRateLimiter = rateLimit({
   skipSuccessfulRequests: true,
   standardHeaders: true,
   legacyHeaders: false,
+  keyGenerator: rateLimitKey,
   message: { error: "Too many attempts — please wait a few minutes and try again." },
 });
 
