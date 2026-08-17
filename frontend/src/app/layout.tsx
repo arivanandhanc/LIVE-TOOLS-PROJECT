@@ -7,6 +7,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { ConsentBanner } from "@/components/consent-banner";
 import { RecaptchaProvider } from "@/components/recaptcha-provider";
+import { Analytics } from "@vercel/analytics/next";
 import { siteConfig } from "@/lib/site";
 
 const inter = Inter({
@@ -130,6 +131,8 @@ export default function RootLayout({
             <ConsentBanner />
             {/* reCAPTCHA v3 — loaded on every page of the site */}
             <RecaptchaProvider />
+            {/* Vercel Web Analytics — page views across every route */}
+            <Analytics />
           </AuthProvider>
         </ThemeProvider>
       </body>
