@@ -223,3 +223,18 @@
     background-size: 56px 56px;
   }
 }
+
+/* ── Google reCAPTCHA v3 badge ──────────────────────────────────────────────
+   The badge is injected by Google's script and shown on every page. It stays
+   VISIBLE on purpose: Google's terms only allow hiding it if the "protected by
+   reCAPTCHA" notice is shown instead (see the footer). We only tame its
+   stacking so it sits under the cookie banner rather than over it. */
+.grecaptcha-badge {
+  visibility: visible;
+  z-index: 40 !important;
+  box-shadow: 0 2px 12px rgb(0 0 0 / 0.18) !important;
+}
+@media (max-width: 640px) {
+  /* Lift it clear of the cookie banner / sticky CTAs on small screens. */
+  .grecaptcha-badge { bottom: 5.5rem !important; }
+}

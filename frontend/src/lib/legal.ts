@@ -149,7 +149,7 @@ export const legalDocs: Record<string, LegalDoc> = {
       {
         heading: "3. Third-party cookies",
         body: [
-          "We use Google reCAPTCHA on sign-in, sign-up, and contact forms to protect against bots and abuse; Google may set cookies subject to its own privacy policy. Our hosting and CDN providers may also set strictly necessary cookies for security and load balancing.",
+          "We use Google reCAPTCHA across the whole site — it loads on every page so it can score a browsing session for signs of automation, and it is checked whenever you submit a form or send a file to our servers. This is a strictly necessary security measure and runs without collecting your consent choices; Google may set cookies and collect device and behaviour data subject to its own Privacy Policy and Terms of Service. Our hosting and CDN providers may also set strictly necessary cookies for security and load balancing.",
         ],
       },
       {

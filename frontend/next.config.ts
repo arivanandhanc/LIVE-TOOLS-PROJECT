@@ -8,8 +8,29 @@ const isDev = process.env.NODE_ENV === "development";
 const apiOrigin =
   process.env.NEXT_PUBLIC_API_URL || (isDev ? "http://localhost:4000" : "https://tools-live.onrender.com");
 
-// Google reCAPTCHA + Google Fonts endpoints that must be allowlisted.
-const recaptcha = "https://www.google.com https://www.gstatic.com";
+// Google reCAPTCHA endpoints that must be allowlisted. Covers both the classic
+// (api.js) and Enterprise (enterprise.js) loaders plus the challenge iframes,
+// which can be served from recaptcha.net in regions where google.com is blocked.
+const recaptcha =
+  "https://www.google.com https://www.gstatic.com https://recaptcha.google.com https://www.recaptcha.net";
+
+// Google AdSense. The loader pulls in ad tags, creatives and the Privacy
+// Sandbox / ad-traffic-quality beacons, each on its own host — miss one and the
+// slot silently renders blank, so keep these grouped and complete.
+const adsScripts =
+  "https://pagead2.googlesyndication.com https://tpc.googlesyndication.com " +
+  "https://googleads.g.doubleclick.net https://adservice.google.com " +
+  "https://partner.googleadservices.com https://www.googletagservices.com " +
+  "https://fundingchoicesmessages.google.com";
+const adsFrames =
+  "https://googleads.g.doubleclick.net https://tpc.googlesyndication.com " +
+  "https://www.google.com https://pagead2.googlesyndication.com";
+const adsConnect =
+  "https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net " +
+  "https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google " +
+  "https://csi.gstatic.com https://fundingchoicesmessages.google.com";
+// Creatives are served from arbitrary Google CDNs plus advertiser domains.
+const adsImages = `${adsScripts} https://www.googletagmanager.com https://*.g.doubleclick.net https://*.googleusercontent.com`;
 
 /**
  * Content-Security-Policy.
@@ -19,12 +40,12 @@ const recaptcha = "https://www.google.com https://www.gstatic.com";
  */
 const csp = [
   `default-src 'self'`,
-  `script-src 'self' 'unsafe-inline' ${recaptcha}${isDev ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline' ${recaptcha} ${adsScripts}${isDev ? " 'unsafe-eval'" : ""}`,
   `style-src 'self' 'unsafe-inline'`,
-  `img-src 'self' blob: data: ${recaptcha}`,
+  `img-src 'self' blob: data: ${recaptcha} ${adsImages}`,
   `font-src 'self' data:`,
-  `connect-src 'self' blob: ${apiOrigin} ${recaptcha} https://www.google-analytics.com`,
-  `frame-src https://www.google.com`,
+  `connect-src 'self' blob: ${apiOrigin} ${recaptcha} ${adsConnect} https://www.google-analytics.com`,
+  `frame-src ${recaptcha} ${adsFrames}`,
   `worker-src 'self' blob:`,
   `media-src 'self' blob:`,
   `object-src 'none'`,

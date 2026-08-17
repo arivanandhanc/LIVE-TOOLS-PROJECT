@@ -3,6 +3,7 @@ import pinoHttp from "pino-http";
 import { logger } from "./config/logger";
 import { applySecurity, apiRateLimiter } from "./middleware/security";
 import { identity } from "./middleware/identity";
+import { recaptchaGuard } from "./middleware/recaptcha";
 import { errorHandler, notFound } from "./middleware/error";
 import { healthRouter } from "./routes/health";
 import { toolsRouter } from "./routes/tools";
@@ -29,6 +30,11 @@ export function createApp() {
 
   // API surface
   app.use("/api", apiRateLimiter);
+  // Sitewide bot check: every state-changing /api call must carry a valid
+  // reCAPTCHA token (minus the skip list in env.recaptcha.skipPaths). Runs
+  // before the routers so a bot is rejected before we parse uploads or hit
+  // the database.
+  app.use("/api", recaptchaGuard);
   app.use("/api", authRouter);
   app.use("/api", adminRouter);
   app.use("/api", meRouter);

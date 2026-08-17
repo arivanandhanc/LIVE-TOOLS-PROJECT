@@ -1,4 +1,5 @@
 import { siteConfig } from "./site";
+import { actionFromPath, executeRecaptcha, needsRecaptcha } from "./recaptcha";
 
 /**
  * Thin API client with in-memory access token + automatic refresh.
@@ -54,14 +55,33 @@ interface RequestOptions extends RequestInit {
   retry?: boolean;
 }
 
+/**
+ * Mint a fresh reCAPTCHA v3 token for a state-changing call, unless the caller
+ * already supplied one. Tokens are single-use and expire in ~2 minutes, so we
+ * generate one per request rather than caching. Returns `{}` when reCAPTCHA is
+ * off or unavailable — the server decides whether that's acceptable.
+ */
+async function recaptchaHeader(
+  path: string,
+  method: string,
+  provided?: HeadersInit
+): Promise<Record<string, string>> {
+  const already = new Headers(provided ?? {}).has("x-recaptcha-token");
+  if (already || !needsRecaptcha(path, method)) return {};
+  const token = await executeRecaptcha(actionFromPath(path));
+  return token ? { "X-Recaptcha-Token": token } : {};
+}
+
 export async function apiFetch<T = unknown>(path: string, opts: RequestOptions = {}): Promise<T> {
   const { auth = false, retry = true, headers, ...rest } = opts;
+  const method = (rest.method ?? "GET").toUpperCase();
   const res = await fetch(`${apiBase()}${path}`, {
     ...rest,
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
       ...(auth && accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      ...(await recaptchaHeader(path, method, headers)),
       ...headers,
     },
   });
@@ -130,11 +150,16 @@ export async function runAiFileTool(tool: string, file: File, fields?: Record<st
   form.append("file", file);
   for (const [k, v] of Object.entries(fields ?? {})) form.append(k, v);
 
-  const doFetch = () =>
-    fetch(`${apiBase()}/api/ai/${tool}`, {
+  const path = `/api/ai/${tool}`;
+  // A fresh token per attempt — reCAPTCHA tokens are single-use.
+  const doFetch = async () =>
+    fetch(`${apiBase()}${path}`, {
       method: "POST",
       credentials: "include",
-      headers: getAccessToken() ? { Authorization: `Bearer ${getAccessToken()}` } : {},
+      headers: {
+        ...(getAccessToken() ? { Authorization: `Bearer ${getAccessToken()}` } : {}),
+        ...(await recaptchaHeader(path, "POST")),
+      },
       body: form,
     });
 

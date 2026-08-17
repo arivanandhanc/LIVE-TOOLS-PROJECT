@@ -15,7 +15,12 @@ healthRouter.get("/ready", (_req, res) => {
     services: {
       database: hasDb() ? "connected" : "disabled",
       storage: env.storageDriver,
-      recaptcha: env.recaptcha.enabled ? "enabled" : "disabled",
+      recaptcha:
+        env.recaptcha.enabled && env.recaptcha.configured
+          ? `enabled (${env.recaptcha.mode})`
+          : env.recaptcha.enabled
+            ? "misconfigured"
+            : "disabled",
     },
     serverTools: supportedServerTools,
     version: process.env.npm_package_version ?? "0.1.0",

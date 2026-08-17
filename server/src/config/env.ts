@@ -90,12 +90,45 @@ export const env = {
       (process.env.GMAIL_USER ? `Arivu's Scrab Tools <${process.env.GMAIL_USER}>` : "Arivu's Scrab Tools <no-reply@arivanandhan.in>"),
   },
 
-  // Google reCAPTCHA (secret stays server-side only)
-  recaptcha: {
-    secret: process.env.RECAPTCHA_SECRET_KEY || null,
-    minScore: Number(process.env.RECAPTCHA_MIN_SCORE ?? 0.5),
-    enabled: bool(process.env.RECAPTCHA_ENABLED, Boolean(process.env.RECAPTCHA_SECRET_KEY)),
-  },
+  // Google reCAPTCHA (credentials stay server-side only).
+  // Two tiers, verified through completely different APIs:
+  //   • "enterprise" → POST .../projects/{projectId}/assessments?key={apiKey}
+  //   • "classic"    → POST /recaptcha/api/siteverify with the secret key
+  // Must match NEXT_PUBLIC_RECAPTCHA_MODE in the web app.
+  recaptcha: (() => {
+    const mode = (process.env.RECAPTCHA_MODE ?? "enterprise").toLowerCase() as
+      | "enterprise"
+      | "classic";
+    const projectId = process.env.RECAPTCHA_PROJECT_ID || null;
+    const apiKey = process.env.RECAPTCHA_API_KEY || null;
+    const siteKey = process.env.RECAPTCHA_SITE_KEY || null;
+    const secret = process.env.RECAPTCHA_SECRET_KEY || null;
+    // Configured = we have everything needed to actually verify a token.
+    const configured =
+      mode === "enterprise" ? Boolean(projectId && apiKey && siteKey) : Boolean(secret);
+
+    return {
+      mode,
+      projectId,
+      apiKey,
+      siteKey,
+      secret,
+      configured,
+      minScore: Number(process.env.RECAPTCHA_MIN_SCORE ?? 0.5),
+      enabled: bool(process.env.RECAPTCHA_ENABLED, configured),
+      // Verify every state-changing /api call except these. They run without a
+      // user gesture (silent refresh, logout, OAuth redirects, usage beacons),
+      // so a token would cost quota and latency for no anti-abuse gain.
+      // Kept in sync with SKIP_PATHS in frontend/src/lib/recaptcha.ts.
+      skipPaths: (
+        process.env.RECAPTCHA_SKIP_PATHS ??
+        "/api/auth/refresh,/api/auth/logout,/api/auth/oauth,/api/usage"
+      )
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+    };
+  })(),
 
   // File handling
   maxUploadBytes: int(process.env.MAX_UPLOAD_BYTES, 50 * 1024 * 1024), // 50 MB

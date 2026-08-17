@@ -6,6 +6,7 @@ import { AuthProvider } from "@/components/auth-provider";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { ConsentBanner } from "@/components/consent-banner";
+import { RecaptchaProvider } from "@/components/recaptcha-provider";
 import { siteConfig } from "@/lib/site";
 
 const inter = Inter({
@@ -48,6 +49,10 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
+// Google AdSense publisher id. Overridable per-environment so preview
+// deployments can run without ads.
+const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "ca-pub-8840337065465233";
+
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#FBBF24" },
@@ -67,6 +72,16 @@ export default function RootLayout({
       className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
+        {/* Google AdSense — loaded on every page. React 19 hoists async scripts
+            into <head>, which is where AdSense expects its loader for site
+            verification and Auto ads. */}
+        {ADSENSE_CLIENT && (
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
+            crossOrigin="anonymous"
+          />
+        )}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -113,6 +128,8 @@ export default function RootLayout({
             <main className="flex-1">{children}</main>
             <Footer />
             <ConsentBanner />
+            {/* reCAPTCHA v3 — loaded on every page of the site */}
+            <RecaptchaProvider />
           </AuthProvider>
         </ThemeProvider>
       </body>

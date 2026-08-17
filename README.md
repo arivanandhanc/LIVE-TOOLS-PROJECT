@@ -42,7 +42,7 @@ scrab-tools/
 | Storage   | Local disk → Cloudflare R2 / S3 (driver-based) |
 | PDF engine| pdf-lib (pure JS, no native deps) |
 | Auth      | JWT (access) + rotating refresh sessions; OAuth + MFA scaffolded |
-| Security  | helmet, CORS allowlist, rate limiting, hpp, scrypt hashing, reCAPTCHA v3 |
+| Security  | helmet, CORS allowlist, rate limiting, hpp, scrypt hashing, sitewide reCAPTCHA |
 | Hosting   | Vercel (web) · Render (API) · Cloudflare (CDN/DNS) |
 
 ## 🚀 Quick start (local, zero infra)
@@ -83,7 +83,8 @@ See **[SETUP.md](./SETUP.md)** for GitHub, domain (tools.arivanandhan.in) and de
   and CSV export in the admin panel.
 - Strict Content-Security-Policy + HSTS, X-Frame-Options, nosniff, Referrer-Policy,
   Permissions-Policy (see `frontend/next.config.ts`).
-- Server-side reCAPTCHA v3 verification on auth/contact forms; per-route rate limiting.
+- Google reCAPTCHA (Enterprise or classic v3) loaded on **every page** and verified
+  server-side on **every state-changing API call**; per-route rate limiting.
 - Automatic file deletion with a retention sweeper.
 
 ## 🧪 Testing

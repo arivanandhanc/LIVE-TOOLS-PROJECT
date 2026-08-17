@@ -76,11 +76,28 @@ string, then `npm run prisma:migrate` once to create the tables.
 You'll point a **subdomain** at the two hosts.
 
 ### 4a. reCAPTCHA (do this first)
-In the [reCAPTCHA admin console](https://www.google.com/recaptcha/admin) for your
-site key, confirm **`tools.arivanandhan.in`** (and `localhost` for testing) are in
-the **Domains** list. Your existing key is already for `arivanandhan.in`, so just
-add the subdomain.
-⚠️ **Rotate the secret key** — it was shared in plaintext during development.
+reCAPTCHA runs on **every page** of the site and is verified on **every
+state-changing API call**. Two tiers are supported — pick one and configure both
+apps to match.
+
+**Enterprise (default).** In the Google Cloud console → *Security → reCAPTCHA*,
+open your score-based key and confirm **`tools.arivanandhan.in`** (and
+`localhost` for testing) are in the **Domains** list. You need three values:
+
+| Value | Where to find it | Goes in |
+|---|---|---|
+| Site key (public, e.g. `6Lfo…`) | reCAPTCHA key details | `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` + `RECAPTCHA_SITE_KEY` |
+| GCP project ID | Cloud console project picker | `RECAPTCHA_PROJECT_ID` |
+| API key | *APIs & Services → Credentials → Create API key*, then **restrict it to the reCAPTCHA Enterprise API** | `RECAPTCHA_API_KEY` |
+
+Enable the **reCAPTCHA Enterprise API** for the project or assessments return 403.
+
+**Classic v3.** Set `RECAPTCHA_MODE=classic` on both apps and supply
+`RECAPTCHA_SECRET_KEY` instead of the project/API key pair.
+
+⚠️ **Rotate any secret that was shared in plaintext during development.**
+The API key and secret key must never be exposed to the browser — only the
+site key is public.
 
 ### 4b. DNS records (at your domain registrar / Cloudflare)
 - **Frontend** → Vercel: add a `CNAME` for `tools` pointing to `cname.vercel-dns.com`
@@ -103,7 +120,9 @@ So: site = `https://tools.arivanandhan.in`, API = `https://api.arivanandhan.in`.
    - `CORS_ORIGINS=https://tools.arivanandhan.in`
    - `API_BASE_URL=https://api.arivanandhan.in`
    - `JWT_SECRET=` (long random string)
-   - `RECAPTCHA_SECRET_KEY=` (your rotated secret), `RECAPTCHA_ENABLED=true`
+   - reCAPTCHA: `RECAPTCHA_ENABLED=true`, `RECAPTCHA_MODE=enterprise`,
+     `RECAPTCHA_PROJECT_ID=`, `RECAPTCHA_API_KEY=`, `RECAPTCHA_SITE_KEY=`
+     (classic mode instead: `RECAPTCHA_MODE=classic` + `RECAPTCHA_SECRET_KEY=`)
    - storage: `STORAGE_DRIVER=s3` + the `S3_*` vars if using R2 (else `local`)
 5. Add the custom domain `api.arivanandhan.in` in Render → Settings → Custom Domains.
 
@@ -114,6 +133,7 @@ So: site = `https://tools.arivanandhan.in`, API = `https://api.arivanandhan.in`.
    - `NEXT_PUBLIC_SITE_URL=https://tools.arivanandhan.in`
    - `NEXT_PUBLIC_API_URL=https://api.arivanandhan.in`
    - `NEXT_PUBLIC_RECAPTCHA_SITE_KEY=` (your public site key)
+   - `NEXT_PUBLIC_RECAPTCHA_MODE=enterprise` (or `classic` — must match the API)
 3. Deploy, then add the domain `tools.arivanandhan.in` in Vercel → Settings → Domains.
 
 ---

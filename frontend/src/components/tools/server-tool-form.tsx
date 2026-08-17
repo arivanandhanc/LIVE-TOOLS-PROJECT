@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ToolPanel, Field } from "@/components/tools/panel";
 import { getServerToolConfig } from "@/lib/tools/server-tools";
+import { executeRecaptcha } from "@/lib/recaptcha";
 import { siteConfig } from "@/lib/site";
 import { cn, formatBytes } from "@/lib/utils";
 
@@ -52,10 +53,14 @@ export function ServerToolForm({ slug }: { slug: string }) {
       files.forEach((f) => fd.append("files", f));
       if (Object.keys(params).length) fd.append("params", JSON.stringify(params));
 
+      // Bot check — the backend verifies this token before touching the file.
+      const token = await executeRecaptcha(`tools/${slug}`.replace(/[^A-Za-z0-9/_]/g, "_"));
+
       const res = await fetch(`${siteConfig.apiUrl}/api/tools/${slug}`, {
         method: "POST",
         body: fd,
         credentials: "include",
+        headers: token ? { "X-Recaptcha-Token": token } : {},
       });
       // Guard against non-JSON (e.g. an HTML error page from a misroute/CORS).
       const text = await res.text();

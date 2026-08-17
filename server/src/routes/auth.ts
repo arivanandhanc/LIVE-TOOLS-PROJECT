@@ -2,7 +2,6 @@ import crypto from "crypto";
 import { Router } from "express";
 import { z } from "zod";
 import { asyncHandler, HttpError } from "../middleware/error";
-import { verifyRecaptcha } from "../middleware/recaptcha";
 import { authRateLimiter } from "../middleware/security";
 import { requireAuth } from "../middleware/identity";
 import * as auth from "../services/auth";
@@ -45,7 +44,8 @@ function ctxOf(req: import("express").Request) {
 authRouter.post(
   "/auth/register",
   authRateLimiter,
-  verifyRecaptcha,
+  // reCAPTCHA is enforced sitewide by recaptchaGuard in app.ts — tokens are
+  // single-use, so verifying again here would reject valid submissions.
   asyncHandler(async (req, res) => {
     if (!(await isServiceEnabled("registration_enabled"))) {
       throw new HttpError(503, "New registrations are temporarily disabled.");
@@ -64,7 +64,6 @@ authRouter.post(
 authRouter.post(
   "/auth/login",
   authRateLimiter,
-  verifyRecaptcha,
   asyncHandler(async (req, res) => {
     const parsed = loginSchema.safeParse(req.body);
     if (!parsed.success) throw new HttpError(400, "Invalid input", parsed.error.flatten());

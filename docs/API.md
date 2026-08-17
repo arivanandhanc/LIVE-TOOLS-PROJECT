@@ -66,14 +66,39 @@ Streams the processed file as an attachment. `404` if expired/auto-deleted.
 
 | Method | Path | Body | Notes |
 |--------|------|------|-------|
-| POST | `/api/auth/register` | `{ email, password, name? }` | reCAPTCHA-guarded; requires DB |
-| POST | `/api/auth/login` | `{ email, password }` | reCAPTCHA-guarded |
-| POST | `/api/auth/refresh` | — | uses `cf_refresh` cookie |
-| POST | `/api/auth/logout` | — | clears session |
+| POST | `/api/auth/register` | `{ email, password, name? }` | requires DB |
+| POST | `/api/auth/login` | `{ email, password }` | |
+| POST | `/api/auth/refresh` | — | uses `cf_refresh` cookie; reCAPTCHA-exempt |
+| POST | `/api/auth/logout` | — | clears session; reCAPTCHA-exempt |
 | GET  | `/api/auth/me` | — | requires Bearer token |
 | GET  | `/api/auth/oauth/:provider` | — | google/github/microsoft (when configured) |
 
-reCAPTCHA token is sent in the `X-Recaptcha-Token` header.
+## reCAPTCHA
+
+Every **state-changing** request (`POST`/`PUT`/`PATCH`/`DELETE`) under `/api` is
+verified by a sitewide guard before it reaches a route handler. Send a fresh,
+single-use score token in the `X-Recaptcha-Token` header (a `recaptchaToken` or
+`g-recaptcha-response` body field also works):
+
+```http
+POST /api/tools/merge-pdf
+X-Recaptcha-Token: 03AGdBq26…
+```
+
+Exempt paths — they carry no user gesture — are `/api/auth/refresh`,
+`/api/auth/logout`, `/api/auth/oauth/*` and `/api/usage`
+(configurable via `RECAPTCHA_SKIP_PATHS`).
+
+| Status | Meaning |
+|--------|---------|
+| `400` | no token supplied |
+| `403` | token invalid, or the score is below `RECAPTCHA_MIN_SCORE` |
+| `503` | verification unreachable (production only; dev fails open) |
+
+Tokens expire after ~2 minutes and are single-use — mint a new one per request.
+Verification runs against reCAPTCHA Enterprise (Assessments API) or classic v3
+(`siteverify`) depending on `RECAPTCHA_MODE`. When reCAPTCHA is unconfigured the
+guard no-ops so local development works without keys.
 
 ## Consent
 
