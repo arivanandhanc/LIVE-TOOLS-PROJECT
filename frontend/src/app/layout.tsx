@@ -8,6 +8,7 @@ import { Footer } from "@/components/layout/footer";
 import { ConsentBanner } from "@/components/consent-banner";
 import { RecaptchaProvider } from "@/components/recaptcha-provider";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { siteConfig } from "@/lib/site";
 
 const inter = Inter({
@@ -133,6 +134,8 @@ export default function RootLayout({
             <RecaptchaProvider />
             {/* Vercel Web Analytics — page views across every route */}
             <Analytics />
+            {/* Vercel Speed Insights — real-user Core Web Vitals */}
+            <SpeedInsights />
           </AuthProvider>
         </ThemeProvider>
       </body>
