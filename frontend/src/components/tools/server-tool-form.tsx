@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ToolPanel, Field } from "@/components/tools/panel";
 import { getServerToolConfig } from "@/lib/tools/server-tools";
-import { executeRecaptcha } from "@/lib/recaptcha";
+import { actionFromPath, executeRecaptcha } from "@/lib/recaptcha";
 import { siteConfig } from "@/lib/site";
 import { cn, formatBytes } from "@/lib/utils";
 
@@ -54,7 +54,9 @@ export function ServerToolForm({ slug }: { slug: string }) {
       if (Object.keys(params).length) fd.append("params", JSON.stringify(params));
 
       // Bot check — the backend verifies this token before touching the file.
-      const token = await executeRecaptcha(`tools/${slug}`.replace(/[^A-Za-z0-9/_]/g, "_"));
+      // The action MUST be derived from the request path: the server sends the
+      // same value as expectedAction, and a mismatch fails the assessment.
+      const token = await executeRecaptcha(actionFromPath(`/api/tools/${slug}`));
 
       const res = await fetch(`${siteConfig.apiUrl}/api/tools/${slug}`, {
         method: "POST",

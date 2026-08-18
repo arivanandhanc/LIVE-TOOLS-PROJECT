@@ -143,6 +143,19 @@ export function requireRecaptcha(expectedAction?: string) {
 export const verifyRecaptcha = requireRecaptcha();
 
 /**
+ * Derive the reCAPTCHA action from a request path.
+ *
+ * MUST stay byte-for-byte identical to `actionFromPath` in
+ * frontend/src/lib/recaptcha.ts — the browser labels the token with this and
+ * Google compares it against the `expectedAction` we send. Universal keys
+ * REJECT an assessment that omits expectedAction outright, so this is required,
+ * not optional. Google only accepts alphanumerics, slashes and underscores.
+ */
+export function actionFromPath(path: string): string {
+  return path.split("?")[0].replace(/^\/+/, "").replace(/[^A-Za-z0-9/_]/g, "_") || "submit";
+}
+
+/**
  * Sitewide guard: verifies EVERY state-changing /api request. Safe methods and
  * the configured skip list (silent refresh, logout, OAuth redirects, telemetry)
  * pass straight through.
@@ -154,5 +167,6 @@ export function recaptchaGuard(req: Request, res: Response, next: NextFunction) 
   const path = req.originalUrl.split("?")[0];
   if (env.recaptcha.skipPaths.some((p) => path === p || path.startsWith(`${p}/`))) return next();
 
-  return verifyRecaptcha(req, res, next);
+  // Derived per-request so it matches the action the browser used.
+  return requireRecaptcha(actionFromPath(path))(req, res, next);
 }
