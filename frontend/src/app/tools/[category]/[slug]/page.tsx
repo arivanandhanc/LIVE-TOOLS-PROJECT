@@ -6,6 +6,7 @@ import {
   tools, getTool, getCategory, getToolsByCategory,
 } from "@/lib/tools/registry";
 import { getHowToSteps, getFaqs, getLongDescription, getIntro, getBenefits } from "@/lib/tools/seo";
+import { getToolContent, isIndexable } from "@/lib/tools/content";
 import { getServerToolConfig } from "@/lib/tools/server-tools";
 import { clusterPagesForTool } from "@/lib/seo-pages";
 import { ToolRunner } from "@/components/tools/runner";
@@ -45,6 +46,14 @@ export async function generateMetadata(
     description,
     keywords,
     alternates: { canonical },
+    // Only pages with hand-written content are indexable. The rest share
+    // templated prose that is 46–66% identical across tools, which competes
+    // with — and drags down — the pages worth ranking. `follow` is kept so
+    // crawlers still discover the tools through these pages, and adding an
+    // entry to content.ts flips a page to indexable automatically.
+    robots: isIndexable(tool.slug)
+      ? { index: true, follow: true }
+      : { index: false, follow: true },
     openGraph: {
       type: "website",
       title,
@@ -97,6 +106,9 @@ export default async function ToolPage(props: PageProps<"/tools/[category]/[slug
   const faqs = getFaqs(tool);
   const intro = getIntro(tool);
   const benefits = getBenefits(tool);
+  // Hand-written, tool-specific content. Present only for tools we've invested
+  // real copy in — those are also the only indexable pages (see generateMetadata).
+  const written = getToolContent(tool.slug);
   const url = `${siteConfig.url}/tools/${tool.category}/${tool.slug}`;
 
   const jsonLd = {
@@ -204,15 +216,54 @@ export default async function ToolPage(props: PageProps<"/tools/[category]/[slug
           {tool.name}: free online {cat.name.toLowerCase()} tool
         </h2>
         <p className="text-muted-foreground leading-relaxed">{intro}</p>
-        <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-          {benefits.map((benefit) => (
-            <li key={benefit} className="flex items-start gap-2 text-sm text-muted-foreground">
-              <ShieldCheck className="mt-0.5 size-4 shrink-0 text-success" />
-              <span>{benefit}</span>
-            </li>
-          ))}
-        </ul>
+        {/* Generic benefit bullets read identically on every page, so they're
+            shown only where there's no hand-written copy to replace them. */}
+        {!written && (
+          <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+            {benefits.map((benefit) => (
+              <li key={benefit} className="flex items-start gap-2 text-sm text-muted-foreground">
+                <ShieldCheck className="mt-0.5 size-4 shrink-0 text-success" />
+                <span>{benefit}</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
+
+      {/* When you'd actually use this — concrete scenarios, not feature bullets. */}
+      {written && (
+        <section className="mt-14 max-w-3xl">
+          <h2 className="mb-4 text-xl font-bold tracking-tight">
+            When to use {tool.name}
+          </h2>
+          <div className="grid gap-5 sm:grid-cols-2">
+            {written.useCases.map((useCase) => (
+              <div key={useCase.title} className="rounded-xl border border-border bg-card p-5">
+                <h3 className="font-semibold">{useCase.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{useCase.body}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Honest limitations. Competitors don't publish theirs, which makes this
+          both a trust signal and text that exists nowhere else. */}
+      {written && (
+        <section className="mt-14 max-w-3xl">
+          <h2 className="mb-4 text-xl font-bold tracking-tight">
+            Limitations worth knowing
+          </h2>
+          <ul className="space-y-3">
+            {written.limitations.map((limitation) => (
+              <li key={limitation} className="flex items-start gap-2 text-sm text-muted-foreground">
+                <Sparkles className="mt-0.5 size-4 shrink-0 text-primary" />
+                <span>{limitation}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* How it works */}
       <section className="mt-14 grid gap-10 lg:grid-cols-2">

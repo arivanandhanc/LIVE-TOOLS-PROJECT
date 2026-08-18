@@ -1,5 +1,6 @@
 import type { Tool } from "./types";
 import { getCategory } from "./registry";
+import { getToolContent } from "./content";
 
 export interface FaqItem {
   question: string;
@@ -7,10 +8,22 @@ export interface FaqItem {
 }
 
 /**
+ * The generators below are TEMPLATES, and templates are what made ~500 tool
+ * pages 46–66% textually identical to one another. They remain only as a
+ * fallback for pages that are `noindex` anyway; any tool we actually want to
+ * rank must have hand-written content in `content.ts`, which takes precedence
+ * everywhere below. Do not "improve" these templates to sound more varied —
+ * varied boilerplate is still boilerplate.
+ */
+
+/**
  * Generate unique, useful How-To steps for a tool. Programmatic but specific —
  * each page gets distinct, indexable content (key for ranking long-tail queries).
  */
 export function getHowToSteps(tool: Tool): string[] {
+  const written = getToolContent(tool.slug);
+  if (written) return written.howTo;
+
   const isServer = tool.mode === "server";
   const verb = tool.name.toLowerCase();
   return [
@@ -29,6 +42,9 @@ export function getHowToSteps(tool: Tool): string[] {
  * block of original, indexable prose Google uses to rank the page.
  */
 export function getIntro(tool: Tool): string {
+  const written = getToolContent(tool.slug);
+  if (written) return written.intro;
+
   const category = getCategory(tool.category)?.name.toLowerCase() ?? "file";
   const name = tool.name;
   const kw = tool.keywords?.[0] ?? name.toLowerCase();
@@ -59,6 +75,9 @@ export function getBenefits(tool: Tool): string[] {
 
 /** Generate a tool-specific FAQ block used for FAQPage structured data + on-page content. */
 export function getFaqs(tool: Tool): FaqItem[] {
+  const written = getToolContent(tool.slug);
+  if (written) return written.faqs;
+
   const category = getCategory(tool.category);
   const categoryName = category?.name.toLowerCase() ?? "file";
   const isClient = tool.mode === "client";

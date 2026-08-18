@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { tools, categories } from "@/lib/tools/registry";
+import { isIndexable } from "@/lib/tools/content";
 import { posts } from "@/lib/blog";
 import { allSeoPages } from "@/lib/seo-pages";
 import { serviceCategories } from "@/lib/resources/services";
@@ -44,12 +45,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  const toolPages: MetadataRoute.Sitemap = tools.map((tool) => ({
-    url: `${base}/tools/${tool.category}/${tool.slug}`,
-    lastModified: now,
-    changeFrequency: "weekly",
-    priority: tool.featured ? 0.9 : 0.7,
-  }));
+  // Only tools with hand-written content are listed. The rest carry robots
+  // noindex (see content.ts) because their templated copy was 46–66% identical
+  // across pages, and submitting pages we've asked Google not to index just
+  // burns crawl budget — the same reasoning already applied to /resources below.
+  const toolPages: MetadataRoute.Sitemap = tools
+    .filter((tool) => isIndexable(tool.slug))
+    .map((tool) => ({
+      url: `${base}/tools/${tool.category}/${tool.slug}`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: tool.featured ? 0.9 : 0.8,
+    }));
 
   const blogPages: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${base}/blog/${post.slug}`,

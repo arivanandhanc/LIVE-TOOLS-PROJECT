@@ -49,6 +49,15 @@ export const metadata: Metadata = {
     creator: siteConfig.twitter,
   },
   robots: { index: true, follow: true },
+  // Search Console ownership. This is the meta-tag method, an alternative to the
+  // DNS TXT record — useful because it ships with a deploy instead of needing
+  // registrar access. Note the token differs per verification method: paste the
+  // one Search Console shows for "HTML tag", not the DNS TXT value.
+  verification: {
+    google:
+      process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ||
+      "gccSBhwQ7mLvfEKUe-bSx9YHflXsLNWzgLXLR92gKt0",
+  },
 };
 
 // Google AdSense publisher id. Overridable per-environment so preview
