@@ -116,6 +116,12 @@ export const env = {
       configured,
       minScore: Number(process.env.RECAPTCHA_MIN_SCORE ?? 0.5),
       enabled: bool(process.env.RECAPTCHA_ENABLED, configured),
+      // What to do when Google itself is unreachable. Defaults to FAIL CLOSED:
+      // once reCAPTCHA is configured, a verification outage must not silently
+      // turn the guard off. (This used to key off NODE_ENV, which meant a
+      // single unset variable in production disabled bot protection entirely.)
+      // Local dev is unaffected — it simply leaves reCAPTCHA unconfigured.
+      failOpen: bool(process.env.RECAPTCHA_FAIL_OPEN, false),
       // Verify every state-changing /api call except these. They run without a
       // user gesture (silent refresh, logout, OAuth redirects, usage beacons),
       // so a token would cost quota and latency for no anti-abuse gain.

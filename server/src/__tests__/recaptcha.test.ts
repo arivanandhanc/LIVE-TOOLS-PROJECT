@@ -143,6 +143,34 @@ describe("recaptchaGuard", () => {
     expect(res.statusCode).toBe(403);
   });
 
+  it("fails CLOSED when the verification call throws", async () => {
+    // Regression guard: this used to key off NODE_ENV, so an unset variable in
+    // production silently disabled bot protection and let bad tokens through.
+    Object.assign(env.recaptcha, { failOpen: false });
+    vi.stubGlobal("fetch", vi.fn(async () => { throw new Error("fetch failed"); }));
+
+    const req = mockReq("POST", "/api/consent");
+    req.headers["x-recaptcha-token"] = "totally-fake-token";
+    const res = mockRes();
+    let passed = false;
+    await recaptchaGuard(req, res, () => { passed = true; });
+    expect(passed).toBe(false);
+    expect(res.statusCode).toBe(503);
+    expect(res.body).toMatchObject({ detail: "fetch failed" });
+  });
+
+  it("fails open only when explicitly opted in", async () => {
+    Object.assign(env.recaptcha, { failOpen: true });
+    vi.stubGlobal("fetch", vi.fn(async () => { throw new Error("fetch failed"); }));
+
+    const req = mockReq("POST", "/api/consent");
+    req.headers["x-recaptcha-token"] = "totally-fake-token";
+    const res = mockRes();
+    let passed = false;
+    await recaptchaGuard(req, res, () => { passed = true; });
+    expect(passed).toBe(true);
+  });
+
   it("blocks a token Google reports as invalid", async () => {
     vi.stubGlobal(
       "fetch",

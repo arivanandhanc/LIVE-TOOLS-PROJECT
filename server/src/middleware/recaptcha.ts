@@ -128,9 +128,13 @@ export function requireRecaptcha(expectedAction?: string) {
       }
       return next();
     } catch (err) {
+      const detail = err instanceof Error ? err.message.slice(0, 200) : String(err).slice(0, 200);
       logger.error({ err, path: req.path }, "reCAPTCHA verification error");
-      // Fail-open in dev, fail-closed in prod.
-      return env.isProd ? res.status(503).json({ error: "Verification unavailable." }) : next();
+      // Fail CLOSED unless explicitly opted out. `detail` is the upstream
+      // failure reason (never a credential) — without it an operator has no way
+      // to tell "Google is down" apart from "our API key is wrong".
+      if (env.recaptcha.failOpen) return next();
+      return res.status(503).json({ error: "Verification unavailable.", detail });
     }
   };
 }
