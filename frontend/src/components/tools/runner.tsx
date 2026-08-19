@@ -100,6 +100,9 @@ const registry: Record<string, ComponentType> = {
   "ocr-pdf": dynamic(() => import("./impl/ocr-pdf"), { loading: Loading, ssr: false }),
 
   // Image
+  // Universal any-to-any converter; the pairwise tools below remain as
+  // dedicated landing pages for their specific search terms.
+  "image-converter": dynamic(() => import("./impl/image-converter"), { loading: Loading, ssr: false }),
   "jpg-to-png": dynamic(() => import("./impl/jpg-to-png"), { loading: Loading }),
   "png-to-jpg": dynamic(() => import("./impl/png-to-jpg"), { loading: Loading }),
   "webp-converter": dynamic(() => import("./impl/webp-converter"), { loading: Loading }),

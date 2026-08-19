@@ -239,6 +239,60 @@ export const toolContent: Record<string, ToolContent> = {
   },
 
   // ────────────────────────────── IMAGE ──────────────────────────────
+  "image-converter": {
+    intro:
+      "Converting between image formats is mostly a question of what you lose. JPEG discards colour detail and has no transparency; PNG keeps every pixel but is large for photographs; WebP and AVIF compress far better than either but are newer, so support varies. This converter decodes anything your browser can display — including AVIF, SVG and ICO — and re-encodes it to whichever format you pick, in batch. Encoder availability is probed on your actual browser rather than assumed, so you're only offered formats that will genuinely work.",
+    useCases: [
+      {
+        title: "Modernising images for the web",
+        body: "Converting a folder of JPEGs to WebP typically cuts 25–35% of the bytes at visually identical quality — usually the single easiest page-speed win available.",
+      },
+      {
+        title: "Meeting an upload that rejects your format",
+        body: "Plenty of portals accept only JPG or PNG and reject WebP, HEIC or AVIF outright. Convert once and upload, rather than screenshotting the image.",
+      },
+      {
+        title: "Flattening transparency deliberately",
+        body: "Moving a transparent PNG to JPEG turns transparent pixels black unless a background is filled in. Here you choose that colour instead of discovering the problem later.",
+      },
+    ],
+    howTo: [
+      "Drop in one image or a whole batch — mixed input formats are fine.",
+      "Pick the output format. Only formats your browser can actually encode are shown.",
+      "For lossy formats set the quality; for formats without transparency choose the background fill colour.",
+      "Convert, then download individually or grab everything as a single ZIP.",
+    ],
+    limitations: [
+      "No browser can encode GIF or TIFF from a canvas, so those are input-only. An animated GIF converts to a still image of its first frame.",
+      "AVIF encoding is unavailable in some browsers and is noticeably slower where it exists; the option is hidden when unsupported.",
+      "HEIC from iPhones usually cannot be decoded outside Safari. Set your iPhone to 'Most Compatible' to capture JPEG instead.",
+      "Converting to a lossy format re-encodes the image. Going JPEG → WebP → JPEG compounds artefacts — always convert from your original.",
+      "SVG converts to raster and loses its infinite scalability. There is no meaningful raster-to-SVG direction.",
+    ],
+    faqs: [
+      {
+        question: "Which format should I convert to?",
+        answer:
+          "For photographs on the web, WebP is the best default — broadly supported and materially smaller than JPEG. Use PNG for logos, screenshots and anything needing transparency. Use JPEG when something explicitly demands it. AVIF compresses best of all but encodes slowly and isn't universally supported.",
+      },
+      {
+        question: "Why does my transparent PNG turn black as a JPEG?",
+        answer:
+          "JPEG has no alpha channel, so transparency has to become a solid colour, and undefined pixels commonly render black. This converter fills transparent areas with a background colour you choose — white by default. If transparency matters, convert to PNG or WebP instead.",
+      },
+      {
+        question: "Can I convert many images at once?",
+        answer:
+          "Yes. Add as many as you like, including a mix of source formats, and they're all converted to your chosen target. A single result downloads directly; multiple results are bundled into one ZIP.",
+      },
+      {
+        question: "Are my images uploaded anywhere?",
+        answer:
+          "No. Decoding and encoding both happen on a canvas in your browser, so the pixels never leave your device. That's a real consideration here, since the images people convert are so often ID photos, signatures or screenshots of private documents.",
+      },
+    ],
+  },
+
   "compress-image": {
     intro:
       "Image compression is a negotiation between file size and visible artefacts, and the right setting depends entirely on the picture. Photographs with smooth gradients tolerate aggressive JPEG compression; screenshots with sharp text and flat colour show banding and ringing almost immediately. This tool runs entirely in your browser using the Canvas encoder, which means the image is never uploaded anywhere — a meaningful difference when the picture is an ID document or a medical scan.",
