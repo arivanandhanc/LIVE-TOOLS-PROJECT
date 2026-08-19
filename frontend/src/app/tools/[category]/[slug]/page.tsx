@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ChevronRight, ShieldCheck, Server, Sparkles } from "lucide-react";
+import { ChevronRight, ShieldCheck, Server, Sparkles, AlertCircle } from "lucide-react";
 import {
   tools, getTool, getCategory, getToolsByCategory,
 } from "@/lib/tools/registry";
@@ -323,6 +323,35 @@ export default async function ToolPage(props: PageProps<"/tools/[category]/[slug
               >
                 {page.chip}
               </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Troubleshooting. Targets the way people search when something breaks
+          ("why is my merged pdf so large"), which is winnable long-tail intent
+          while the head terms stay out of reach. */}
+      {written?.troubleshooting && written.troubleshooting.length > 0 && (
+        <section className="mt-14 max-w-3xl">
+          <h2 className="mb-4 text-xl font-bold tracking-tight">
+            Troubleshooting {tool.name}
+          </h2>
+          <div className="space-y-4">
+            {written.troubleshooting.map((item) => (
+              <div key={item.problem} className="rounded-xl border border-border bg-card p-5">
+                <h3 className="flex items-start gap-2 font-semibold">
+                  <AlertCircle className="mt-0.5 size-4 shrink-0 text-primary" />
+                  {item.problem}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  <span className="font-medium text-foreground">Why it happens: </span>
+                  {item.cause}
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  <span className="font-medium text-foreground">How to fix it: </span>
+                  {item.fix}
+                </p>
+              </div>
             ))}
           </div>
         </section>

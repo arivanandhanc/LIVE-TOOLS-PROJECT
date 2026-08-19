@@ -37,6 +37,17 @@ export interface ToolContent {
   limitations: string[];
   /** Questions specific to this tool — not "is it free" on every page. */
   faqs: FaqItem[];
+  /**
+   * Real failure modes and their fixes.
+   *
+   * This is the highest-value block on the page and the hardest for a
+   * competitor to copy, because it can only be written by someone who knows
+   * what actually goes wrong. It also maps directly onto how people search when
+   * something breaks — "why is my merged pdf so large", "pdf to word came out
+   * blank" — which is long-tail intent we can realistically win while the
+   * head terms stay out of reach.
+   */
+  troubleshooting?: { problem: string; cause: string; fix: string }[];
 }
 
 export const toolContent: Record<string, ToolContent> = {
@@ -90,6 +101,31 @@ export const toolContent: Record<string, ToolContent> = {
         question: "Can I merge a password-protected PDF?",
         answer:
           "Not directly. Encrypted files must be decrypted first — open the file in a PDF reader with the password and save an unprotected copy, then merge that.",
+      },
+    ],
+    troubleshooting: [
+      {
+        problem: "The merged file is enormous — far bigger than I expected",
+        cause:
+          "Each source PDF carries its own embedded font subsets and images. Merging keeps all of them, so ten files that each embed the same 3 MB font set produce a document carrying it ten times over.",
+        fix: "Run the result through Compress PDF. Font and image de-duplication is exactly what it reclaims, and merged documents are the case where it helps most.",
+      },
+      {
+        problem: "Pages came out in the wrong order",
+        cause:
+          "The merge follows the on-screen card order, not the order you selected the files in, and not alphabetical order by filename.",
+        fix: "Drag the cards into the exact sequence you want before merging. The topmost card becomes page 1 — check the first and last card rather than trusting the filenames.",
+      },
+      {
+        problem: "Form fields stopped working after merging",
+        cause:
+          "Interactive form fields are identified by name. When two documents both contain a field called 'date' or 'signature', they collide and one value wins.",
+        fix: "Flatten each document before merging so the filled values become permanent page content. You lose editability, but the data is preserved.",
+      },
+      {
+        problem: "The file is rejected as password-protected",
+        cause: "Encrypted PDFs cannot be read without their password, so the merge cannot open them.",
+        fix: "Open each file in a PDF reader, enter the password, and save an unprotected copy. Merge those copies.",
       },
     ],
   },
@@ -188,6 +224,31 @@ export const toolContent: Record<string, ToolContent> = {
           "This tool compresses once with sensible settings. For a hard ceiling, use the target-size compressor, which repeatedly adjusts quality until the output lands under the size you specify — the right choice for portals that reject anything over a stated limit.",
       },
     ],
+    troubleshooting: [
+      {
+        problem: "The file barely got smaller",
+        cause:
+          "Compression reclaims space from oversized embedded images. A PDF that is mostly text and vector graphics has almost nothing to reclaim, and an already-optimised file has none.",
+        fix: "Check what the document actually contains. If it is a text report, a 5-10% reduction is the correct result and no tool will do better without destroying something. If it contains scans, the images are where the size is.",
+      },
+      {
+        problem: "Text in my scanned document is now hard to read",
+        cause:
+          "A scanned page is entirely an image, so image compression applies to the text itself. Push quality too low and fine print degrades.",
+        fix: "Re-compress from the original at a higher quality setting. Scans of small print need gentler settings than photographs do.",
+      },
+      {
+        problem: "I still cannot get under the portal's size limit",
+        cause:
+          "General compression targets a quality level, not a file size, so it cannot guarantee a specific ceiling.",
+        fix: "Use the target-size compressor, which iterates until the output lands under the limit you name. If it still cannot reach it, split the document and upload it in parts.",
+      },
+      {
+        problem: "Nothing happens when I try to compress",
+        cause: "The file is encrypted, so its content streams cannot be read or rewritten.",
+        fix: "Open it in a PDF reader with the password and save an unprotected copy first.",
+      },
+    ],
   },
 
   "jpg-to-pdf": {
@@ -283,6 +344,31 @@ export const toolContent: Record<string, ToolContent> = {
         question: "Are my documents uploaded to a server?",
         answer:
           "No. Extraction runs in your browser, so the PDF never leaves your device. That matters here more than for most tools, since the documents people convert to Word are disproportionately contracts, reports and records.",
+      },
+    ],
+    troubleshooting: [
+      {
+        problem: "The Word document came out completely empty",
+        cause:
+          "The PDF is a scan — a photograph of pages with no text layer. There is nothing to extract, so the output is genuinely empty rather than broken.",
+        fix: "Test it first: open the PDF and try to select a line of text with your cursor. If you cannot, run OCR to generate a text layer, then convert.",
+      },
+      {
+        problem: "The text is jumbled or out of order",
+        cause:
+          "Extraction follows the PDF's internal text order, which is the order a generator wrote the glyphs — not necessarily the order a human reads them. Multi-column layouts are the usual trigger.",
+        fix: "For two-column documents, expect to reflow manually. There is no reliable automatic fix, because the column structure is not recorded in the file.",
+      },
+      {
+        problem: "My tables lost their structure",
+        cause:
+          "PDFs do not store tables. What looks like a table is text positioned at coordinates with lines drawn around it, so there are no cells to recover.",
+        fix: "For tabular data, screenshot the table and use an OCR tool that reconstructs tables, or ask for the original spreadsheet if one exists.",
+      },
+      {
+        problem: "Images and charts are missing",
+        cause: "Only the text layer is extracted; embedded graphics are not carried into the DOCX.",
+        fix: "Use PDF to JPG to capture the pages containing graphics, then insert those images into your Word document.",
       },
     ],
   },
@@ -771,6 +857,38 @@ export const toolContent: Record<string, ToolContent> = {
         question: "Are my images uploaded anywhere?",
         answer:
           "No. Decoding and encoding both happen on a canvas in your browser, so the pixels never leave your device. That's a real consideration here, since the images people convert are so often ID photos, signatures or screenshots of private documents.",
+      },
+    ],
+    troubleshooting: [
+      {
+        problem: "My iPhone photos will not load",
+        cause:
+          "iPhones save HEIC by default, and no browser except Safari can decode it. The file is valid; your browser simply cannot read it.",
+        fix: "On iPhone, Settings → Camera → Formats → Most Compatible captures JPEG instead. For photos you already have, AirDrop or email them, which converts to JPEG in transit.",
+      },
+      {
+        problem: "The AVIF option is missing",
+        cause:
+          "Your browser can display AVIF but cannot encode it. Support for the two directions is not the same, and encoders arrived much later than decoders.",
+        fix: "Use WebP, which is nearly as efficient and encodes in every current browser. Or try again in Chrome or Edge, which do have AVIF encoders.",
+      },
+      {
+        problem: "My animated GIF became a single still frame",
+        cause:
+          "A canvas holds one frame at a time, and no browser encodes animated formats from it. Only the first frame survives.",
+        fix: "There is no in-browser fix. Animated conversion needs a dedicated video or GIF tool.",
+      },
+      {
+        problem: "The converted file is larger than the original",
+        cause:
+          "You converted a format that was already efficient for that content — usually a PNG screenshot or logo pushed into a format built for photographs.",
+        fix: "Match format to content: PNG or WebP for flat colour and text, JPEG or WebP for photographs. If the original was already the right choice, converting will not help.",
+      },
+      {
+        problem: "The page froze on a large batch",
+        cause:
+          "Everything runs on your device, so a batch of very large images can exhaust the tab's memory — most likely on a phone.",
+        fix: "Convert in smaller batches, or use a desktop browser for large sets.",
       },
     ],
   },
