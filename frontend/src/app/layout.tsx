@@ -23,6 +23,11 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+// Google AdSense publisher id. Overridable per-environment so preview
+// deployments can run without ads. Declared before `metadata` because that
+// object references it at module-evaluation time.
+const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "ca-pub-8840337065465233";
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
@@ -58,11 +63,13 @@ export const metadata: Metadata = {
       process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ||
       "gccSBhwQ7mLvfEKUe-bSx9YHflXsLNWzgLXLR92gKt0",
   },
+  // AdSense site-ownership claim. This is separate from the loader script and
+  // from ads.txt: AdSense checks all three, and the meta tag is what lets it
+  // associate a newly-added domain with the publisher account.
+  other: {
+    "google-adsense-account": ADSENSE_CLIENT,
+  },
 };
-
-// Google AdSense publisher id. Overridable per-environment so preview
-// deployments can run without ads.
-const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "ca-pub-8840337065465233";
 
 export const viewport: Viewport = {
   themeColor: [
