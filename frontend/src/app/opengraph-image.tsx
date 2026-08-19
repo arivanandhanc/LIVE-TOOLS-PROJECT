@@ -39,8 +39,8 @@ export default function OpengraphImage() {
             ST
           </div>
           <div style={{ display: "flex", gap: 12, fontSize: 52, fontWeight: 800, color: "#27241d" }}>
-            <span>Arivu&apos;s</span>
-            <span style={{ color: "#d97706" }}>Scrab Tools</span>
+            <span>Scrab</span>
+            <span style={{ color: "#d97706" }}>Tools</span>
           </div>
         </div>
         <div style={{ fontSize: 76, fontWeight: 800, color: "#1c1917", lineHeight: 1.1, maxWidth: 980 }}>
