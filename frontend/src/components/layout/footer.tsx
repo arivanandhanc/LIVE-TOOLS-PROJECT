@@ -98,6 +98,30 @@ export function Footer() {
             </a>{" "}
             — for speed, security and privacy.
           </p>
+          {/* Google requires either a visible reCAPTCHA badge or this
+              attribution. The badge now loads on first interaction rather than
+              on page load, so the notice guarantees compliance either way. */}
+          <p className="text-xs">
+            Protected by reCAPTCHA —{" "}
+            <a
+              href="https://policies.google.com/privacy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline transition-colors hover:text-foreground"
+            >
+              Privacy
+            </a>{" "}
+            &{" "}
+            <a
+              href="https://policies.google.com/terms"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline transition-colors hover:text-foreground"
+            >
+              Terms
+            </a>
+            .
+          </p>
         </div>
       </div>
     </footer>
