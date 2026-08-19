@@ -212,8 +212,10 @@ export default async function ToolPage(props: PageProps<"/tools/[category]/[slug
 
       {/* About / unique intro — original indexable prose */}
       <section className="mt-14 max-w-3xl">
+        {/* cat.name is already plural ("Image Tools"), so appending "tool"
+            rendered "free online image tools tool". */}
         <h2 className="mb-4 text-xl font-bold tracking-tight">
-          {tool.name}: free online {cat.name.toLowerCase()} tool
+          {written ? `About ${tool.name}` : `${tool.name} — free online ${cat.name.toLowerCase()}`}
         </h2>
         <p className="text-muted-foreground leading-relaxed">{intro}</p>
         {/* Generic benefit bullets read identically on every page, so they're
