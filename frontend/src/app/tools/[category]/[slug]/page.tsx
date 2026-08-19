@@ -7,6 +7,7 @@ import {
 } from "@/lib/tools/registry";
 import { getHowToSteps, getFaqs, getLongDescription, getIntro, getBenefits } from "@/lib/tools/seo";
 import { getToolContent, isIndexable } from "@/lib/tools/content";
+import { getSiblingTools, getCrossCategoryTools } from "@/lib/tools/related";
 import { getServerToolConfig } from "@/lib/tools/server-tools";
 import { clusterPagesForTool } from "@/lib/seo-pages";
 import { ToolRunner } from "@/components/tools/runner";
@@ -78,9 +79,10 @@ export default async function ToolPage(props: PageProps<"/tools/[category]/[slug
 
   const cat = getCategory(tool.category)!;
   const Icon = tool.icon;
-  const related = getToolsByCategory(tool.category)
-    .filter((current) => current.slug !== tool.slug)
-    .slice(0, 4);
+  // Indexable tools are surfaced first — equity landing on a noindex page is
+  // spent on something that can never rank. See lib/tools/related.ts.
+  const related = getSiblingTools(tool, 8);
+  const crossCategory = getCrossCategoryTools(tool, 4);
 
   const clusterPages = clusterPagesForTool(tool.slug);
   const clusterCopy: Record<string, { heading: string; intro: string }> = {
@@ -326,13 +328,50 @@ export default async function ToolPage(props: PageProps<"/tools/[category]/[slug
         </section>
       )}
 
-      {/* Related */}
+      {/* Related — same category first, since it's the strongest topical signal. */}
       {related.length > 0 && (
         <section className="mt-14">
           <h2 className="mb-4 text-xl font-bold tracking-tight">Related {cat.name.toLowerCase()}</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {related.map((current) => (
               <ToolCard key={current.slug} tool={current} />
+            ))}
+          </div>
+          <Link
+            href={`/tools/${cat.slug}`}
+            className="mt-4 inline-flex text-sm font-medium text-primary hover:underline"
+          >
+            All {cat.name.toLowerCase()} →
+          </Link>
+        </section>
+      )}
+
+      {/* Cross-category links. Keeps every section of the site within two clicks
+          of any tool page, so no category becomes orphaned. */}
+      {crossCategory.length > 0 && (
+        <section className="mt-14">
+          <h2 className="mb-4 text-xl font-bold tracking-tight">Explore other tools</h2>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {crossCategory.map((group) => (
+              <div key={group.slug}>
+                <h3 className="mb-2 text-sm font-semibold">
+                  <Link href={`/tools/${group.slug}`} className="hover:text-primary">
+                    {group.category}
+                  </Link>
+                </h3>
+                <ul className="space-y-1.5">
+                  {group.tools.map((current) => (
+                    <li key={current.slug}>
+                      <Link
+                        href={`/tools/${current.category}/${current.slug}`}
+                        className="text-sm text-muted-foreground transition-colors hover:text-primary"
+                      >
+                        {current.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ))}
           </div>
         </section>
