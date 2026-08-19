@@ -238,6 +238,488 @@ export const toolContent: Record<string, ToolContent> = {
     ],
   },
 
+  "pdf-to-word": {
+    intro:
+      "Be clear about what this does, because the category is full of overpromising: it extracts the text from a PDF into an editable DOCX, it does not rebuild the layout. That distinction is unavoidable rather than a shortcoming of this particular tool. A PDF stores glyphs at coordinates — it has no concept of a paragraph, a table or a heading — so any converter has to infer that structure, and inference is where fidelity is lost. If your goal is to get the words into Word and edit them, this does that well. If you need a pixel-identical Word replica of a designed document, no browser tool will give you that.",
+    useCases: [
+      {
+        title: "Reusing text from a report",
+        body: "Pull the wording out of a PDF you no longer have the source for, then reformat it in Word rather than retyping several thousand words.",
+      },
+      {
+        title: "Quoting from a long document",
+        body: "Extract everything once and search it in Word, instead of fighting a PDF viewer's find function across hundreds of pages.",
+      },
+      {
+        title: "Translating or rewriting content",
+        body: "Translation and editing tools work on text, not page coordinates. Extraction gets the content into a form they can actually process.",
+      },
+    ],
+    howTo: [
+      "Load the PDF — it is read in your browser and never uploaded.",
+      "The text layer is extracted page by page; larger documents take a few seconds.",
+      "Download the DOCX and open it in Word, Google Docs or LibreOffice.",
+      "Expect to reapply formatting — headings, columns and tables will need attention.",
+    ],
+    limitations: [
+      "Layout is not reconstructed. Multi-column pages typically come out as one column, and tables lose their cell structure.",
+      "Scanned PDFs contain no text layer at all — they are images of pages, and produce an empty document. Run OCR first.",
+      "Images, charts and vector graphics are not carried into the DOCX; only text is extracted.",
+      "Reading order follows the PDF's internal text order, which for complex layouts is not always the visual order.",
+      "Fonts, sizes and colours are normalised rather than preserved.",
+    ],
+    faqs: [
+      {
+        question: "Why doesn't my Word document look like the PDF?",
+        answer:
+          "Because a PDF describes where each glyph sits on a page, not that a group of them forms a paragraph or a table. Converting means inferring that structure, and inference is imperfect. This tool prioritises getting the text out accurately and editable rather than approximating a layout that would need manual correction anyway.",
+      },
+      {
+        question: "My converted document is empty. What went wrong?",
+        answer:
+          "Your PDF is almost certainly a scan — a photograph of pages with no text layer to extract. You can confirm it in any PDF viewer: if you cannot select the text with your cursor, there is no text to extract. Run the OCR tool first to generate a text layer.",
+      },
+      {
+        question: "Are my documents uploaded to a server?",
+        answer:
+          "No. Extraction runs in your browser, so the PDF never leaves your device. That matters here more than for most tools, since the documents people convert to Word are disproportionately contracts, reports and records.",
+      },
+    ],
+  },
+
+  "pdf-to-jpg": {
+    intro:
+      "Turning PDF pages into images is a rendering job, and the single setting that determines whether the result is usable is resolution. A PDF page is vector data with no inherent pixel size, so it must be rasterised at a chosen scale. Render at screen resolution and text looks fine on screen but pixelates the moment anyone zooms or prints. Each page becomes its own JPG, rendered locally in your browser.",
+    useCases: [
+      {
+        title: "Posting a page where PDFs aren't supported",
+        body: "Social platforms, forums and many chat apps display images inline but treat a PDF as an attachment nobody opens.",
+      },
+      {
+        title: "Dropping a page into a slide deck",
+        body: "Presentation software handles images far more predictably than embedded PDF objects.",
+      },
+      {
+        title: "Uploading where only images are accepted",
+        body: "Forms that accept JPG or PNG but reject PDF outright — common on older portals.",
+      },
+    ],
+    howTo: [
+      "Load your PDF; page count is detected automatically.",
+      "Each page is rendered to a JPG image in order.",
+      "Check a page containing small text before relying on the output — that's where insufficient resolution shows first.",
+      "Download the images.",
+    ],
+    limitations: [
+      "The output is an image, so the text is no longer selectable or searchable. This is inherent to rasterising.",
+      "JPEG is lossy and handles sharp text edges poorly — fine print can show visible artefacts.",
+      "Very long documents produce many large images and can exhaust browser memory.",
+      "Rendering depends on your device, so a large PDF takes noticeably longer on a phone.",
+    ],
+    faqs: [
+      {
+        question: "Will the text still be searchable in the JPG?",
+        answer:
+          "No. Converting a page to an image discards the text layer entirely — what remains is a picture of the words. If you need searchable text, extract it with the PDF to Word tool instead, or keep the document as a PDF.",
+      },
+      {
+        question: "Why does my text look fuzzy?",
+        answer:
+          "The page was rasterised at too low a resolution for its content. PDFs are resolution-independent, so pixel dimensions only exist once rendered. Documents with small print need a higher render scale — and JPEG compounds this, since JPEG artefacts cluster exactly at the sharp edges that letterforms are made of.",
+      },
+      {
+        question: "Should I use JPG or PNG for pages of text?",
+        answer:
+          "PNG, if you have the choice. JPEG was designed for photographs with smooth gradients and produces halos around high-contrast text. PNG is lossless, so letterforms stay crisp — the file is larger, but a page of text is exactly the case where JPEG performs worst.",
+      },
+    ],
+  },
+
+  "rotate-pdf": {
+    intro:
+      "Pages scanned sideways or upside down are usually a feeder-orientation mistake, and the fix is genuinely lossless: PDF stores rotation as a page attribute, so correcting it changes a number rather than re-rendering pixels. Nothing is re-compressed and no quality is lost, no matter how many times you rotate. You can rotate every page or only the ones that are wrong.",
+    useCases: [
+      {
+        title: "Fixing a sideways scan",
+        body: "Landscape pages fed through a portrait scanner arrive rotated 90°, forcing every reader to tilt their head or their screen.",
+      },
+      {
+        title: "Correcting a few pages in a long document",
+        body: "Mixed-orientation scans where most pages are fine and a handful were fed the wrong way.",
+      },
+      {
+        title: "Preparing a document for print",
+        body: "Printers honour the page rotation attribute, so fixing it beforehand avoids a tray of sideways paper.",
+      },
+    ],
+    howTo: [
+      "Load the PDF you want to correct.",
+      "Choose the rotation — 90° clockwise, 90° anticlockwise, or 180° for upside-down pages.",
+      "Apply it to all pages, or select just the ones that are wrong.",
+      "Download the corrected file.",
+    ],
+    limitations: [
+      "Rotation is limited to 90° increments, because that is what the PDF specification stores. Correcting a slightly skewed scan needs deskewing, which is a different operation.",
+      "Rotation applies to whole pages; you cannot rotate an element within a page.",
+      "A few older or non-compliant viewers ignore the rotation attribute and display the original orientation.",
+      "Encrypted PDFs must be unlocked first.",
+    ],
+    faqs: [
+      {
+        question: "Does rotating reduce quality?",
+        answer:
+          "No, not at all. Rotation sets a page attribute that viewers apply at display time — the page content is untouched and nothing is re-encoded. You can rotate repeatedly with no cumulative degradation, unlike rotating a JPEG.",
+      },
+      {
+        question: "Can I rotate only some pages?",
+        answer:
+          "Yes, and that's the common case with mixed scans. Select the specific pages that are wrong rather than rotating the whole document, which would only make the correct pages wrong instead.",
+      },
+      {
+        question: "My scan is tilted by a few degrees. Can this fix it?",
+        answer:
+          "No. PDF rotation only supports 90° steps, so it cannot correct a slight tilt from a page sitting crooked in a scanner. That requires deskewing, which re-renders the page content — a genuinely different and lossy operation.",
+      },
+    ],
+  },
+
+  "watermark-pdf": {
+    intro:
+      "A watermark communicates intent — DRAFT, CONFIDENTIAL, a company name — and it is worth being honest that it does not enforce anything. Text drawn onto a page can be removed by anyone with the right tool, so a watermark deters casual misuse and labels provenance; it is not a security control. This adds text or an image across your pages locally in the browser, with control over placement and opacity.",
+    useCases: [
+      {
+        title: "Marking drafts so they aren't mistaken for final",
+        body: "A visible DRAFT across every page prevents an in-progress version circulating as though it were approved.",
+      },
+      {
+        title: "Labelling confidential material",
+        body: "A CONFIDENTIAL stamp sets expectations and shows intent, which matters for internal policy even though it enforces nothing technically.",
+      },
+      {
+        title: "Branding documents you send out",
+        body: "Proposals and reports carrying your name or logo on each page, so a single forwarded page still identifies its source.",
+      },
+    ],
+    howTo: [
+      "Load the PDF you want to mark.",
+      "Enter your watermark text or choose an image.",
+      "Set position, rotation and opacity — around 20–30% is usually readable without obscuring the content.",
+      "Apply and download the watermarked file.",
+    ],
+    limitations: [
+      "A watermark is not protection. It can be removed with PDF editing tools, so never rely on it to secure a document.",
+      "Watermarks are drawn on top of existing content and can obscure text if opacity is set too high.",
+      "It is applied uniformly; per-page watermark text is not supported.",
+      "Adding a watermark to a scanned PDF increases file size, since it adds a content layer over each page image.",
+    ],
+    faqs: [
+      {
+        question: "Can someone remove my watermark?",
+        answer:
+          "Yes — and you should design around that. A watermark is page content, and anyone with a PDF editor can strip or cover it. It signals status and ownership, and deters casual reuse. If a document genuinely must not be copied or altered, you need encryption and access controls, not a watermark.",
+      },
+      {
+        question: "What opacity should I use?",
+        answer:
+          "Roughly 20–30% is the usual sweet spot: clearly visible without making the underlying text hard to read. Go higher and you hurt legibility; go much lower and it stops registering as a label at all. Check a dense page rather than a mostly-empty one.",
+      },
+      {
+        question: "Is my document uploaded to apply the watermark?",
+        answer:
+          "No. The watermark is drawn in your browser and the file never leaves your device — which is the sensible arrangement given that the documents people mark CONFIDENTIAL are, definitionally, the ones they least want on someone else's server.",
+      },
+    ],
+  },
+
+  "add-page-numbers": {
+    intro:
+      "Page numbers matter most when a document leaves your hands — in court bundles, tenders and printed reports, an unnumbered stack cannot be referenced or reassembled. The complication is that the PDF's page order and the document's own numbering rarely agree: covers, blank separators and appendices all shift things. This adds numbers to the pages you choose, with control over where they sit and where the count starts.",
+    useCases: [
+      {
+        title: "Court and legal bundles",
+        body: "Filings require continuous pagination so a hearing can reference a specific page without ambiguity.",
+      },
+      {
+        title: "Tender and grant submissions",
+        body: "Panels commonly require numbered pages and reject submissions without them.",
+      },
+      {
+        title: "Numbering a merged document",
+        body: "Files combined from several sources each restart at 1. A single pass renumbers the whole thing coherently.",
+      },
+    ],
+    howTo: [
+      "Load the PDF you want to number.",
+      "Choose the position — footer centre is the conventional choice for printed documents.",
+      "Set the starting number and, if needed, the first page to number, so a cover sheet can be skipped.",
+      "Apply and check the first and last pages before sending it on.",
+    ],
+    limitations: [
+      "Numbers are drawn on top of the page, so they can overlap existing footers. Check a page that already has footer content.",
+      "Existing page numbers are not detected or replaced — adding numbers to an already-numbered document produces two sets.",
+      "Formats such as roman numerals for front matter are not supported; numbering is a single continuous sequence.",
+      "Placement is uniform, so it will not alternate for double-sided printing.",
+    ],
+    faqs: [
+      {
+        question: "Can I skip the cover page?",
+        answer:
+          "Yes, and it's the usual requirement. Set numbering to begin on a later page so the cover stays clean. You can also control the starting number independently, which is how you make page 3 of the file read as page 1 of the document.",
+      },
+      {
+        question: "The numbers overlap my existing footer. Can I move them?",
+        answer:
+          "Yes — choose a different position. Numbers are drawn as new content rather than inserted into a layout, so they have no awareness of what is already on the page. If your document already has footer text, move the numbers to a corner instead of the centre.",
+      },
+      {
+        question: "Will this replace page numbers that are already there?",
+        answer:
+          "No. Existing numbers are part of the page content and cannot be reliably detected or removed, so you would end up with two sets. Only add numbers to documents that don't already have them.",
+      },
+    ],
+  },
+
+  "remove-pages": {
+    intro:
+      "Deleting pages is straightforward, with one counter-intuitive consequence worth knowing: the file often barely shrinks. Removing a page drops its content stream, but shared resources — embedded fonts, colour profiles, images referenced from several pages — usually remain. Deleting half a document and finding it is still 90% of its original size is normal, not a failure. The pages you keep are copied unchanged, so nothing is re-encoded.",
+    useCases: [
+      {
+        title: "Stripping pages before sharing",
+        body: "Remove internal notes, pricing appendices or blank separators before a document goes to a client.",
+      },
+      {
+        title: "Cleaning up a scan",
+        body: "Feeder scans routinely capture blank backs of double-sided pages. Removing them halves the page count.",
+      },
+      {
+        title: "Cutting boilerplate",
+        body: "Drop the terms-and-conditions appendix nobody reads before circulating a report internally.",
+      },
+    ],
+    howTo: [
+      "Load the PDF and check its page count.",
+      "Enter the pages or ranges to delete, such as 2 or 5-8.",
+      "Confirm your selection — deletion applies to the pages you list, not the ones you keep.",
+      "Download the result and verify the remaining pages are the ones you expected.",
+    ],
+    limitations: [
+      "File size often drops far less than the page count, because embedded fonts and shared resources are retained.",
+      "Bookmarks and internal links pointing at deleted pages will no longer resolve.",
+      "Page numbers printed on the pages themselves are page content and will now be non-consecutive.",
+      "There is no undo. Keep your original.",
+    ],
+    faqs: [
+      {
+        question: "Why is my file still large after deleting most pages?",
+        answer:
+          "Because page count and file size are only loosely related. Embedded fonts, colour profiles and images shared across pages stay in the file when individual pages go. If size is your goal, run the compressor afterwards — deletion alone frequently reclaims very little.",
+      },
+      {
+        question: "Do I list the pages to delete or the pages to keep?",
+        answer:
+          "The pages to delete. If it's easier to describe what you want to keep — for example keeping only pages 1–3 of a 50-page file — use the Extract Pages tool instead, which works the other way round.",
+      },
+      {
+        question: "Are the remaining pages re-compressed?",
+        answer:
+          "No. Kept pages are copied as-is, so text stays selectable and images keep their original quality. This is a structural edit, not a re-render.",
+      },
+    ],
+  },
+
+  "extract-pages": {
+    intro:
+      "Extracting is the inverse of deleting: you name the pages you want and get a new document containing exactly those, in the order you listed them. That ordering detail is genuinely useful — asking for 5,1,3 gives you those pages in that sequence, which makes this a quick way to reorder a short document as well as subset a long one. The original is never modified.",
+    useCases: [
+      {
+        title: "Sending only the relevant section",
+        body: "Pull the four pages a colleague actually needs out of a long report rather than making them hunt.",
+      },
+      {
+        title: "Separating documents from one scan",
+        body: "A single scanning pass often contains several unrelated documents. Extract each into its own file.",
+      },
+      {
+        title: "Reordering a few pages",
+        body: "Listing pages in a different order outputs them in that order, which is faster than a full page-organiser for small fixes.",
+      },
+    ],
+    howTo: [
+      "Load the source PDF.",
+      "List the pages or ranges you want, for example 1-3 or 5,1,8.",
+      "Note that the order you list is the order you get.",
+      "Download the new document; the original is untouched.",
+    ],
+    limitations: [
+      "Page numbers are 1-based and ranges include both ends, so 1-3 yields three pages.",
+      "Bookmarks and outline entries from the source are not carried across.",
+      "Internal links pointing outside the extracted set will no longer resolve.",
+      "Requesting a page beyond the document's length returns an error rather than being ignored.",
+    ],
+    faqs: [
+      {
+        question: "What's the difference between this and Split PDF?",
+        answer:
+          "They overlap heavily — both produce a new document from selected pages. Extract is oriented around picking specific pages and controlling their order, including reordering. Use whichever framing matches how you're thinking about the task.",
+      },
+      {
+        question: "Can I reorder pages while extracting?",
+        answer:
+          "Yes. Pages appear in the order you list them, so requesting 3,1,2 returns them in that sequence. For a small reordering job this is quicker than a visual page organiser.",
+      },
+      {
+        question: "Is the original document changed?",
+        answer:
+          "No. The source is read to build a new file and your copy is left exactly as it was. Extraction is always non-destructive.",
+      },
+    ],
+  },
+
+  "png-to-pdf": {
+    intro:
+      "PNG is lossless, which makes this conversion different from its JPEG counterpart in one respect that matters: there is no generational quality loss to worry about, and screenshots and diagrams with sharp edges and flat colour stay perfectly crisp. The cost is size — a PNG of a detailed screenshot is often several times larger than the JPEG equivalent, and that carries into the PDF. Each image becomes one page, scaled to fit while preserving its aspect ratio.",
+    useCases: [
+      {
+        title: "Turning screenshots into a document",
+        body: "Bug reports, step-by-step guides and audit evidence are usually PNG screenshots that need to arrive as one file, in order.",
+      },
+      {
+        title: "Combining diagrams and charts",
+        body: "Exported diagrams keep their crisp lines and flat colour through a lossless conversion, where JPEG would add halos around every edge.",
+      },
+      {
+        title: "Submitting images where only PDF is accepted",
+        body: "Many portals accept a single PDF and nothing else, regardless of what you actually have.",
+      },
+    ],
+    howTo: [
+      "Add the PNG images you want in the document.",
+      "Arrange them into the page order you want.",
+      "Convert — each image becomes a page, scaled to fit and centred.",
+      "Download the PDF and check the ordering.",
+    ],
+    limitations: [
+      "PNG transparency has no equivalent in a PDF page, so transparent areas are composited onto white.",
+      "One image per page; multiple images on a single page is not supported.",
+      "PNG files are large, and the resulting PDF inherits that. Run the compressor afterwards if size matters.",
+      "No OCR is performed — text inside a screenshot stays an image and is not searchable.",
+    ],
+    faqs: [
+      {
+        question: "Should I use PNG or JPG images for my PDF?",
+        answer:
+          "It depends entirely on the content. Screenshots, diagrams, logos and anything containing text belong as PNG — lossless, so edges stay sharp. Photographs belong as JPEG, which compresses them far more efficiently with no visible difference. Using JPEG for screenshots produces visible halos around text.",
+      },
+      {
+        question: "What happens to transparent areas?",
+        answer:
+          "They are composited onto a white background. A PDF page has no alpha channel, so transparency must resolve to something — this is worth knowing if your PNG has a transparent background that was hiding an awkward edge.",
+      },
+      {
+        question: "My PDF is very large. Why?",
+        answer:
+          "Because PNG is lossless and lossless is big, particularly for detailed screenshots. The conversion embeds the image data as-is rather than re-compressing it, so the PDF is roughly the sum of your PNGs. Run it through the PDF compressor if you need it smaller.",
+      },
+    ],
+  },
+
+  "excel-to-pdf": {
+    intro:
+      "Spreadsheets and pages disagree fundamentally: a sheet is an unbounded grid, a PDF page is a fixed rectangle. Every spreadsheet-to-PDF conversion is therefore a decision about what to do with columns that don't fit, and the honest answer is that wide sheets are the hard case. This renders your XLS or XLSX data as a table in a PDF, which works well for reports and data extracts, and less well for sheets built around charts and heavy visual formatting.",
+    useCases: [
+      {
+        title: "Sending data that must not be edited",
+        body: "A PDF signals the figures are final, where a spreadsheet invites someone to change a cell and recirculate it.",
+      },
+      {
+        title: "Attaching a data extract to a report",
+        body: "Getting tabular results into a document format that opens identically everywhere, without Excel installed.",
+      },
+      {
+        title: "Archiving a snapshot",
+        body: "Freezing a month-end position so the numbers stay as they were, independent of formulas that would recalculate.",
+      },
+    ],
+    howTo: [
+      "Load your XLS or XLSX file.",
+      "The sheet's data is read and laid out as a table.",
+      "Convert and download the PDF.",
+      "Check wide sheets carefully — column overflow is the usual problem.",
+    ],
+    limitations: [
+      "Cell formatting, colours, conditional formatting and merged cells are not preserved; the output is a clean data table.",
+      "Charts, images and pivot tables are not rendered — only cell values are converted.",
+      "Formulas are converted to their computed values, which is usually what you want but means the logic is gone.",
+      "Very wide sheets are difficult to fit on a page; consider splitting them or converting in landscape.",
+      "Only the data is exported, so print areas and page-break settings from Excel are not honoured.",
+    ],
+    faqs: [
+      {
+        question: "Will my spreadsheet's formatting be preserved?",
+        answer:
+          "No. The conversion extracts cell values and renders them as a clean table, so colours, fonts, conditional formatting and merged cells don't carry across. If the formatting is the point — a designed invoice or dashboard — export to PDF from Excel itself, which knows about its own layout.",
+      },
+      {
+        question: "What happens to formulas?",
+        answer:
+          "They're converted to their calculated values, which is normally what you want in a PDF — a static record of the numbers. Be aware the underlying logic isn't preserved, so the PDF can't be audited for how a figure was derived.",
+      },
+      {
+        question: "My table is cut off at the right edge. What can I do?",
+        answer:
+          "That's the fundamental spreadsheet-to-page mismatch: sheets extend indefinitely, pages don't. Options are splitting wide sheets into several narrower ones, removing columns you don't need in the PDF, or converting in landscape. There's no setting that makes forty columns fit a portrait page legibly.",
+      },
+    ],
+  },
+
+  "sign-pdf": {
+    intro:
+      "This places a signature image onto a page. It is worth stating plainly that this is not a digital signature in the cryptographic sense — it adds a picture of your signature as page content, with nothing binding it to your identity and nothing detecting later alteration. For most everyday paperwork that is exactly what is being asked for, and it is far quicker than printing, signing and rescanning. For anything requiring legal non-repudiation, you need a certificate-based e-signature service instead.",
+    useCases: [
+      {
+        title: "Returning a form without a printer",
+        body: "The print-sign-scan cycle exists only because the signature has to become part of the page. Placing an image does the same thing in seconds.",
+      },
+      {
+        title: "Initialling routine paperwork",
+        body: "Delivery notes, internal approvals and acknowledgements where a visible mark is all that's needed.",
+      },
+      {
+        title: "Adding a signature block to a template",
+        body: "Applying the same signature to documents you issue regularly.",
+      },
+    ],
+    howTo: [
+      "Load the PDF you need to sign.",
+      "Add your signature image — a photo of a signature on white paper works, ideally with the background removed as a transparent PNG.",
+      "Position and size it over the signature line.",
+      "Download the signed document.",
+    ],
+    limitations: [
+      "This is not a cryptographic digital signature. There is no certificate, no identity binding, and no tamper detection.",
+      "The image can be extracted from the PDF and reused by anyone who receives the file — a real consideration for a genuine signature.",
+      "A JPEG signature carries a white box around it. Use a transparent PNG so it sits cleanly over the line.",
+      "Nothing is timestamped, so the document does not record when it was signed.",
+    ],
+    faqs: [
+      {
+        question: "Is this a legally binding electronic signature?",
+        answer:
+          "It depends entirely on your jurisdiction and the document, and you shouldn't assume it is. Many routine agreements accept a signature image, but anything requiring proof of identity or tamper-evidence needs a certificate-based service that binds the signature to a verified identity and detects later changes. This tool adds an image; it makes no cryptographic claim.",
+      },
+      {
+        question: "Why does my signature have a white box around it?",
+        answer:
+          "Because the image has an opaque background — the usual result of photographing a signature and saving it as JPEG. Use a PNG with a transparent background so only the ink shows and the underlying line stays visible.",
+      },
+      {
+        question: "Can someone copy my signature out of the PDF?",
+        answer:
+          "Yes. Once placed, it's an image inside the file and can be extracted and reused. That's true of every signature-image tool, not just this one, and it's the strongest practical argument for certificate-based signing when the document actually matters.",
+      },
+    ],
+  },
+
   // ────────────────────────────── IMAGE ──────────────────────────────
   "image-converter": {
     intro:
