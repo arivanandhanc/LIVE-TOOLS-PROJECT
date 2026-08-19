@@ -1,24 +1,26 @@
 export const siteConfig = {
-  name: "Arivu's Scrab Tools",
-  tagline: "Every file tool you need. Faster, cleaner, free.",
+  name: "Scrab Tools",
+  tagline: "Mini tools for PDFs and every digital asset.",
   description:
-    "Arivu's Scrab Tools is a fast, secure, privacy-first platform with 100+ tools to convert, compress, merge, edit and transform PDF, image, CSV and text files online.",
+    "Scrab Tools is a collection of 100+ free mini tools for PDFs, images, CSV data, text and developer formats — convert, compress, merge and edit in seconds. Most run entirely in your browser, so your files never leave your device.",
   // `||` (not `??`) so an empty-string env var also falls back. These are
   // public values; the fallbacks keep production working even if the Vercel
   // env var is missing/blank. Local dev overrides apiUrl via .env.local.
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://tools.arivanandhan.in",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.scrabtools.site",
   apiUrl: process.env.NEXT_PUBLIC_API_URL || "https://tools-live.onrender.com",
   ogImage: "/og.png",
   twitter: "@arivanandhan",
   keywords: [
+    "mini tools",
     "PDF tools",
+    "online tools",
     "file converter",
-    "online converter",
     "PDF editor",
     "CSV converter",
     "image compressor",
     "merge PDF",
     "compress PDF",
+    "digital asset tools",
   ],
 } as const;
 

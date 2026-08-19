@@ -1,4 +1,4 @@
-# Full local stack for Arivu's Scrab Tools.
+# Full local stack for Scrab Tools.
 #   docker compose up --build
 # Brings up Postgres, Redis, MinIO (S3/R2-compatible), the API and the web app.
 

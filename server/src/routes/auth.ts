@@ -11,7 +11,7 @@ import { env } from "../config/env";
 export const authRouter = Router();
 
 const REFRESH_COOKIE = "cf_refresh";
-// In production the web app (e.g. tools.arivanandhan.in) and the API
+// In production the web app (e.g. www.scrabtools.site) and the API
 // (e.g. tools-live.onrender.com) are on DIFFERENT registrable domains, which
 // makes the refresh request cross-site. A `lax` cookie is NOT sent on those
 // cross-site fetches, so the silent refresh on page load fails and the user

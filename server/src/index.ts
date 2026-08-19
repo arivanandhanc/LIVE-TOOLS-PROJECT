@@ -12,7 +12,7 @@ void bootstrapAdmin();
 const server = app.listen(env.port, () => {
   logger.info(
     { port: env.port, env: env.nodeEnv, storage: env.storageDriver },
-    `Arivu's Scrab Tools API listening on http://localhost:${env.port}`
+    `Scrab Tools API listening on http://localhost:${env.port}`
   );
 });
 

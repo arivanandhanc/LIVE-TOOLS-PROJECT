@@ -6,7 +6,7 @@ import { siteConfig } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Founder — Arivanandhan Chitheshwaran",
   description:
-    "Arivanandhan Chitheshwaran is the founder and engineer behind Arivu's Scrab Tools, a privacy-first suite of 95+ free online file and document tools.",
+    "Arivanandhan Chitheshwaran is the founder and engineer behind Scrab Tools, a privacy-first suite of 95+ free online file and document tools.",
   alternates: { canonical: "/about/founder" },
 };
 
@@ -42,13 +42,13 @@ export default function FounderPage() {
         Arivanandhan Chitheshwaran
       </h1>
       <p className="mt-2 text-lg text-muted-foreground">
-        Founder &amp; Engineer — Arivu&apos;s Scrab Tools
+        Founder &amp; Engineer — Scrab Tools
       </p>
 
       <div className="mt-6 space-y-4 text-muted-foreground">
         <p>
           I&apos;m Arivanandhan, an independent software engineer and the founder of{" "}
-          <strong>Arivu&apos;s Scrab Tools</strong>. I design and build every tool on this
+          <strong>Scrab Tools</strong>. I design and build every tool on this
           platform — a growing suite of {`95+`} free utilities for PDF, image, CSV, text and
           developer work.
         </p>

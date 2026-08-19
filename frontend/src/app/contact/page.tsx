@@ -3,7 +3,7 @@ import { Mail, Shield, LifeBuoy } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Get in touch with the Arivu's Scrab Tools team.",
+  description: "Get in touch with the Scrab Tools team.",
   alternates: { canonical: "/contact" },
 };
 

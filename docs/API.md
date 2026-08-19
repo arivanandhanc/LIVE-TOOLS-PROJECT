@@ -1,4 +1,4 @@
-# Arivu's Scrab Tools API Reference
+# Scrab Tools API Reference
 
 Base URL (local): `http://localhost:4000` · (prod): `https://api.arivanandhan.in`
 

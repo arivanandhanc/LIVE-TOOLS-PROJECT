@@ -143,7 +143,7 @@ export default function HomePage() {
             Built for speed, security and privacy
           </h2>
           <p className="mx-auto mt-2 max-w-2xl text-muted-foreground">
-            Arivu&apos;s Scrab Tools is engineered to feel faster and safer than the tools you know.
+            Scrab Tools is engineered to feel faster and safer than the tools you know.
           </p>
         </div>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

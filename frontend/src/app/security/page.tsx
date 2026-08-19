@@ -7,7 +7,7 @@ import { siteConfig } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Security & Privacy — Your files never leave your browser",
   description:
-    "How Arivu's Scrab Tools keeps your files private: most tools run 100% in your browser with zero upload, encrypted transfers for server tools, and automatic deletion. GDPR & CCPA aligned.",
+    "How Scrab Tools keeps your files private: most tools run 100% in your browser with zero upload, encrypted transfers for server tools, and automatic deletion. GDPR & CCPA aligned.",
   alternates: { canonical: "/security" },
 };
 
@@ -51,7 +51,7 @@ export default function SecurityPage() {
     name: "Security & Privacy",
     url: `${siteConfig.url}/security`,
     description:
-      "How Arivu's Scrab Tools protects your files: in-browser processing with no upload, encrypted transfers, and automatic deletion.",
+      "How Scrab Tools protects your files: in-browser processing with no upload, encrypted transfers, and automatic deletion.",
     publisher: { "@type": "Organization", name: siteConfig.name, url: siteConfig.url },
   };
 

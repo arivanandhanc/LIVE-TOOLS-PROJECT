@@ -1,9 +1,9 @@
-# Arivu's Scrab Tools
+# Scrab Tools
 
 > Every file tool you need, in one fast workspace. A privacy-first, enterprise-grade
 > alternative to iLovePDF & Adobe Online Tools — **100+ tools**, free, no sign-up required.
 
-Live target: **https://tools.arivanandhan.in**
+Live target: **https://www.scrabtools.site**
 
 ---
 
@@ -63,7 +63,7 @@ To enable accounts, set `DATABASE_URL` (Neon) in `server/.env` and run `npm run 
 docker compose up --build      # web :3000, api :4000, postgres, redis, minio
 ```
 
-See **[SETUP.md](./SETUP.md)** for GitHub, domain (tools.arivanandhan.in) and deployment.
+See **[SETUP.md](./SETUP.md)** for GitHub, domain (www.scrabtools.site) and deployment.
 
 ## 🧰 Tool categories
 
@@ -104,4 +104,4 @@ CI (`.github/workflows/ci.yml`) runs lint/typecheck/test/build for both apps and
 
 ## 📄 License
 
-Proprietary — © Arivu's Scrab Tools. All rights reserved.
+Proprietary — © Scrab Tools. All rights reserved.

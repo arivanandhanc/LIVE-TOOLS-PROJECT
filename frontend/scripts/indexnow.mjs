@@ -13,7 +13,7 @@
  * Run it after each deploy (or wire into CI) to push fresh content for crawling.
  */
 
-const HOST = "tools.arivanandhan.in";
+const HOST = "www.scrabtools.site";
 // Current IndexNow key. Override via argv[2] / INDEXNOW_KEY when the matching
 // key file isn't deployed yet. The key file must be live at https://HOST/<key>.txt.
 const KEY = process.argv[2] || process.env.INDEXNOW_KEY || "2e07c95e36124dc1a8f33572ea750e28";

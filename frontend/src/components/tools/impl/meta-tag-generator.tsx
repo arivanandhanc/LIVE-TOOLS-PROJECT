@@ -11,8 +11,8 @@ const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").repl
 export default function MetaTagGenerator() {
   const [title, setTitle] = React.useState("Scrab Tools — Free Online File Tools");
   const [description, setDescription] = React.useState("Fast, private PDF, image, CSV and developer tools that run in your browser.");
-  const [url, setUrl] = React.useState("https://tools.arivanandhan.in");
-  const [image, setImage] = React.useState("https://tools.arivanandhan.in/og.png");
+  const [url, setUrl] = React.useState("https://www.scrabtools.site");
+  const [image, setImage] = React.useState("https://www.scrabtools.site/og.png");
 
   const output = React.useMemo(() => [
     `<title>${esc(title)}</title>`,

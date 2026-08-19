@@ -24,7 +24,7 @@ jobs:
       - run: npm run lint
       - run: npm run build
         env:
-          NEXT_PUBLIC_SITE_URL: https://tools.arivanandhan.in
+          NEXT_PUBLIC_SITE_URL: https://www.scrabtools.site
           NEXT_PUBLIC_API_URL: https://api.arivanandhan.in
 
   server:
