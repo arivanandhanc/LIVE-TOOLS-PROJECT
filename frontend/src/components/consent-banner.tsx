@@ -51,7 +51,8 @@ export function ConsentBanner() {
             <h2 className="font-semibold">We value your privacy</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               We use necessary cookies to make the site work. With your consent we also use
-              analytics to improve Scrab Tools. Read our{" "}
+              analytics to improve Scrab Tools, and advertising cookies from Google and its
+              partners to fund it. Read our{" "}
               <Link href="/legal/cookies" className="underline">Cookie Policy</Link>.
             </p>
 
@@ -59,7 +60,15 @@ export function ConsentBanner() {
               <div className="mt-4 space-y-2">
                 <Row label="Strictly necessary" desc="Required for the site to function." checked disabled />
                 <Row label="Analytics" desc="Helps us understand usage." checked={analytics} onChange={setAnalytics} />
-                <Row label="Marketing" desc="Personalized content and offers." checked={marketing} onChange={setMarketing} />
+                {/* Labelled "Advertising" to match the Cookie Policy — the banner is
+                    what actually records consent, so it has to describe accurately
+                    what is being consented to. */}
+                <Row
+                  label="Advertising"
+                  desc="Lets Google AdSense and its partners personalise the ads that fund this site."
+                  checked={marketing}
+                  onChange={setMarketing}
+                />
               </div>
             )}
 

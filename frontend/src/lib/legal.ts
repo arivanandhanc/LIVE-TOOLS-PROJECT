@@ -80,45 +80,54 @@ export const legalDocs: Record<string, LegalDoc> = {
         ],
       },
       {
-        heading: "8. Subprocessors we rely on",
+        heading: "8. Advertising",
         body: [
-          "We use carefully selected service providers who process data on our behalf under appropriate agreements: hosting and content delivery (e.g. Vercel for the web app, Render for the API), database (e.g. Neon/PostgreSQL), optional object storage (e.g. Cloudflare R2 / S3-compatible storage), transactional email (your configured SMTP/email provider) for OTP and notifications, AI processing (Anthropic), and bot/abuse protection (Google reCAPTCHA).",
+          "This site is free to use and is funded by advertising. We use Google AdSense to serve ads. Google, as a third-party vendor, uses cookies to serve ads on this site, and its use of advertising cookies enables it and its partners to serve ads to you based on your visit to this and other sites on the internet.",
+          "Third-party vendors and ad networks may also use cookies, web beacons or similar technologies to collect information such as your IP address, device and browser characteristics, and the pages you view, in order to measure and personalise advertising.",
+          "You can opt out of personalised advertising by visiting Google's Ads Settings at adssettings.google.com, and you can opt out of third-party vendors' use of cookies for personalised advertising at aboutads.info/choices. If you are in the EEA or UK, personalised advertising is only used where you have given consent through our cookie banner, and you can withdraw that consent at any time.",
+          "Advertising never has access to the files you process. Browser-based tools keep your files on your device entirely, and files sent to our servers are used solely to perform the requested operation and are deleted automatically.",
+        ],
+      },
+      {
+        heading: "9. Subprocessors we rely on",
+        body: [
+          "We use carefully selected service providers who process data on our behalf under appropriate agreements: hosting and content delivery (e.g. Vercel for the web app, Render for the API), database (e.g. Neon/PostgreSQL), optional object storage (e.g. Cloudflare R2 / S3-compatible storage), transactional email (your configured SMTP/email provider) for OTP and notifications, AI processing (Anthropic), advertising (Google AdSense), analytics (Vercel Web Analytics and Speed Insights), and bot/abuse protection (Google reCAPTCHA).",
           "These providers may process data in countries outside your own; where required we rely on appropriate safeguards such as Standard Contractual Clauses.",
         ],
       },
       {
-        heading: "9. International transfers",
+        heading: "10. International transfers",
         body: [
           "Your data may be processed in countries other than where you live. Where personal data is transferred outside the EEA/UK, we use lawful transfer mechanisms (such as adequacy decisions or Standard Contractual Clauses) to protect it.",
         ],
       },
       {
-        heading: "10. Security",
+        heading: "11. Security",
         body: [
           "We apply industry-standard safeguards: TLS encryption in transit, hashed passwords (scrypt), HttpOnly/Secure cookies, strict security headers and Content-Security-Policy, CORS allow-listing, rate limiting, and audit logging. No method of transmission or storage is 100% secure, but we work continuously to protect your data.",
         ],
       },
       {
-        heading: "11. Children's privacy",
+        heading: "12. Children's privacy",
         body: [
           "Scrab Tools is not directed to children under 16 (or the age required by your jurisdiction). We do not knowingly collect their personal data; if you believe a child has provided us data, contact us and we will delete it.",
         ],
       },
       {
-        heading: "12. Your rights",
+        heading: "13. Your rights",
         body: [
           "Depending on where you live, you may have the right to access, correct, delete, restrict, or object to the processing of your personal data, to data portability, and to withdraw consent at any time. California residents have rights to know, delete, correct, and opt out of 'sale'/'sharing' (we do not sell or share personal data for cross-context behavioral advertising).",
           "To exercise any right, contact us via the Contact page. We will verify your identity and respond within the timeframe required by law. You will not be discriminated against for exercising your rights.",
         ],
       },
       {
-        heading: "13. Changes to this policy",
+        heading: "14. Changes to this policy",
         body: [
           "We may update this policy as the service evolves. We will revise the 'Last updated' date above and, for material changes, provide a more prominent notice.",
         ],
       },
       {
-        heading: "14. Contact",
+        heading: "15. Contact",
         body: [
           "For any privacy question or request, please use the Contact page. We aim to respond promptly.",
         ],
@@ -143,13 +152,15 @@ export const legalDocs: Record<string, LegalDoc> = {
         body: [
           "Strictly necessary (always on): required for core functionality and security. These include our authentication cookie 'cf_refresh' (a secure, HttpOnly refresh-token cookie that keeps you signed in), an anonymous guest identifier 'cf_guest' (used for rate-limiting and anonymous history on server tools), a short-lived OAuth state cookie used during Google sign-in, and your saved cookie-consent choice. These cannot be switched off as the service would not work without them.",
           "Analytics (optional): help us understand, in aggregate, how the site is used so we can improve it. These are set only if you consent.",
-          "Marketing (optional): may be used for personalized content. These are off by default and set only if you consent.",
+          "Advertising (optional): set by Google AdSense and its partners to serve and measure ads, and — where you consent — to personalise them. These are off by default in the EEA and UK until you accept, and you can change your choice at any time.",
         ],
       },
       {
         heading: "3. Third-party cookies",
         body: [
-          "We use Google reCAPTCHA across the whole site — it loads on every page so it can score a browsing session for signs of automation, and it is checked whenever you submit a form or send a file to our servers. This is a strictly necessary security measure and runs without collecting your consent choices; Google may set cookies and collect device and behaviour data subject to its own Privacy Policy and Terms of Service. Our hosting and CDN providers may also set strictly necessary cookies for security and load balancing.",
+          "Google reCAPTCHA protects the whole site against automated abuse. It loads on first interaction and is checked whenever you submit a form or send a file to our servers. This is a strictly necessary security measure; Google may set cookies and collect device and behaviour data subject to its own Privacy Policy and Terms of Service.",
+          "Google AdSense serves the advertising that funds the site. Google, as a third-party vendor, uses cookies to serve ads, and its use of advertising cookies enables it and its partners to serve ads based on your visits to this and other sites. Other ad-technology vendors may also set cookies or similar identifiers to measure and personalise advertising. You can opt out of personalised advertising at adssettings.google.com, or opt out of participating third-party vendors at aboutads.info/choices.",
+          "Our hosting and CDN providers may also set strictly necessary cookies for security and load balancing.",
         ],
       },
       {
