@@ -806,6 +806,155 @@ export const toolContent: Record<string, ToolContent> = {
     ],
   },
 
+  "organize-pages": {
+    intro:
+      "Page order problems almost always come from the scanner, not the document — a sheet feeder that pulled two pages at once, or a stack loaded upside down. This tool shows every page as a thumbnail so you can move them into the right sequence, spin individual pages upright, and drop the ones that shouldn't be there, then export the result as a new PDF. One thing to know before you start: the export builds a fresh document from the pages you keep, so the page content survives exactly but anything attached to the old document structure does not.",
+    useCases: [
+      {
+        title: "Fixing a duplex scan that came out interleaved",
+        body: "Scanning a double-sided stack on a single-sided feeder gives you all the fronts, then all the backs. Reorder them into 1, 2, 3 here — or use Alternate & Mix PDF if the fronts and backs arrived as two separate files.",
+      },
+      {
+        title: "Moving an appendix to the end",
+        body: "Reports often get assembled with the appendix in the middle because that's where the source file sat. Move it to the end without re-exporting from the original application.",
+      },
+      {
+        title: "Trimming a document before sending it on",
+        body: "Removing internal cover sheets, blank separator pages and pricing pages from a document you're forwarding, while leaving the rest of the pages untouched.",
+      },
+      {
+        title: "Straightening pages scanned sideways",
+        body: "Landscape tables scanned in a portrait stack come out rotated. Rotate only those pages, instead of rotating the whole file and breaking the ones that were already upright.",
+      },
+    ],
+    howTo: [
+      "Load your PDF — every page renders as a numbered thumbnail.",
+      "Use the left and right arrows on a thumbnail to move that page earlier or later in the sequence.",
+      "Click the rotate button to turn a page 90° clockwise; click again for 180° and 270°. Rotation is added to whatever rotation the page already carried.",
+      "Click the trash icon on any page you want to drop.",
+      "Click Export. The kept pages are written to a new PDF in the order shown, saved as your-file-organized.pdf.",
+    ],
+    limitations: [
+      "Bookmarks and the document outline are not carried over. The export creates a new document containing only the pages, so a navigation tree built in the original is lost — check this before reorganising a long reference document that depends on one.",
+      "Interactive form fields do not survive. If the PDF contains fillable fields, flatten it first or the field data will be dropped.",
+      "Internal links that pointed at a specific page can break, because the pages are renumbered and the old link destinations are not rebuilt.",
+      "Document metadata — title, author, subject — is not copied to the new file.",
+      "A password-protected PDF can be opened for reorganising, but the export is not encrypted. The protection is not carried over.",
+      "The whole file is held in memory while you work, so scans of several hundred megabytes can be slow on a phone.",
+    ],
+    faqs: [
+      {
+        question: "Why did my bookmarks disappear after reorganising?",
+        answer:
+          "Because the export builds a new document from the pages you kept rather than editing the original in place. Page content is copied across exactly, but the outline holding the bookmarks belongs to the document rather than to any individual page, so it isn't part of what gets copied. If the bookmarks matter more than the page order, reorder in the application that produced the PDF instead.",
+      },
+      {
+        question: "Does rotating here change the file, or just the view?",
+        answer:
+          "It changes the file. The rotation is written into each page's rotation property, so every viewer opens the page the way you left it. That's the difference between this and rotating in a PDF reader, which usually only turns your current view and forgets it when you close the file.",
+      },
+      {
+        question: "Can I reorder pages across two different PDFs?",
+        answer:
+          "Not here — this works on one file at a time. Merge the files first, then reorganise the combined document. For two files that need interleaving page by page, which is usually odd and even scan stacks, Alternate & Mix PDF does it in one step.",
+      },
+      {
+        question: "Does reordering reduce the page quality?",
+        answer:
+          "No. Pages are copied as they are, not re-rendered or re-compressed, so a scan keeps its original resolution and text stays selectable. The output size should be close to the sum of the pages you kept.",
+      },
+    ],
+    troubleshooting: [
+      {
+        problem: "The exported PDF has the pages in the right order, but the form is now blank.",
+        cause: "The original contained interactive form fields, which live in the document's form structure rather than in the page content that gets copied.",
+        fix: "Start again from the original: flatten it first so the field values become part of the page, then reorganise the flattened copy.",
+      },
+      {
+        problem: "A page still looks sideways after rotating it.",
+        cause: "The page already carried a rotation and the tool adds to it rather than replacing it, so a page stored at 270° that you rotate once lands at 0° — not always what the thumbnail led you to expect.",
+        fix: "Keep clicking rotate until the thumbnail looks upright. The thumbnail shows the final orientation, so trust it rather than counting clicks.",
+      },
+      {
+        problem: "Thumbnails take a long time to appear, or the tab stops responding.",
+        cause: "Every page is rendered to an image up front, which is memory-heavy for documents of several hundred pages.",
+        fix: "Split the document into smaller chunks first, reorganise each chunk, then merge them back together.",
+      },
+    ],
+  },
+
+  "crop-pdf": {
+    intro:
+      "Cropping a PDF sets a smaller visible window on each page. The important consequence, and the one most tools leave unsaid, is that whatever falls outside that window is still inside the file — hidden from view, not deleted. That's fine for tidying scan margins so a document reads better on a tablet, and it is the wrong tool entirely for hiding sensitive text, which anyone can recover by widening the crop again. Margins are entered in millimetres and applied to every page in the document.",
+    useCases: [
+      {
+        title: "Removing the black border from a flatbed scan",
+        body: "Scanning a page smaller than the glass leaves a dark frame around it. A few millimetres off each edge removes the frame without touching the page content.",
+      },
+      {
+        title: "Making a paper-sized PDF readable on an e-reader",
+        body: "A4 pages on a small screen are mostly white margin. Cropping the margins away lets the reader zoom the text to fill the screen instead of the whitespace.",
+      },
+      {
+        title: "Cutting a repeated header or footer band",
+        body: "Documents exported with a standing header on every page — a banner, a system watermark strip, a printed URL — can have that band cropped off in a single pass.",
+      },
+    ],
+    howTo: [
+      "Load the PDF you want to crop.",
+      "Enter how many millimetres to take off the top, right, bottom and left. Leave a field at zero to keep that edge as it is.",
+      "The same margins apply to every page, measured from each page's current crop box rather than from the paper size.",
+      "Run the tool and download the result, saved as your-file-cropped.pdf.",
+    ],
+    limitations: [
+      "Cropping hides content, it does not remove it. Text and images outside the crop box stay in the file and reappear if the crop is reset — never use this to conceal confidential material.",
+      "One set of margins is applied to every page. A document mixing portrait and landscape pages, or scans that drift across the stack, can't be handled page by page here.",
+      "Margins are measured from each page's existing crop box, so cropping a file twice takes the second set off the already-cropped area rather than off the original sheet.",
+      "Margins that would leave zero or negative width or height are refused with a message asking you to reduce them, rather than producing a file that won't open.",
+      "The file does not get meaningfully smaller. The hidden content is still stored, so cropping is not a way to reduce file size — compress the PDF for that.",
+      "A few printers and older viewers honour the media box rather than the crop box, so a cropped page can still print with its original margins.",
+    ],
+    faqs: [
+      {
+        question: "Does cropping delete the text I cropped out?",
+        answer:
+          "No, and this matters. Cropping sets a smaller visible area on the page; everything outside it is still stored in the file and comes back if anyone widens the crop box. Copying text out of a cropped PDF can even return the hidden words. If your aim is to remove sensitive content rather than tidy the layout, you need true redaction, not cropping.",
+      },
+      {
+        question: "Why is my file the same size after cropping?",
+        answer:
+          "Because nothing was thrown away. The page content is unchanged and only the visible window moved, so the byte count barely shifts. If you need a smaller file, run the cropped PDF through Compress PDF afterwards.",
+      },
+      {
+        question: "Can I crop only some of the pages?",
+        answer:
+          "Not in a single pass — the margins you enter apply to every page. To crop part of a document, extract those pages first, crop the extracted file, then merge it back with the pages you left alone.",
+      },
+      {
+        question: "How do I work out the right margin in millimetres?",
+        answer:
+          "Start from the paper size and estimate. An A4 page is 210 mm across and 297 mm tall, so a 20 mm border is roughly a tenth of the width. Crop conservatively, open the result, and run it again if more needs to come off — the second pass measures from the already-cropped edge.",
+      },
+    ],
+    troubleshooting: [
+      {
+        problem: "The tool says the crop margins are larger than the page.",
+        cause: "The left and right margins together exceed the page width, or the top and bottom exceed its height, which would leave nothing visible.",
+        fix: "Reduce the margins. The values are millimetres, not points or pixels — 200 is wider than an A4 page, while 20 is a realistic scan border.",
+      },
+      {
+        problem: "Some pages cropped correctly and others lost content.",
+        cause: "The document mixes page sizes or orientations and one set of margins is applied to all of them, so a margin that trims a portrait page cuts into a landscape one.",
+        fix: "Split the document by orientation, crop each part with its own margins, then merge the parts back together.",
+      },
+      {
+        problem: "The crop looks right on screen but the printout still has the old margins.",
+        cause: "The output device is honouring the page's media box rather than its crop box. A minority of printers and older viewers behave this way.",
+        fix: "Print to PDF from a viewer that respects the crop box, then send that file to the printer.",
+      },
+    ],
+  },
+
   // ────────────────────────────── IMAGE ──────────────────────────────
   "image-converter": {
     intro:
