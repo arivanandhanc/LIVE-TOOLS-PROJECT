@@ -5,16 +5,7 @@ import { Cookie } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { apiFetch } from "@/lib/api";
-
-const CONSENT_KEY = "cf_consent";
-const CONSENT_VERSION = "1.0";
-
-interface ConsentChoice {
-  necessary: true;
-  analytics: boolean;
-  marketing: boolean;
-  consentVersion: string;
-}
+import { CONSENT_VERSION, publishConsent, readConsent, type ConsentChoice } from "@/lib/consent";
 
 export function ConsentBanner() {
   const [visible, setVisible] = React.useState(false);
@@ -23,16 +14,16 @@ export function ConsentBanner() {
   const [marketing, setMarketing] = React.useState(false);
 
   React.useEffect(() => {
-    try {
-      const stored = localStorage.getItem(CONSENT_KEY);
-      if (!stored || JSON.parse(stored).consentVersion !== CONSENT_VERSION) setVisible(true);
-    } catch {
-      setVisible(true);
-    }
+    // `readConsent` returns null for both "never answered" and "answered an
+    // older policy version", which are the same thing as far as the banner is
+    // concerned: ask again.
+    if (!readConsent()) setVisible(true);
   }, []);
 
   async function save(choice: ConsentChoice) {
-    localStorage.setItem(CONSENT_KEY, JSON.stringify(choice));
+    // Publishing (rather than writing localStorage directly) is what lets the
+    // Google tags apply the choice immediately instead of on the next reload.
+    publishConsent(choice);
     setVisible(false);
     // Record server-side for the consent ledger (IP, country, browser captured there).
     await apiFetch("/api/consent", { method: "POST", body: JSON.stringify(choice) }).catch(() => undefined);

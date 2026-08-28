@@ -7,8 +7,11 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { ConsentBanner } from "@/components/consent-banner";
 import { RecaptchaProvider } from "@/components/recaptcha-provider";
+import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { GoogleAnalytics } from "@/components/google-analytics";
+import { CONSENT_BOOTSTRAP_SCRIPT } from "@/lib/consent";
 import { siteConfig } from "@/lib/site";
 
 const inter = Inter({
@@ -89,13 +92,29 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
+      <head>
+        {/* Google Consent Mode v2 defaults, emitted as a blocking inline script
+            at the top of <head>. It has to execute before any Google tag, or
+            the tag falls back to Google's defaults (granted) and can write
+            storage before the banner is ever answered. It lives here rather
+            than in <body> because React hoists the async AdSense loader into
+            <head>, which would otherwise put it ahead of us. */}
+        <script dangerouslySetInnerHTML={{ __html: CONSENT_BOOTSTRAP_SCRIPT }} />
+      </head>
       <body className="flex min-h-full flex-col">
-        {/* Google AdSense — loaded on every page. React 19 hoists async scripts
-            into <head>, which is where AdSense expects its loader for site
-            verification and Auto ads. */}
+        {/* Google AdSense — loaded on every page.
+            Loaded through next/script rather than a bare <script async>. The
+            bare tag was hoisted by React to the very top of <head>, ahead of
+            even explicit <head> children, which put it in front of the Consent
+            Mode defaults above — AdSense would then start under Google's own
+            (granted) defaults before the banner was ever answered. next/script
+            injects after hydration instead, so the defaults always win.
+            Ownership is still proven by the `google-adsense-account` meta tag
+            and ads.txt, neither of which depends on where the loader sits. */}
         {ADSENSE_CLIENT && (
-          <script
-            async
+          <Script
+            id="adsense-loader"
+            strategy="afterInteractive"
             src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
             crossOrigin="anonymous"
           />
@@ -148,6 +167,9 @@ export default function RootLayout({
             <ConsentBanner />
             {/* reCAPTCHA v3 — loaded on every page of the site */}
             <RecaptchaProvider />
+            {/* Google Analytics 4 — acquisition, landing pages and Search
+                Console linkage, which Vercel Analytics does not cover. */}
+            <GoogleAnalytics />
             {/* Vercel Web Analytics — page views across every route */}
             <Analytics />
             {/* Vercel Speed Insights — real-user Core Web Vitals */}
