@@ -68,7 +68,15 @@ export function siblingPages(page: SeoPage): SeoPage[] {
   return allSeoPages.filter((p) => p.cluster === page.cluster && p.slug !== page.slug);
 }
 
-/** Landing pages to surface from a canonical tool page (internal-link block). */
+/**
+ * Landing pages to surface from a canonical tool page (internal-link block).
+ *
+ * This is the only path by which most landing pages are reachable, so every
+ * cluster must appear under some tool here. A cluster missing from this switch
+ * is orphaned: it ships in the sitemap, Google crawls it once, finds nothing
+ * linking to it, and files it under "Discovered - currently not indexed".
+ * scripts/link-audit.mjs fails the build-time check if that happens again.
+ */
 export function clusterPagesForTool(toolSlug: string): SeoPage[] {
   switch (toolSlug) {
     case "compress-pdf":
@@ -76,9 +84,17 @@ export function clusterPagesForTool(toolSlug: string): SeoPage[] {
     case "compress-image":
       return imageCompressPages;
     case "jpg-to-pdf":
-      return imagesToPdfPages.filter((p) => p.cluster === "jpg-to-pdf-size");
+      // Also carries the generic "image to PDF" targets — there is no
+      // image-to-pdf tool page of its own to hang them from.
+      return imagesToPdfPages.filter(
+        (p) => p.cluster === "jpg-to-pdf-size" || p.cluster === "image-to-pdf-size"
+      );
+    case "png-to-pdf":
+      return imagesToPdfPages.filter((p) => p.cluster === "png-to-pdf-size");
     case "resize-image":
-      return imageResizePages;
+      // Social/ID sizing pages are resize pages by another name, and this is
+      // the only tool page that can reasonably link them.
+      return [...imageResizePages, ...socialMediaPages, ...photoIdPages];
     default:
       return [];
   }
