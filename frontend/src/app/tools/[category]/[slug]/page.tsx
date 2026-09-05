@@ -5,7 +5,7 @@ import { ChevronRight, ShieldCheck, Server, Sparkles, AlertCircle } from "lucide
 import {
   tools, getTool, getCategory, getToolsByCategory,
 } from "@/lib/tools/registry";
-import { getHowToSteps, getFaqs, getLongDescription, getIntro, getBenefits } from "@/lib/tools/seo";
+import { getHowToSteps, getFaqs, getLongDescription, getIntro, getBenefits, getTitle, getKeywords } from "@/lib/tools/seo";
 import { getToolContent, isIndexable } from "@/lib/tools/content";
 import { getSiblingTools, getCrossCategoryTools } from "@/lib/tools/related";
 import { getServerToolConfig } from "@/lib/tools/server-tools";
@@ -30,18 +30,11 @@ export async function generateMetadata(
   const cat = getCategory(tool.category);
   // cat.name is already plural ("PDF Tools", "Image Tools"), so don't append
   // "Tool" — that produced "PDF Tools Tool". Keep the category keyword intact.
-  const title = `${tool.name} — Free Online ${cat?.name ?? "File Tool"}`;
+  // getTitle adds "Converter" where the harvested queries show demand for it.
+  const title = getTitle(tool, cat?.name ?? "File Tool");
   const description = getLongDescription(tool);
   const canonical = `/tools/${tool.category}/${tool.slug}`;
-  const keywords = Array.from(
-    new Set([
-      ...(tool.keywords ?? []),
-      tool.name.toLowerCase(),
-      `${tool.name.toLowerCase()} online`,
-      `free ${tool.name.toLowerCase()}`,
-      `${tool.name.toLowerCase()} no sign up`,
-    ])
-  );
+  const keywords = getKeywords(tool);
   return {
     title,
     description,
