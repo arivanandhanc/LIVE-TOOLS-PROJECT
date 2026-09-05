@@ -10,7 +10,9 @@
     "indexnow": "node scripts/indexnow.mjs",
     "checkup": "node scripts/site-checkup.mjs",
     "link-audit": "node scripts/link-audit.mjs",
-    "keywords": "node scripts/keyword-harvest.mjs"
+    "keywords": "node scripts/keyword-harvest.mjs",
+    "url-regression": "node scripts/url-regression.mjs",
+    "seo-check": "npm run link-audit && npm run url-regression"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

@@ -141,7 +141,7 @@ function makePage(d: Dim): SeoPage {
 // valuable pages and drops the least valuable ones.
 // ─────────────────────────────────────────────────────────────────────────
 
-export const RESIZE_PAGE_BUDGET = 300;
+export const RESIZE_PAGE_BUDGET = 320;
 
 /** Copy varies by size band and shape so no two pages share an intro. */
 function useFor(w: number, h: number): string {
@@ -198,6 +198,19 @@ function collect(pairs: Array<[number, number]>): Dim[] {
   }
   return out;
 }
+
+// Tier 0 — every square this site has already published.
+//
+// These URLs are live and indexed, so they must survive any change to the
+// budget or the step sizes below. Dropping one turns a page Google already
+// ranks into a 404: the finer ladder in tier 1 steps by 10 above 600, which
+// silently removed twelve previously-published sizes (625, 675, … 1175) —
+// including /resize-image-to-1075x1075, which held #1. Never shrink this list;
+// a page that should no longer exist needs a redirect, not a deletion.
+const LEGACY_SQUARE_STEP = 25;
+const legacySquares: Array<[number, number]> = [];
+for (let s = 50; s <= 2000; s += LEGACY_SQUARE_STEP) legacySquares.push([s, s]);
+tiers.push(collect(legacySquares));
 
 // Tier 1 — squares. "Resize image to N×N" is the single most-searched shape,
 // stepped finer at the small end where the queries concentrate.
