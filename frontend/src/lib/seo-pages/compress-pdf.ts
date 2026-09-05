@@ -25,15 +25,22 @@ const KB = 1024;
 const MB = 1024 * 1024;
 
 /** High-intent KB / MB size targets people actually search for. */
-const KB_SIZES = [
-  10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100,
-  110, 120, 125, 130, 150, 175, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900,
-];
-const MB_SIZES = [1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25];
+// Stepped finest at the low end, where the "portal rejected my upload" queries
+// concentrate, and coarser above 500 KB where searches thin out.
+const KB_SIZES: number[] = [];
+for (let kb = 10; kb <= 200; kb += 5) KB_SIZES.push(kb);
+for (let kb = 210; kb <= 500; kb += 10) KB_SIZES.push(kb);
+for (let kb = 525; kb <= 1000; kb += 25) KB_SIZES.push(kb);
+
+const MB_SIZES = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6, 7, 8, 9, 10, 12, 15, 16, 20, 25, 30, 40, 50];
 
 const RAW: Array<{ label: string; display: string; bytes: number }> = [
   ...KB_SIZES.map((kb) => ({ label: `${kb}kb`, display: `${kb} KB`, bytes: kb * KB })),
-  ...MB_SIZES.map((mb) => ({ label: `${mb}mb`, display: `${mb} MB`, bytes: mb * MB })),
+  ...MB_SIZES.map((mb) => ({
+    label: `${String(mb).replace('.', '-')}mb`,
+    display: `${mb} MB`,
+    bytes: Math.round(mb * MB),
+  })),
 ];
 
 export const compressTargets: CompressTarget[] = RAW.map((r) => ({

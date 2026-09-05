@@ -27,12 +27,13 @@ export async function generateMetadata(
     title,
     description: `${service.name}: ${service.description} See what it does and visit the official site.`,
     alternates: { canonical: `/resources/${service.category}/${service.slug}` },
-    // These are thin, near-identical "describe + outbound link" pages. On a
-    // young domain, indexing 500+ of them dilutes crawl budget and drags the
-    // whole site's quality signal. noindex (but follow, so link equity still
-    // flows out) keeps them usable while Google focuses on our real tools.
-    // Category hubs at /resources/[category] stay indexable.
-    robots: { index: false, follow: true },
+    // 529 "describe + outbound link" pages, now exposed to Google by request.
+    // Caveat worth keeping visible: these are the thinnest pages on the site
+    // and the pattern Google's scaled-content-abuse policy names directly, so
+    // they are the most likely of any batch here to sit in "Discovered -
+    // currently not indexed" or to cost site-wide quality signal. Flip back to
+    // `index: false` if impressions on the rest of the site dip after this.
+    robots: { index: true, follow: true },
   };
 }
 

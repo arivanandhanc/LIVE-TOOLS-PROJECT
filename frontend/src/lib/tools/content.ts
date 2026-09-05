@@ -1491,8 +1491,27 @@ export function getToolContent(slug: string): ToolContent | undefined {
  * that are actually worth ranking. Write an entry above and the page becomes
  * indexable automatically; nothing else needs changing.
  */
+/**
+ * Master switch for the tool-page index gate.
+ *
+ * These 157 pages are real, working tools, not doorway pages, so they are all
+ * exposed to Google. The original gate limited indexing to the 26 slugs with
+ * hand-written prose because the templated copy on the rest measured 46-66%
+ * identical; that duplication is still there, so the pages most likely to be
+ * held in "Crawled - currently not indexed" are the ones still relying on the
+ * template. Adding an entry to `toolContent` is what makes a page competitive.
+ *
+ * Set back to `false` to restore the previous 26-page gate.
+ */
+export const INDEX_ALL_TOOL_PAGES = true;
+
 export function isIndexable(slug: string): boolean {
-  return slug in toolContent;
+  return INDEX_ALL_TOOL_PAGES || slug in toolContent;
+}
+
+/** Slugs still carrying template-only prose — the queue for real content. */
+export function needsUniqueContent(slug: string): boolean {
+  return !(slug in toolContent);
 }
 
 /** Count used by the sitemap and by build-time reporting. */
