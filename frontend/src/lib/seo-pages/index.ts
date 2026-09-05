@@ -16,6 +16,7 @@ import { imageCompressPages } from "./compress-image";
 import { imageResizePages } from "./resize-image";
 import { photoIdPages } from "./photo-id";
 import { socialMediaPages } from "./social-media";
+import { imagesToPdfPages } from "./images-to-pdf";
 
 export type { SeoPage } from "./types";
 
@@ -53,6 +54,7 @@ export const allSeoPages: SeoPage[] = [
   ...imageResizePages,
   ...photoIdPages,
   ...socialMediaPages,
+  ...imagesToPdfPages,
 ];
 
 const bySlug = new Map(allSeoPages.map((p) => [p.slug, p]));
@@ -73,6 +75,8 @@ export function clusterPagesForTool(toolSlug: string): SeoPage[] {
       return pdfPages;
     case "compress-image":
       return imageCompressPages;
+    case "jpg-to-pdf":
+      return imagesToPdfPages.filter((p) => p.cluster === "jpg-to-pdf-size");
     case "resize-image":
       return imageResizePages;
     default:

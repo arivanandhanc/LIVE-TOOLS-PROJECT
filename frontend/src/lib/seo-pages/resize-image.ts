@@ -141,7 +141,7 @@ function makePage(d: Dim): SeoPage {
 // valuable pages and drops the least valuable ones.
 // ─────────────────────────────────────────────────────────────────────────
 
-export const RESIZE_PAGE_BUDGET = 4200;
+export const RESIZE_PAGE_BUDGET = 300;
 
 /** Copy varies by size band and shape so no two pages share an intro. */
 function useFor(w: number, h: number): string {

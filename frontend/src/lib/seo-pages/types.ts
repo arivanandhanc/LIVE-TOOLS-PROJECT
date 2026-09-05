@@ -6,13 +6,14 @@ export interface SeoFaq {
 }
 
 /** Which client tool a landing page mounts. */
-export type SeoKind = "compress-pdf" | "compress-image" | "resize-image";
+export type SeoKind = "compress-pdf" | "compress-image" | "resize-image" | "images-to-pdf";
 
 /** Params handed to the client tool runner for each kind. */
 export type SeoToolParams =
   | { kind: "compress-pdf"; targetBytes: number; targetDisplay: string }
   | { kind: "compress-image"; format: "jpg" | "png" | "webp"; targetBytes: number; targetDisplay: string }
-  | { kind: "resize-image"; width: number; height: number };
+  | { kind: "resize-image"; width: number; height: number }
+  | { kind: "images-to-pdf"; targetBytes: number; targetDisplay: string; accept: string };
 
 export interface SeoCrumb {
   name: string;
