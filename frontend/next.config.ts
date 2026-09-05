@@ -91,8 +91,24 @@ const nextConfig: NextConfig = {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
   async redirects() {
-    // Pricing removed — everything is free. Send any old/bookmarked links home.
-    return [{ source: "/pricing", destination: "/", permanent: true }];
+    return [
+      // Pricing removed — everything is free. Send any old/bookmarked links home.
+      { source: "/pricing", destination: "/", permanent: true },
+      // Legacy domain → canonical host, path preserved, as a PERMANENT (308)
+      // redirect. Google only transfers ranking signals across a permanent
+      // redirect; a 307/302 tells it to keep indexing the old URL, which is
+      // exactly what kept tools.arivanandhan.in ranking while the new domain
+      // sat behind a same-name competitor for its own brand query.
+      // NOTE: while the legacy host is configured as a redirect in the Vercel
+      // dashboard, the edge answers first and this rule never runs — it is the
+      // backstop for when that domain is instead pointed at this app.
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "tools.arivanandhan.in" }],
+        destination: "https://www.scrabtools.site/:path*",
+        permanent: true,
+      },
+    ];
   },
 };
 

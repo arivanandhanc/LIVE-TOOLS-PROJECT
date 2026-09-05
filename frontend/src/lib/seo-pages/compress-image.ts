@@ -13,10 +13,19 @@ const FMT_DISPLAY: Record<Fmt, string> = { jpg: "JPG", png: "PNG", webp: "WebP" 
 // Each format gets a realistic set of KB targets people search for. Limited to
 // formats a browser canvas can actually encode (JPEG/PNG/WebP) — GIF/AVIF can't
 // be produced client-side, so we don't fake pages for them.
+function ladder(from: number, to: number, step: number): number[] {
+  const out: number[] = [];
+  for (let n = from; n <= to; n += step) out.push(n);
+  return out;
+}
+
+// JPG carries the most search demand (ID photos, exam portals), so it gets the
+// finest ladder; PNG and WebP start higher because sub-20 KB targets are not
+// realistically reachable for them without destroying the image.
 const SIZES: Record<Fmt, number[]> = {
-  jpg: [10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200, 250, 300, 400, 500],
-  png: [20, 30, 50, 75, 100, 150, 200, 250, 300, 400, 500],
-  webp: [10, 20, 30, 50, 75, 100, 150, 200, 300, 500],
+  jpg: [...ladder(5, 100, 5), ...ladder(110, 300, 10), ...ladder(325, 600, 25), 700, 800, 1000],
+  png: [...ladder(20, 100, 10), ...ladder(125, 300, 25), ...ladder(350, 600, 50), 800, 1000],
+  webp: [...ladder(10, 100, 10), ...ladder(125, 300, 25), ...ladder(350, 600, 50), 800, 1000],
 };
 
 function display(kb: number): string {

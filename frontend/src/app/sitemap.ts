@@ -3,7 +3,7 @@ import { tools, categories } from "@/lib/tools/registry";
 import { isIndexable } from "@/lib/tools/content";
 import { posts } from "@/lib/blog";
 import { allSeoPages } from "@/lib/seo-pages";
-import { serviceCategories } from "@/lib/resources/services";
+import { serviceCategories, services } from "@/lib/resources/services";
 import { legalSlugs } from "@/lib/legal";
 import { siteConfig } from "@/lib/site";
 
@@ -45,10 +45,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  // Only tools with hand-written content are listed. The rest carry robots
-  // noindex (see content.ts) because their templated copy was 46–66% identical
-  // across pages, and submitting pages we've asked Google not to index just
-  // burns crawl budget — the same reasoning already applied to /resources below.
+  // All tool pages are indexable (see INDEX_ALL_TOOL_PAGES in content.ts), so
+  // all of them are submitted. The filter is kept rather than dropped so that
+  // restoring the gate also restores the matching sitemap automatically.
   const toolPages: MetadataRoute.Sitemap = tools
     .filter((tool) => isIndexable(tool.slug))
     .map((tool) => ({
@@ -80,10 +79,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  // Individual service pages (/resources/[category]/[slug]) are intentionally
-  // omitted: they're thin, near-duplicate "describe + outbound link" pages and
-  // carry robots noindex. Listing them would only waste crawl budget. The
-  // category hubs above stay in the sitemap.
+  // Individual service pages, now indexable, so they are submitted too. Lowest
+  // priority on the site: they are the thinnest pages here and should be the
+  // last thing crawl budget is spent on.
+  const servicePages: MetadataRoute.Sitemap = services.map((s) => ({
+    url: `${base}/resources/${s.category}/${s.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.3,
+  }));
 
   return [
     ...staticPages,
@@ -93,5 +97,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...blogPages,
     ...seoPages,
     ...resourceCategoryPages,
+    ...servicePages,
   ];
 }

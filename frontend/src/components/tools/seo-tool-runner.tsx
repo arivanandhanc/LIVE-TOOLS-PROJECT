@@ -10,7 +10,7 @@ const Loading = () => (
   </div>
 );
 
-// All three tools are browser-only (pdf.js / canvas) and must not be SSR'd.
+// Every tool here is browser-only (pdf.js / canvas) and must not be SSR'd.
 const CompressPdfTarget = dynamic(() => import("./impl/compress-pdf-target"), {
   loading: Loading,
   ssr: false,
@@ -20,6 +20,10 @@ const ImageCompressTarget = dynamic(() => import("./impl/image-compress-target")
   ssr: false,
 });
 const ImageResizeFixed = dynamic(() => import("./impl/image-resize-fixed"), {
+  loading: Loading,
+  ssr: false,
+});
+const ImagesToPdfTarget = dynamic(() => import("./impl/images-to-pdf-target"), {
   loading: Loading,
   ssr: false,
 });
@@ -44,5 +48,13 @@ export function SeoToolRunner({ tool }: { tool: SeoToolParams }) {
       );
     case "resize-image":
       return <ImageResizeFixed width={tool.width} height={tool.height} />;
+    case "images-to-pdf":
+      return (
+        <ImagesToPdfTarget
+          targetBytes={tool.targetBytes}
+          targetDisplay={tool.targetDisplay}
+          accept={tool.accept}
+        />
+      );
   }
 }

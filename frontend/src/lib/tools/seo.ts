@@ -1,6 +1,7 @@
 import type { Tool } from "./types";
 import { getCategory } from "./registry";
 import { getToolContent } from "./content";
+import { termsFor } from "./generated/search-terms";
 
 export interface FaqItem {
   question: string;
@@ -126,5 +127,48 @@ export function getLongDescription(tool: Tool): string {
     `${tool.description} ${tool.name} is a fast, free and secure online tool from Scrab Tools — no sign-up, no watermarks, and ${
       tool.mode === "client" ? "100% private (runs in your browser)" : "with automatic file deletion"
     }.`
+  );
+}
+
+/**
+ * Page title, shaped by what people actually search for.
+ *
+ * 653 of the 5,000 harvested queries contain "converter" (scripts/data/
+ * keywords.csv) — it is the single most common noun after the format names,
+ * and "pdf to word converter" is the #3 query overall. The old title was
+ * `<name> — Free Online <category>`, which never contained the word, so the
+ * highest-demand phrasing for every conversion tool was missing from the one
+ * element that carries the most weight.
+ *
+ * Only added where the harvest actually shows the demand, so tools nobody
+ * calls a converter ("Merge PDF") are left alone.
+ */
+export function getTitle(tool: Tool, categoryName: string): string {
+  const terms = termsFor(tool.slug);
+  const wantsConverter =
+    !/\bconverter\b/i.test(tool.name) &&
+    terms.some((t) => /\bconverter\b/i.test(t));
+  const head = wantsConverter ? `${tool.name} Converter` : tool.name;
+  return `${head} — Free Online ${categoryName}`;
+}
+
+/**
+ * Meta keywords for a tool: the real queries first, hand-written registry
+ * keywords after, deduped.
+ *
+ * Worth being clear that Google has ignored the meta keywords tag since 2009,
+ * so this changes nothing for Google ranking. It is kept because a few smaller
+ * engines still read it and because it documents, next to the page, what the
+ * page is actually competing for. The title above is the part that matters.
+ */
+export function getKeywords(tool: Tool): string[] {
+  return Array.from(
+    new Set([
+      ...termsFor(tool.slug),
+      ...(tool.keywords ?? []),
+      tool.name.toLowerCase(),
+      `${tool.name.toLowerCase()} online`,
+      `free ${tool.name.toLowerCase()}`,
+    ])
   );
 }

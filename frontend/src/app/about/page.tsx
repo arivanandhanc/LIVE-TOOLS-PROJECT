@@ -79,6 +79,10 @@ export default function AboutPage() {
         </Button>
 
         <Button asChild variant="outline">
+          <Link href="/about/founder">About the Founder</Link>
+        </Button>
+
+        <Button asChild variant="outline">
           <a
             href="https://arivanandhan.in"
             target="_blank"

@@ -126,21 +126,124 @@ function makePage(d: Dim): SeoPage {
   };
 }
 
-// Fill in common square sizes (every 25 px) people search for — each "resize to
-// N×N" is a distinct query. Deduped against the curated DIMS above.
-const SQUARES: Dim[] = [];
-for (let s = 50; s <= 2000; s += 25) {
-  if (DIMS.some((d) => d.w === s && d.h === s)) continue;
-  SQUARES.push({
-    w: s,
-    h: s,
-    use:
-      s <= 300
-        ? "thumbnails, avatars and form photo boxes"
-        : s <= 800
-          ? "profile photos and product images"
-          : "high-resolution square images and prints",
-  });
+// ─────────────────────────────────────────────────────────────────────────
+// Combinatorial keyword fill.
+//
+// Every "resize image to W×H" is its own query, and the long tail of them is
+// where this site actually wins: /resize-image-to-1075x1075 sits at #1 in
+// Google precisely because nobody else has a page for it, while the head terms
+// ("resize image") are held by iLovePDF/Adobe and are not winnable. So the
+// strategy is to own the tail exhaustively — each page is a working resizer,
+// not a doorway, since the tool takes W and H as parameters.
+//
+// Tiers are appended in descending order of search intent and the total is
+// capped, so raising or lowering RESIZE_PAGE_BUDGET always keeps the most
+// valuable pages and drops the least valuable ones.
+// ─────────────────────────────────────────────────────────────────────────
+
+export const RESIZE_PAGE_BUDGET = 300;
+
+/** Copy varies by size band and shape so no two pages share an intro. */
+function useFor(w: number, h: number): string {
+  const r = w / h;
+  const max = Math.max(w, h);
+  if (Math.abs(r - 1) < 0.02) {
+    if (max <= 300) return "thumbnails, avatars and form photo boxes";
+    if (max <= 800) return "profile photos and product images";
+    if (max <= 1500) return "e-commerce listings and social profile pictures";
+    return "high-resolution square images and prints";
+  }
+  if (r > 1) {
+    if (Math.abs(r - 16 / 9) < 0.03) return "video thumbnails, slide backgrounds and widescreen banners";
+    if (Math.abs(r - 4 / 3) < 0.03) return "presentation slides and classic 4:3 photos";
+    if (Math.abs(r - 3 / 2) < 0.03) return "DSLR-ratio photos and print layouts";
+    if (Math.abs(r - 16 / 10) < 0.03) return "desktop wallpapers and wide displays";
+    if (r >= 2.2) return "ultra-wide headers, cover images and banner strips";
+    return max <= 800 ? "email banners and inline web images" : "landscape headers and hero images";
+  }
+  if (Math.abs(r - 9 / 16) < 0.03) return "stories, reels and vertical video covers";
+  if (Math.abs(r - 3 / 4) < 0.03) return "portrait posts and photo prints";
+  if (Math.abs(r - 2 / 3) < 0.03) return "portrait photo prints and posters";
+  if (r <= 0.45) return "tall banners, bookmarks and vertical skyscraper images";
+  return max <= 800 ? "portrait thumbnails and form photos" : "portrait posters and print photos";
 }
 
-export const imageResizePages: SeoPage[] = [...DIMS, ...SQUARES].map(makePage);
+/** Round pixel values people actually type into a resizer. */
+const COMMON_PX = [
+  50, 64, 72, 80, 90, 100, 110, 120, 125, 128, 144, 150, 160, 175, 180, 192, 200,
+  210, 220, 225, 240, 250, 256, 270, 280, 288, 300, 320, 340, 350, 360, 375, 384,
+  400, 420, 432, 440, 450, 460, 480, 500, 512, 540, 560, 576, 600, 620, 640, 660,
+  680, 700, 720, 750, 768, 800, 820, 840, 850, 864, 900, 920, 960, 1000, 1024,
+  1050, 1080, 1100, 1120, 1152, 1200, 1240, 1280, 1300, 1350, 1366, 1400, 1440,
+  1500, 1536, 1600, 1680, 1700, 1728, 1800, 1900, 1920, 2000, 2048, 2160, 2400,
+  2560, 3000, 3200, 3840,
+];
+
+/** Aspect ratios worth a dedicated family of pages. */
+const RATIOS: Array<[number, number]> = [
+  [16, 9], [9, 16], [4, 3], [3, 4], [3, 2], [2, 3], [16, 10], [10, 16],
+  [5, 4], [4, 5], [21, 9], [2, 1], [1, 2], [5, 3], [7, 5], [8, 5],
+];
+
+const seen = new Set<string>(DIMS.map((d) => `${d.w}x${d.h}`));
+const tiers: Dim[][] = [];
+
+function collect(pairs: Array<[number, number]>): Dim[] {
+  const out: Dim[] = [];
+  for (const [w, h] of pairs) {
+    const key = `${w}x${h}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push({ w, h, use: useFor(w, h) });
+  }
+  return out;
+}
+
+// Tier 1 — squares. "Resize image to N×N" is the single most-searched shape,
+// stepped finer at the small end where the queries concentrate.
+const squares: Array<[number, number]> = [];
+for (let s = 50; s <= 600; s += 5) squares.push([s, s]);
+for (let s = 610; s <= 1200; s += 10) squares.push([s, s]);
+for (let s = 1225; s <= 2000; s += 25) squares.push([s, s]);
+for (let s = 2050; s <= 4000; s += 50) squares.push([s, s]);
+tiers.push(collect(squares));
+
+// Tier 2 — named aspect-ratio families at every common width.
+const ratioPairs: Array<[number, number]> = [];
+for (const [rw, rh] of RATIOS) {
+  for (const base of COMMON_PX) {
+    const w = base;
+    const h = Math.round((base * rh) / rw);
+    if (h < 40 || h > 4320) continue;
+    ratioPairs.push([w, h]);
+  }
+}
+tiers.push(collect(ratioPairs));
+
+// Tier 3 — the remaining W×H grid, held to sane shapes (between 1:3 and 3:1)
+// so we never publish a page for a dimension nobody would ask for. Ordered by
+// how close the pair is to a familiar ratio, so the budget cuts the odd ones.
+const gridPairs: Array<[number, number]> = [];
+for (const w of COMMON_PX) {
+  for (const h of COMMON_PX) {
+    const r = w / h;
+    if (r < 1 / 3 || r > 3) continue;
+    gridPairs.push([w, h]);
+  }
+}
+gridPairs.sort((a, b) => {
+  const dist = ([w, h]: [number, number]) =>
+    Math.min(...RATIOS.map(([rw, rh]) => Math.abs(w / h - rw / rh)));
+  return dist(a) - dist(b) || a[0] - b[0] || a[1] - b[1];
+});
+tiers.push(collect(gridPairs));
+
+const filled: Dim[] = [];
+for (const tier of tiers) {
+  for (const d of tier) {
+    if (DIMS.length + filled.length >= RESIZE_PAGE_BUDGET) break;
+    filled.push(d);
+  }
+}
+
+export const imageResizePages: SeoPage[] = [...DIMS, ...filled].map(makePage);

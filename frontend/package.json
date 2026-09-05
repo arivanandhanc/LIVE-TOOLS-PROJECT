@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "indexnow": "node scripts/indexnow.mjs",
-    "checkup": "node scripts/site-checkup.mjs"
+    "checkup": "node scripts/site-checkup.mjs",
+    "link-audit": "node scripts/link-audit.mjs",
+    "keywords": "node scripts/keyword-harvest.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

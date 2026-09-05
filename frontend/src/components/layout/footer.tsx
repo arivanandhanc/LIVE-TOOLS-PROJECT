@@ -20,6 +20,7 @@ const footerLinks = {
   ],
   Company: [
     { title: "About", href: "/about" },
+    { title: "Founder", href: "/about/founder" },
     { title: "Blog", href: "/blog" },
     { title: "Contact", href: "/contact" },
     { title: "Support", href: "https://support.arivanandhan.in" },
