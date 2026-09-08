@@ -63,6 +63,38 @@ export function prewarmServer(): void {
   if (Date.now() - warmedAt < 4 * 60 * 1000) return;
   warmedAt = Date.now();
   void fetch(`${CONVERT_SERVER}/health`, { cache: "no-store" }).catch(() => {});
+  // Fetch the access pass at the same time. It is a round trip to our own
+  // server, and doing it here rather than on click means it costs the user
+  // nothing — by the time they have chosen a format, it is already held.
+  void getToken().catch(() => {});
+}
+
+/**
+ * The worker's access pass, minted by our own server at /api/convert-token.
+ *
+ * The signing secret never reaches the browser, so this token is the only
+ * thing a page can present — and it cannot be forged or reused for long. Held
+ * in memory only: persisting it would extend the life of something designed to
+ * be short-lived.
+ */
+let cached: { token: string; expiresAt: number } | null = null;
+
+async function getToken(): Promise<string> {
+  // Renew a little before expiry so a slow conversion doesn't start with a
+  // token that dies mid-request.
+  if (cached && cached.expiresAt - Date.now() > 20_000) return cached.token;
+
+  const res = await fetch("/api/convert-token", { cache: "no-store" });
+  if (!res.ok) {
+    throw new ConversionError(
+      res.status === 503
+        ? "Server conversions aren't configured on this deployment yet."
+        : "Couldn't get permission to use the conversion server."
+    );
+  }
+  const data = (await res.json()) as { token: string; expiresAt: number };
+  cached = data;
+  return data.token;
 }
 
 export interface ConversionResult {
@@ -176,6 +208,8 @@ export async function runConversion(file: File, targetId: string): Promise<Conve
 }
 
 async function convertOnServer(file: File, target: string): Promise<Blob> {
+  const token = await getToken();
+
   const body = new FormData();
   body.append("file", file);
 
@@ -188,8 +222,25 @@ async function convertOnServer(file: File, target: string): Promise<Blob> {
     const res = await fetch(`${CONVERT_SERVER}/convert?to=${encodeURIComponent(target)}`, {
       method: "POST",
       body,
+      headers: { "X-Convert-Token": token },
       signal: controller.signal,
     });
+
+    // A rejected pass is worth retrying exactly once with a fresh one: the
+    // likeliest cause is a token that expired while the user was deciding, and
+    // making them click twice for that would be our bug showing through.
+    if (res.status === 401) {
+      cached = null;
+      const retry = await fetch(`${CONVERT_SERVER}/convert?to=${encodeURIComponent(target)}`, {
+        method: "POST",
+        body,
+        headers: { "X-Convert-Token": await getToken() },
+        signal: controller.signal,
+      });
+      if (retry.ok) return await retry.blob();
+      const { error } = await retry.json().catch(() => ({ error: "Access was refused." }));
+      throw new ConversionError(error);
+    }
 
     if (!res.ok) {
       const { error } = await res.json().catch(() => ({ error: `Server returned ${res.status}.` }));
