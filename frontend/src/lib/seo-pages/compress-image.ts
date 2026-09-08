@@ -28,6 +28,25 @@ const SIZES: Record<Fmt, number[]> = {
   webp: [...ladder(10, 100, 10), ...ladder(125, 300, 25), ...ladder(350, 600, 50), 800, 1000],
 };
 
+// Sizes that were published under an earlier ladder and must keep resolving.
+// Changing a step is enough to stop generating a page Google has already
+// indexed: the step-10 PNG/WebP ladders above land on multiples of 10 and so
+// dropped /compress-png-to-75kb and /compress-webp-to-75kb, which then 404'd.
+// Pinning them here means a later re-tune can shrink or widen the ladder without
+// deleting a live URL — the same guard the legacy square ladder gets in
+// resize-image.ts. Removing a page stays possible, but as a decision with a
+// redirect behind it rather than a side effect of a loop bound.
+const LEGACY_SIZES: Record<Fmt, number[]> = {
+  jpg: [],
+  png: [75],
+  webp: [75],
+};
+
+/** Ladder plus pinned legacy sizes, de-duplicated so no page is generated twice. */
+function sizesFor(fmt: Fmt): number[] {
+  return [...new Set([...SIZES[fmt], ...LEGACY_SIZES[fmt]])].sort((a, b) => a - b);
+}
+
 function display(kb: number): string {
   return `${kb} KB`;
 }
@@ -117,5 +136,5 @@ function makePage(fmt: Fmt, kb: number): SeoPage {
 }
 
 export const imageCompressPages: SeoPage[] = (Object.keys(SIZES) as Fmt[]).flatMap((fmt) =>
-  SIZES[fmt].map((kb) => makePage(fmt, kb))
+  sizesFor(fmt).map((kb) => makePage(fmt, kb))
 );
