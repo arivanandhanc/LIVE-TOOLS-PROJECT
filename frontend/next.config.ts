@@ -8,6 +8,18 @@ const isDev = process.env.NODE_ENV === "development";
 const apiOrigin =
   process.env.NEXT_PUBLIC_API_URL || (isDev ? "http://localhost:4000" : "https://tools-live.onrender.com");
 
+// The document conversion worker (LibreOffice on AWS Lambda), which the
+// universal converter on the home page calls directly from the browser.
+//
+// It has to be named in connect-src or the fetch is refused before it leaves
+// the page — and a CSP refusal surfaces as a bare "Failed to fetch", which is
+// indistinguishable from the server being down. The same request from curl
+// succeeds, because curl has no CSP, so the endpoint looks healthy from every
+// angle except the one that matters.
+const convertOrigin =
+  process.env.NEXT_PUBLIC_CONVERT_URL ||
+  "https://3x5q7btxawvcheyflwpxw7z62m0fjfqn.lambda-url.ap-south-1.on.aws";
+
 // Google reCAPTCHA endpoints that must be allowlisted. Covers both the classic
 // (api.js) and Enterprise (enterprise.js) loaders plus the challenge iframes,
 // which can be served from recaptcha.net in regions where google.com is blocked.
@@ -44,7 +56,7 @@ const csp = [
   `style-src 'self' 'unsafe-inline'`,
   `img-src 'self' blob: data: ${recaptcha} ${adsImages}`,
   `font-src 'self' data:`,
-  `connect-src 'self' blob: ${apiOrigin} ${recaptcha} ${adsConnect} https://www.google-analytics.com`,
+  `connect-src 'self' blob: ${apiOrigin} ${convertOrigin} ${recaptcha} ${adsConnect} https://www.google-analytics.com`,
   `frame-src ${recaptcha} ${adsFrames}`,
   `worker-src 'self' blob:`,
   `media-src 'self' blob:`,
