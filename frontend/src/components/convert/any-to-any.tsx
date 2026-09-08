@@ -202,9 +202,17 @@ export function AnyToAny() {
             </>
           )}
 
+          {/*
+            The waiting message has to match the route actually taken. Telling
+            someone a 0.1s canvas conversion "can take ~25 seconds" makes the
+            fast path feel slow, which is the opposite of what the split
+            between device and server is for.
+          */}
           {busy && (
             <p className="text-sm text-muted-foreground">
-              Converting… the first server conversion can take ~25 seconds while it wakes up.
+              {options.find((o) => o.id === target)?.info!.where === "server"
+                ? "Converting on our server… usually a few seconds."
+                : "Converting on your device…"}
             </p>
           )}
 

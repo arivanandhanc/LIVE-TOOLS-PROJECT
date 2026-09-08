@@ -107,11 +107,31 @@ export interface ConversionResult {
 
 export class ConversionError extends Error {}
 
-/** Whether the server is capable of this pair, ignoring whether it should. */
+/**
+ * Presentation formats LibreOffice will accept but shouldn't be offered from
+ * arbitrary sources.
+ *
+ * Asked to turn a CSV into a PowerPoint, LibreOffice does not refuse — it
+ * produces a deck with the spreadsheet dumped onto slides, which nobody wants
+ * and nobody asked for. Capability is not the same as usefulness, and offering
+ * a conversion whose output is meaningless costs more trust than the extra
+ * option buys.
+ */
+const PRESENTATION = new Set(["pptx", "ppt", "odp"]);
+
+/** Whether the server is capable of this pair, and it is worth offering. */
 function serverSupports(from: FileFormat, to: FileFormat): boolean {
   if (from.hub === "image" || to.hub === "image") return false;
   if (from.id === "pdf") return false; // pdf.js reads these better than LibreOffice
-  return SERVER_SOURCES.has(from.id) && SERVER_TARGETS.has(to.id);
+  if (!SERVER_SOURCES.has(from.id) || !SERVER_TARGETS.has(to.id)) return false;
+
+  // A deck can only sensibly come from another deck. PDF stays available from
+  // everything, because "make this a PDF" is meaningful for any document, and
+  // a spreadsheet into Word is a real thing people want — a table in a
+  // document. Only the presentation direction is nonsense.
+  if (PRESENTATION.has(to.id) && !PRESENTATION.has(from.id)) return false;
+
+  return true;
 }
 
 /**
