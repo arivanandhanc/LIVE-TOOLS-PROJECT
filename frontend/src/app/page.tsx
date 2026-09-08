@@ -11,6 +11,7 @@ import {
 } from "@/lib/tools/registry";
 import { allSeoPages } from "@/lib/seo-pages";
 import { siteConfig } from "@/lib/site";
+import { AnyToAny } from "@/components/convert/any-to-any";
 
 // Curated hub into the high-intent programmatic landing pages.
 const seoGroups = [
@@ -88,6 +89,27 @@ export default function HomePage() {
           <p className="mt-5 text-sm text-muted-foreground">
             No account required · No watermarks · No file size traps
           </p>
+        </div>
+      </section>
+
+      {/*
+        Universal converter.
+        Directly under the hero because it answers the question most visitors
+        actually arrive with — "can you turn this into that?" — without asking
+        them to guess which of the tools below is the right one first.
+      */}
+      <section className="border-b border-border bg-card/40">
+        <div className="container-page py-14">
+          <div className="mb-6 text-center">
+            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              Convert anything to anything
+            </h2>
+            <p className="mt-2 text-balance text-muted-foreground">
+              Drop a file and we&apos;ll show you every format it can become. Most conversions
+              never leave your device.
+            </p>
+          </div>
+          <AnyToAny />
         </div>
       </section>
 

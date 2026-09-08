@@ -1,0 +1,19 @@
+# Paths deliberately removed. url-regression.mjs stops flagging these.
+#
+# The tools below were dropped in the June 2026 registry rebuild and have
+# returned 404 ever since. They are listed here as a decision, not left to be
+# rediscovered as a mystery: none has a live equivalent (the site converts
+# PDF-to-Word, not Word-to-PDF), and Google treats a redirect to an unrelated
+# hub as a soft 404 anyway, so 404 is the honest answer until the tool exists.
+# Build one of them again and delete its line here.
+
+/tools/developer/qr-scanner
+/tools/image/ai-image-enhancement
+/tools/image/background-remover
+/tools/pdf/edit-pdf
+/tools/pdf/pdf-to-excel
+/tools/pdf/pdf-to-powerpoint
+/tools/pdf/powerpoint-to-pdf
+/tools/pdf/protect-pdf
+/tools/pdf/unlock-pdf
+/tools/pdf/word-to-pdf
