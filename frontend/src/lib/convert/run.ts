@@ -107,11 +107,31 @@ export interface ConversionResult {
 
 export class ConversionError extends Error {}
 
-/** Whether the server is capable of this pair, ignoring whether it should. */
+/**
+ * Presentation formats LibreOffice will accept but shouldn't be offered from
+ * arbitrary sources.
+ *
+ * Asked to turn a CSV into a PowerPoint, LibreOffice does not refuse — it
+ * produces a deck with the spreadsheet dumped onto slides, which nobody wants
+ * and nobody asked for. Capability is not the same as usefulness, and offering
+ * a conversion whose output is meaningless costs more trust than the extra
+ * option buys.
+ */
+const PRESENTATION = new Set(["pptx", "ppt", "odp"]);
+
+/** Whether the server is capable of this pair, and it is worth offering. */
 function serverSupports(from: FileFormat, to: FileFormat): boolean {
   if (from.hub === "image" || to.hub === "image") return false;
   if (from.id === "pdf") return false; // pdf.js reads these better than LibreOffice
-  return SERVER_SOURCES.has(from.id) && SERVER_TARGETS.has(to.id);
+  if (!SERVER_SOURCES.has(from.id) || !SERVER_TARGETS.has(to.id)) return false;
+
+  // A deck can only sensibly come from another deck. PDF stays available from
+  // everything, because "make this a PDF" is meaningful for any document, and
+  // a spreadsheet into Word is a real thing people want — a table in a
+  // document. Only the presentation direction is nonsense.
+  if (PRESENTATION.has(to.id) && !PRESENTATION.has(from.id)) return false;
+
+  return true;
 }
 
 /**
@@ -159,6 +179,17 @@ export function describe(fromId: string, toId: string) {
  * becomes a button that fails when clicked — the one outcome worth engineering
  * against, since the user has already committed by then.
  */
+/**
+ * What a PDF can become in the browser.
+ *
+ * This is the most valuable path on the site — "pdf to word" and "pdf to
+ * excel" are the two largest queries in the harvest — and the server cannot
+ * help, because LibreOffice reads a PDF by rasterising it. pdf.js exposes the
+ * text layer, so the browser does it better and without an upload.
+ */
+const DEVICE_PDF_DOCUMENT_TARGETS = new Set(["txt", "html", "md", "docx"]);
+const DEVICE_PDF_TABULAR_TARGETS = new Set(["csv", "tsv", "xlsx", "json"]);
+
 const DEVICE_DOCUMENT_TARGETS = new Set(["html", "md", "txt"]);
 const DEVICE_TABULAR_TARGETS = new Set(["csv", "tsv", "xlsx", "json"]);
 /**
@@ -173,6 +204,8 @@ function canRunOnDevice(from: FileFormat, to: FileFormat): boolean {
   if (from.hub === "image" && to.hub === "image") return true;
   if (from.hub === "image" && to.id === "pdf") return true;
   if (from.id === "pdf" && to.hub === "image") return true;
+  if (from.id === "pdf" && to.hub === "document") return DEVICE_PDF_DOCUMENT_TARGETS.has(to.id);
+  if (from.id === "pdf" && to.hub === "tabular") return DEVICE_PDF_TABULAR_TARGETS.has(to.id);
   if (from.hub === "tabular" && to.hub === "tabular") return DEVICE_TABULAR_TARGETS.has(to.id);
   if (from.hub === "tabular" && to.hub === "document") return DEVICE_TABULAR_AS_DOCUMENT.has(to.id);
   if (from.hub === "document" && to.hub === "document") return DEVICE_DOCUMENT_TARGETS.has(to.id);
@@ -293,6 +326,65 @@ async function convertOnDevice(file: File, from: FileFormat, to: FileFormat): Pr
     // dropping the rest without saying so would be the dishonest option. The
     // UI says "page 1" next to the result.
     return canvasToBlob(pages[0].canvas, to.mime[0], to.lossy ? 0.92 : undefined);
+  }
+
+  // ── PDF in ────────────────────────────────────────────────────────────────
+  if (from.id === "pdf" && (to.hub === "document" || to.hub === "tabular")) {
+    const { extractLines, linesToText, linesToRows, EmptyPdfError } = await import("./pdf-extract");
+
+    let pages;
+    try {
+      pages = await extractLines(file);
+    } catch (err) {
+      // A scan has no text to find. Say that, rather than handing back an
+      // empty document that looks like the converter silently failed.
+      if (err instanceof EmptyPdfError) throw new ConversionError(err.message);
+      throw err;
+    }
+
+    if (to.hub === "tabular") {
+      const rows = linesToRows(pages);
+      if (to.id === "json") {
+        return new Blob([JSON.stringify(rows, null, 2)], { type: "application/json" });
+      }
+      const XLSX = await import("xlsx");
+      const sheet = XLSX.utils.aoa_to_sheet(rows);
+      if (to.id === "csv" || to.id === "tsv") {
+        const text = XLSX.utils.sheet_to_csv(sheet, { FS: to.id === "tsv" ? "\t" : "," });
+        return new Blob([text], { type: to.mime[0] });
+      }
+      const book = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(book, sheet, "Sheet1");
+      const out = XLSX.write(book, { bookType: "xlsx", type: "array" });
+      return new Blob([out], { type: to.mime[0] });
+    }
+
+    const text = linesToText(pages);
+    if (to.id === "txt") return new Blob([text], { type: "text/plain" });
+    if (to.id === "md") return new Blob([text], { type: "text/markdown" });
+    if (to.id === "html") {
+      const esc = (s: string) => s.replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c]!));
+      const body = pages
+        .map((p) => p.map((l) => `<p>${esc(l.text)}</p>`).join("\n"))
+        .join("\n<hr>\n");
+      return new Blob([`<!doctype html><meta charset="utf-8">\n${body}\n`], { type: "text/html" });
+    }
+
+    // DOCX. One paragraph per visual line, and a page break between pages —
+    // the most faithful structure available from coordinates alone.
+    const { Document, Packer, Paragraph, TextRun } = await import("docx");
+    const paragraphs = pages.flatMap((p, pageIndex) => {
+      const body = p.map(
+        (l, i) =>
+          new Paragraph({
+            children: [new TextRun(l.text)],
+            pageBreakBefore: pageIndex > 0 && i === 0,
+          })
+      );
+      return body.length ? body : [new Paragraph({ children: [new TextRun("")] })];
+    });
+    const doc = new Document({ sections: [{ children: paragraphs }] });
+    return new Blob([await Packer.toBlob(doc)], { type: to.mime[0] });
   }
 
   if (from.hub === "tabular") {
