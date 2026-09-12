@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ChevronRight, ShieldCheck } from "lucide-react";
 import { siteConfig } from "@/lib/site";
+import { isGoogleIndexable } from "@/lib/seo-pages/earning";
 import { getToolsByCategory } from "@/lib/tools/registry";
 import { ToolCard } from "@/components/tool-card";
 import { SeoToolRunner } from "@/components/tools/seo-tool-runner";
@@ -27,6 +28,25 @@ export async function generateMetadata(
     description: page.description,
     keywords: page.keywords,
     alternates: { canonical },
+    /*
+      Hidden from Google, kept in Bing.
+
+      These clusters run 86-96% textually identical between siblings, which
+      Google's helpful-content system treats as one thin page repeated rather
+      than as hundreds of answers — the same shape that demoted this domain
+      once already. But Bing indexes them happily and sends roughly six times
+      Google's traffic, so a blanket `noindex` would spend the traffic keeping
+      the site alive in order to fix a problem only one search engine has.
+
+      `googleBot` is therefore set on its own, leaving the default `robots`
+      directive permissive. The pages stay live, stay linked and stay
+      discoverable; Google is simply shown the ~43 that earn visitors instead
+      of the ~540 near-copies standing behind them. Mediapartners-Google, which
+      AdSense uses, reads its own directive and is unaffected.
+    */
+    robots: isGoogleIndexable(page.slug)
+      ? undefined
+      : { googleBot: { index: false, follow: true } },
     openGraph: {
       type: "website",
       title: page.title,

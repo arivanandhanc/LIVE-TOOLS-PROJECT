@@ -1,0 +1,61 @@
+# Tell Bing about new and changed pages, automatically.
+#
+# Bing flagged "Some important pages weren't submitted via IndexNow" because
+# the submitter existed but was only ever run by hand, and hadn't been run
+# since the pages changed. A step that depends on someone remembering it is
+# not a step.
+#
+# This matters more here than it would on most sites: Bing and Yahoo send
+# roughly six times the traffic Google does, and IndexNow is the one channel
+# where we can push rather than wait to be crawled. Google has no equivalent.
+
+name: indexnow
+
+on:
+  push:
+    branches: [main]
+    # Only when something a crawler would care about actually changed. Docs,
+    # CI config and the conversion worker do not alter a single URL.
+    paths:
+      - "frontend/src/**"
+      - "frontend/public/**"
+      - "frontend/next.config.ts"
+  # A daily net, in case a deploy happens outside the paths above or a push
+  # run is lost.
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: indexnow
+  cancel-in-progress: false
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # Submitting before Vercel finishes would push the *old* sitemap, so wait
+      # for the deploy to actually be serving. Polling a marker beats a fixed
+      # sleep: a slow build would otherwise silently submit stale URLs.
+      - name: Wait for the new build to be live
+        run: |
+          set -euo pipefail
+          for i in $(seq 1 30); do
+            if curl -fsS --max-time 30 https://www.scrabtools.site/sitemap.xml \
+                 | grep -q "<lastmod>$(date -u +%F)"; then
+              echo "sitemap regenerated for $(date -u +%F)"
+              exit 0
+            fi
+            echo "attempt $i: not yet"
+            sleep 20
+          done
+          echo "Sitemap never showed today's date; submitting anyway."
+
+      - name: Submit to IndexNow
+        run: node frontend/scripts/indexnow.mjs

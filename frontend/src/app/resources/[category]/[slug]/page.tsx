@@ -33,7 +33,21 @@ export async function generateMetadata(
     // they are the most likely of any batch here to sit in "Discovered -
     // currently not indexed" or to cost site-wide quality signal. Flip back to
     // `index: false` if impressions on the rest of the site dip after this.
-    robots: { index: true, follow: true },
+    /*
+      Hidden from Google, kept in Bing — the same split applied to the
+      programmatic clusters.
+
+      These are ~246-word "describe the service, link to it" stubs, 510 of
+      them. They were `index: false` until the gate was opened site-wide on
+      5 Sep; the AdSense review has sat in "Getting ready" since 20 Aug, and
+      the sibling domain on the same account is already flagged "Low value
+      content". Five hundred near-identical stubs are the clearest instance of
+      that shape on this site.
+
+      Bing indexes them without complaint and sends most of our traffic, so
+      they stay visible there. Only Google is shown the substantive pages.
+    */
+    robots: { googleBot: { index: false, follow: true } },
   };
 }
 
