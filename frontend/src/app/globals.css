@@ -235,6 +235,21 @@
   box-shadow: 0 2px 12px rgb(0 0 0 / 0.18) !important;
 }
 @media (max-width: 640px) {
-  /* Lift it clear of the cookie banner / sticky CTAs on small screens. */
-  .grecaptcha-badge { bottom: 5.5rem !important; }
+  /* On a phone the badge is a 256x60 panel pinned over the content, and at
+     that size it covers real UI rather than sitting beside it. Scaling from
+     the bottom-right corner shrinks its footprint without moving where it is
+     anchored, so it still reads as a corner badge and stops eating the page.
+
+     Hiding it outright would also be permitted here — the "Protected by
+     reCAPTCHA" notice Google requires in its place is already in the footer —
+     but shrinking keeps the signal visible, which is the more honest option
+     when the badge is the only on-page sign that a bot check is running. */
+  .grecaptcha-badge {
+    bottom: 5.5rem !important;
+    transform: scale(0.6);
+    transform-origin: bottom right;
+    /* The panel slides out from the right edge; clipping the overflow keeps
+       the collapsed state from leaving a sliver of the expanded one behind. */
+    overflow: hidden !important;
+  }
 }
