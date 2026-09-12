@@ -14,9 +14,26 @@ function normalizeBaseUrl(url: string): string {
 
 export const siteConfig = {
   name: "Scrab Tools",
-  tagline: "Mini tools for PDFs and every digital asset.",
+  // The old tagline was "Mini tools for PDFs and every digital asset", which
+  // put "Tools" twice in the rendered title ("Scrab Tools — Mini tools …") and
+  // spent the most valuable words in the document on a repetition. "Converter"
+  // replaces it on the evidence of our own harvest: 653 of the 5,000 queries
+  // contain that word, making it the most common noun after the format names,
+  // and it appeared in no homepage title at all.
+  tagline: "Free file converters for PDF, images and data",
+  /**
+   * Doubles as the hero paragraph, which is why it reads as a sentence rather
+   * than a keyword list.
+   *
+   * Two constraints shape it. Seobility measured the previous one at 1405px
+   * against a 1000px limit, so Google would have truncated it in results — it
+   * is now roughly half the length. And it deliberately contains the words of
+   * the H1 above it ("one fast workspace", "every file tool"), which were
+   * absent from the page body entirely; a heading whose words appear nowhere
+   * in the content it introduces is a mismatch signal.
+   */
   description:
-    "Scrab Tools is a collection of 100+ free mini tools for PDFs, images, CSV data, text and developer formats — convert, compress, merge and edit in seconds. Most run entirely in your browser, so your files never leave your device.",
+    "One fast workspace for every file tool you need — convert, compress and edit PDFs, images, CSV and text in your browser.",
   // `||` (not `??`) so an empty-string env var also falls back. These are
   // public values; the fallbacks keep production working even if the Vercel
   // env var is missing/blank. Local dev overrides apiUrl via .env.local.
