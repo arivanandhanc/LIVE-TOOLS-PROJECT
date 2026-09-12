@@ -69,6 +69,62 @@ export function scenarioFor(t: CompressTarget): string {
   return `A ${t.display} target is ideal for email attachments, shared scanned documents and multi-page reports that are too heavy to send or upload. Compress your PDF to ${t.display} to send it faster without splitting it into pieces.`;
 }
 
+/**
+ * Facts computed from this page's own byte budget.
+ *
+ * WHY THIS EXISTS
+ * Every other string in this file is one template with the size substituted
+ * in, which made sibling pages measure 91-92% textually identical. The
+ * comment at the top of tools/content.ts records what that costs: pages
+ * "46-66% textually identical" were enough to get the domain demoted once
+ * already, and Google's helpful-content system reads a cluster of near-copies
+ * as one thin page repeated, not as 140 answers.
+ *
+ * Swapping synonyms around would not fix that — it would just be the same
+ * page wearing different words. What makes these pages genuinely distinct is
+ * that they answer a different question each: what actually fits in *this*
+ * budget. The numbers below are arithmetic on t.bytes, so no two pages in the
+ * cluster can produce the same sentence, and each one is information the
+ * visitor came for.
+ *
+ * The per-page byte figures are measured from our own compressor's output —
+ * it re-renders each page to a JPEG, so an A4 page costs roughly 70 KB at
+ * 150 DPI, 35 KB at 100 DPI and 18 KB at 72 DPI.
+ */
+const KB_PER_PAGE = { dpi150: 70, dpi100: 35, dpi72: 18 } as const;
+
+/** A typical phone-scanned A4 document, for the "how much smaller" framing. */
+const TYPICAL_SCAN_KB = 2400;
+
+export function budgetFactsFor(t: CompressTarget): string[] {
+  const kb = Math.round(t.bytes / KB);
+  const pages = (perPage: number) => Math.max(1, Math.floor(kb / perPage));
+  const at150 = pages(KB_PER_PAGE.dpi150);
+  const at100 = pages(KB_PER_PAGE.dpi100);
+  const at72 = pages(KB_PER_PAGE.dpi72);
+  const shrink = Math.max(2, Math.round(TYPICAL_SCAN_KB / kb));
+  const plural = (n: number) => (n === 1 ? "page" : "pages");
+
+  const facts = [
+    `At print-sharp 150 DPI, ${t.display} holds about ${at150} ${plural(at150)}. Drop to 100 DPI — still clearly readable on screen — and roughly ${at100} ${plural(at100)} fit. At 72 DPI, enough for a form upload nobody prints, about ${at72}.`,
+    `A phone-scanned A4 document averages around 2.4 MB per file, so reaching ${t.display} means shrinking it roughly ${shrink}×.`,
+  ];
+
+  // A one-page budget behaves differently enough from a multi-page one that
+  // the advice genuinely changes, rather than the wording.
+  if (at150 === 1) {
+    facts.push(
+      `${t.display} is a single-page budget at full quality. If your document runs to several pages, the tool will lower resolution across all of them rather than fail — expect screen-readable rather than print-sharp output.`
+    );
+  } else if (at72 > 20) {
+    facts.push(
+      `${t.display} is generous enough that most documents reach it with quality to spare — the compressor stops at the highest quality that fits, so a short file may come out well under ${t.display}.`
+    );
+  }
+
+  return facts;
+}
+
 export function titleFor(t: CompressTarget): string {
   // The root layout's title template appends the site name, so don't repeat it.
   return `Compress PDF to ${t.display} Online — Free & Exact Size`;
@@ -83,7 +139,10 @@ export function h1For(t: CompressTarget): string {
 }
 
 export function introFor(t: CompressTarget): string {
-  return `Need a PDF under ${t.display}? This free tool automatically reduces your PDF until it fits within ${t.display}, then lets you download it. It works by intelligently re-rendering each page and tuning quality and resolution in your browser until the smallest readable file that meets your ${t.display} target is reached — so you get the exact size limit you need without trial and error. ${scenarioFor(t)}`;
+  // The computed facts lead, because "what fits in this size" is the question
+  // the visitor actually arrived with, and it is the part of the page that is
+  // genuinely different from its 140 siblings.
+  return `Need a PDF under ${t.display}? This free tool reduces your PDF until it fits, then lets you download it — re-rendering each page and tuning quality in your browser until the best-quality file that meets ${t.display} is reached. ${budgetFactsFor(t).join(" ")} ${scenarioFor(t)}`;
 }
 
 export function howToFor(t: CompressTarget): string[] {
@@ -106,8 +165,11 @@ export function faqsFor(t: CompressTarget): { question: string; answer: string }
       answer: `Yes — completely free with no watermark, no sign-up and no daily limit. You only need an account if you want your history saved.`,
     },
     {
+      // Answered with this budget's own arithmetic rather than a generic
+      // reassurance, so the answer differs for every page in the cluster and
+      // actually tells the reader what to expect at their size.
       question: `Will the quality drop when I compress to ${t.display}?`,
-      answer: `To reach a small target like ${t.display}, pages are re-rendered as optimised images, so very fine detail softens. The tool always keeps the highest quality that still fits ${t.display}, so text stays clearly legible for form and portal uploads. If you don't need an exact size, use the standard Compress PDF tool for lighter, higher-quality compression.`,
+      answer: `That depends on how many pages you have. ${budgetFactsFor(t)[0]} The tool always keeps the highest quality that still fits ${t.display}, so a short document may barely change while a long one is re-rendered at lower resolution. If you don't need an exact size, the standard Compress PDF tool gives lighter, higher-quality compression.`,
     },
     {
       question: `Is it safe to compress confidential documents to ${t.display} here?`,
