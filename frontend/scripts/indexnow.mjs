@@ -14,9 +14,20 @@
  */
 
 const HOST = "www.scrabtools.site";
-// Current IndexNow key. Override via argv[2] / INDEXNOW_KEY when the matching
-// key file isn't deployed yet. The key file must be live at https://HOST/<key>.txt.
-const KEY = process.argv[2] || process.env.INDEXNOW_KEY || "2e07c95e36124dc1a8f33572ea750e28";
+/**
+ * Current IndexNow key, issued from Bing Webmaster Tools.
+ *
+ * Not a secret: IndexNow proves ownership by requiring the key to be readable
+ * at https://HOST/<key>.txt, so publishing it is the mechanism rather than a
+ * leak. The file must contain the key and nothing else — no trailing newline,
+ * or the endpoint rejects the submission as a key mismatch.
+ *
+ * Override via argv[2] or INDEXNOW_KEY when rotating: submit with the old key
+ * until the new key file has actually deployed, then switch this default.
+ * Earlier keys are left in public/ deliberately — they cost 32 bytes each and
+ * removing one mid-flight would fail any submission still referencing it.
+ */
+const KEY = process.argv[2] || process.env.INDEXNOW_KEY || "ca61b8ab6dca4c5881dfe68a776e6a64";
 const SITEMAP = `https://${HOST}/sitemap.xml`;
 const ENDPOINT = "https://api.indexnow.org/indexnow";
 
